@@ -1,0 +1,1 @@
+./Debug/main.cpp.o ./Debug/point.cpp.o ./Debug/verlet.cpp.o ./Debug/force.cpp.o
