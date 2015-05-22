@@ -2,6 +2,9 @@
 #define VERLET_H
 #include <iostream>
 #include "force.h"
+#include "point.h"
+
+using namespace mathTools;
 
 namespace integrators
 {
@@ -9,20 +12,27 @@ namespace integrators
 //Creates an abstract parent class (interface) for a generic integrator.
 class I_integrator
 {
-	public:
+	protected:
+		//Delta t value used.
+		float timeStep;
+		float systemTime;
 
-		virtual float nextPosition(float pos, float vel, physics::IForce* f) =0;
-		virtual float nextVelocity(float pos, float vel, physics::IForce* f) =0;
+	public:
+		virtual float nextPosition(float index, mathTools::points* pnt, physics::forces* f) =0;
+		virtual float nextVelocity(float index, mathTools::points* pnt, physics::forces* f) =0;
+
+		//getter/setter for 'timeStep'
+		void setTimeStep(float newStep) { timeStep = newStep; }
+		float getTimeStep() { return timeStep; }
+
+		//getter for 'systemTime'
+		float getSystemTime() { return systemTime; }
+		void writeSystemTime() { std::cout << "Current time: " << systemTime << ".\n"; }
 };
 
 //Verlet Velocity integrator.
 class verlet: public I_integrator
 {
-	private:
-		//Delta t value used.
-		float timeStep;
-		float systemTime;
-
 	public:
 
 		//Constructor/Destructor
@@ -30,16 +40,8 @@ class verlet: public I_integrator
 		~verlet();
 
 		//Gets the next position and velocity terms.
-		float nextPosition(float pos, float vel, physics::IForce* f);
-		float nextVelocity(float pos, float vel, physics::IForce* f);
-
-		//getter/setter for 'timeStep'
-		void setTimeStep(float newStep) { timeStep = newStep; }
-		float getTimeStep() { return timeStep; }
-		
-		//getter for 'systemTime'
-		float getSystemTime() { return systemTime; }
-		void writeSystemTime() { std::cout << "Current time: " << systemTime << ".\n"; }
+		float nextPosition(float index, mathTools::points* pnt, physics::forces* f);
+		float nextVelocity(float index, mathTools::points* pnt, physics::forces* f);
 };
 
 }

@@ -17,23 +17,37 @@ namespace mathTools
 	//Releases the memory blocks
 	points::~points()
 	{
-		delete[] points::x;
-		delete[] points::y;
-		delete[] points::z;
-		delete[] points::vx;
-		delete[] points::vy;
-		delete[] points::vz;
+		delete[] x;
+		delete[] y;
+		delete[] z;
+		delete[] vx;
+		delete[] vy;
+		delete[] vz;
+	}
+
+	void points::setAllPos(int i, float xVal, float yVal, float zVal)
+	{
+		*(x+i)=xVal;
+		*(y+i)=yVal;
+		*(z+i)=zVal;
+	}
+
+	void points::setAllVel(int i, float vxVal, float vyVal, float vzVal)
+	{
+		*(vx+i)=vxVal;
+		*(vy+i)=vyVal;
+		*(vz+i)=vzVal;
 	}
 
 	//Creates a random distribution of the initial points
 	void points::init()
 	{
 		//Iterates through all points.
-		for(int i=0; i<points::arr_size; i++)
+		for(int i=0; i<arr_size; i++)
 		{
-			points::setX(i, randomPos);
-			points::setY(i, randomPos);
-			points::setZ(i, randomPos);
+			setX(i, randomPos);
+			setY(i, randomPos);
+			setZ(i, randomPos);
 		}
 	}
 
