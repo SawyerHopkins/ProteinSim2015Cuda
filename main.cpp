@@ -27,7 +27,9 @@ int main(int argc, char **argv)
 
 	for (int i =0; i < pt->arr_size; i++)
 	{
-		difeq->nextPosition(i,pt,NULL);
+		float pos[3] = {pt->getX(i), pt->getY(i), pt->getZ(i)};
+		float vel[3] = {pt->getVX(i), pt->getVY(i), pt->getVZ(i)};
+		difeq->nextPosition(i,pos,vel,pt,NULL);
 	}
 
 	printf("hello world\n");
