@@ -11,7 +11,8 @@ namespace mathTools
 	//Creates a new set if 'size' number of particles all located at the origin.
 	points::points(int size) : 
 	x(new float[size]), y(new float[size]), z(new float[size]), 
-	vx(new float[size]), vy(new float[size]), vz(new float[size])
+	vx(new float[size]), vy(new float[size]), vz(new float[size]),
+	r(new float[size])
 	{
 		arr_size = size;
 	}
@@ -19,7 +20,8 @@ namespace mathTools
 	//Copy constructor.
 	points::points(const points &obj) : 
 	x(new float[obj.arr_size]), y(new float[obj.arr_size]), z(new float[obj.arr_size]), 
-	vx(new float[obj.arr_size]), vy(new float[obj.arr_size]), vz(new float[obj.arr_size])
+	vx(new float[obj.arr_size]), vy(new float[obj.arr_size]), vz(new float[obj.arr_size]),
+	r(new float[obj.arr_size])
 	{
 		//Copies the stored values rather than pointers.
 		arr_size=obj.arr_size;
@@ -40,6 +42,7 @@ namespace mathTools
 		delete[] vx;
 		delete[] vy;
 		delete[] vz;
+		delete[] r;
 	}
 
 	//Function to quickly set all three spacial cordinates of a particle.
@@ -70,6 +73,7 @@ namespace mathTools
 			setVY(i, randomPos);
 			setZ(i, randomPos);
 			setVZ(i, randomPos);
+			setR(i, 1.0);
 		}
 	}
 

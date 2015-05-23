@@ -32,7 +32,7 @@ namespace physics
 			~forces();
 
 			//Adds a force to the  stack
-			void addForce(IForce* f) { flist.push_back(f); }
+			void addForce(IForce* f);
 
 			//Calculates the total acceleration
 			void getAcceleration(float pos[], float vel[], float t, float (&acc)[3]);

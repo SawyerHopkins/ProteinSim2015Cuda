@@ -23,6 +23,15 @@ namespace physics
 		delete[] &timeDependent;
 	}
 
+	void forces::addForce(IForce* f)
+	{
+		flist.push_back(f);
+		if (f->isTimeDependent())
+		{
+			timeDependent=true;
+		}
+	}
+
 	//Calculates the total acceleration to get net force.
 	//Uses pointer to acc to update potentials in the I_Integrator.
 	void forces::getAcceleration(float pos[], float vel[], float t, float (&acc)[3])

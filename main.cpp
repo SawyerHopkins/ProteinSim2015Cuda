@@ -13,31 +13,50 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
+	/*-------------Variables-------------*/
+
+	//Initialize random number generator.
 	srand (time(NULL));
+	//Set the maximum time.
+	float endTime = 1000;
+	//Set the time step for the integrator.
+	float timeStep = 1;
+	//Set the number of particles.
+	float nParticles = 5;
 
-	integrators::verlet * difeq = new integrators::verlet(0.1);
+	/*-------------Setup-------------*/
 
-	mathTools::points * pt = new mathTools::points(5);
+	//Create the integrator.
+	integrators::verlet * difeq = new integrators::verlet(timeStep);
+
+	//Creates the particle system.
+	mathTools::points * pt = new mathTools::points(nParticles);
+	//Initialize the particle system with random position and velocity.
 	pt->init();
 
+	//Creates a force manager.
+	physics::forces * force = new physics::forces();
+	force->addForce(new physics::electroStaticForce()); //Adds the Coloumb potential.
+
+	/*-------------Debugging-------------*/
+	/*-Out the position of each particle-*/
 	for (int i = 0; i < pt->arr_size; i++)
 	{
-		cout << pt->getX(i) << "," << pt->getY(i) << "," << pt->getZ(i) << "\n";
+		pt->writePosition(i);
 	}
 
-	for (int i =0; i < pt->arr_size; i++)
+	/*-------------Iterator-------------*/
+	while(difeq->getSystemTime() < endTime)
 	{
-		float pos[3] = {pt->getX(i), pt->getY(i), pt->getZ(i)};
-		float vel[3] = {pt->getVX(i), pt->getVY(i), pt->getVZ(i)};
-		difeq->nextPosition(i,pos,vel,pt,NULL);
+		for (int i =0; i < pt->arr_size; i++)
+		{
+			float pos[3] = {pt->getX(i), pt->getY(i), pt->getZ(i)};
+			float vel[3] = {pt->getVX(i), pt->getVY(i), pt->getVZ(i)};
+			difeq->nextPosition(i,pos,vel,pt,force);
+			difeq->advanceTime();
+		}
 	}
 
-	printf("hello world\n");
-
+	//Debug code 0 -> No Error:
 	return 0;
-}
-
-float force(void)
-{
-	return 0.0;
 }

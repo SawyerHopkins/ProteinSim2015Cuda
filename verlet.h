@@ -20,8 +20,8 @@ namespace integrators
 
 		public:
 			//Generic functions for advancing position and velocity
-			virtual float nextPosition(float index, float pos[], float vel[], mathTools::points* pnt, physics::forces* f) =0;
-			virtual float nextVelocity(float index, float pos[], float vel[], mathTools::points* pnt, physics::forces* f) =0;
+			virtual int nextPosition(float index, float pos[], float vel[], mathTools::points* pnt, physics::forces* f) =0;
+			virtual int nextVelocity(float index, float pos[], float vel[], mathTools::points* pnt, physics::forces* f) =0;
 
 			//getter/setter for 'timeStep'
 			void setTimeStep(float newStep) { timeStep = newStep; }
@@ -30,6 +30,7 @@ namespace integrators
 			//getter for 'systemTime'
 			float getSystemTime() { return systemTime; }
 			void writeSystemTime() { std::cout << "Current time: " << systemTime << ".\n"; }
+			void advanceTime() { systemTime = systemTime + timeStep; }
 	};
 
 	//Verlet Velocity integrator.
@@ -42,8 +43,8 @@ namespace integrators
 			~verlet();
 
 			//Gets the next position and velocity terms.
-			float nextPosition(float index, float pos[], float vel[], mathTools::points* pnt, physics::forces* f);
-			float nextVelocity(float index, float pos[], float vel[], mathTools::points* pnt, physics::forces* f);
+			int nextPosition(float index, float pos[], float vel[], mathTools::points* pnt, physics::forces* f);
+			int nextVelocity(float index, float pos[], float vel[], mathTools::points* pnt, physics::forces* f);
 
 			//The velocity verlet Algorithms to obtain the next position and velocity terms.
 			float posAlgorithm(float pos, float vel, float acc, float t);
