@@ -22,7 +22,7 @@ int main(int argc, char **argv)
 	//Set the time step for the integrator.
 	float timeStep = 1;
 	//Set the number of particles.
-	float nParticles = 5;
+	float nParticles = 10;
 
 	/*-------------Setup-------------*/
 
@@ -30,9 +30,9 @@ int main(int argc, char **argv)
 	integrators::verlet * difeq = new integrators::verlet(timeStep);
 
 	//Creates the particle system.
-	mathTools::points * pt = new mathTools::points(nParticles);
+	mathTools::points * pt = new mathTools::points(nParticles, 5);
 	//Initialize the particle system with random position and velocity.
-	pt->init();
+	pt->init(0.01);
 
 	//Creates a force manager.
 	physics::forces * force = new physics::forces();
@@ -40,7 +40,7 @@ int main(int argc, char **argv)
 
 	/*-------------Debugging-------------*/
 	/*-Out the position of each particle-*/
-	for (int i = 0; i < pt->arr_size; i++)
+	for (int i = 0; i < pt->arrSize; i++)
 	{
 		pt->writePosition(i);
 	}
@@ -48,7 +48,7 @@ int main(int argc, char **argv)
 	/*-------------Iterator-------------*/
 	while(difeq->getSystemTime() < endTime)
 	{
-		for (int i =0; i < pt->arr_size; i++)
+		for (int i =0; i < pt->arrSize; i++)
 		{
 			float pos[3] = {pt->getX(i), pt->getY(i), pt->getZ(i)};
 			float vel[3] = {pt->getVX(i), pt->getVY(i), pt->getVZ(i)};

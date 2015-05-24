@@ -2,6 +2,7 @@
 #define POINT_H
 #include <vector>
 #include <iostream>
+#include <math.h>
 
 //Contains point and matrix manipulation.
 namespace mathTools
@@ -22,13 +23,16 @@ namespace mathTools
 			//Contains the radius of each particle
 			float * r;
 
+			//Contains the system information
+			int boxSize;
+
 		public:
 
 			//The number of particles/points
-			int arr_size;
+			int arrSize;
 
 			//Constructor/Destructor
-			points(int size);
+			points(int nParticles, int size);
 			points( const points &obj );
 			~points();
 
@@ -43,36 +47,26 @@ namespace mathTools
 			float getVY(int index) { return *(vy+index); }
 			float getVZ(int index) { return *(vz+index); }
 
-			//Debugging tools to write position and velocity of a particle.
-			void writePosition(int index) { std::cout << *(x+index) << "," << *(y+index) << "," << *(z+index) << "\n"; }
-			void writeVelocity(int index) { std::cout << *(vx+index) << "," << *(vy+index) << "," << *(vz+index) << "\n"; }
-
 			//Standard setters for position
-			void setX( int index, float val ) { *(x+index) = val; }
-			void setY( int index, float val ) { *(y+index) = val; }
-			void setZ( int index, float val ) { *(z+index) = val; }
-			void setR( int index, float val ) { *(r+index) = val; }
+			void setX( int index, float val ) { *(x+index) = fmod(val,boxSize); }
+			void setY( int index, float val ) { *(y+index) = fmod(val,boxSize); }
+			void setZ( int index, float val ) { *(z+index) = fmod(val,boxSize); }
+			void setR( int index, float val ) { *(r+index) = fmod(val,boxSize); }
 			void setAllPos( int index, float xVal, float yVal, float zVal);
 
-			//Setters take an arbitrary function of type float->float.
-			void setX( int index, float (*f)(float) ) { *(x+index) = (*f)( *(x+index) ); }
-			void setY( int index, float (*f)(float) ) { *(y+index) = (*f)( *(y+index) ); }
-			void setZ( int index, float (*f)(float) ) { *(z+index) = (*f)( *(z+index) ); }
-
-			//Setters for using I_integrator
+			//Setters for velocity
 			void setVX( int index, float val ) { *(vx+index) = val; }
 			void setVY( int index, float val ) { *(vy+index) = val; }
 			void setVZ( int index, float val ) { *(vz+index) = val; }
 			void setAllVel( int index, float vxVal, float vyVal, float vzVal);
 
-			//Standard setters for velocity
-			void setVX( int index, float (*f)(float) ) { *(vx+index) = (*f)( *(vx+index) ); }
-			void setVY( int index, float (*f)(float) ) { *(vy+index) = (*f)( *(vy+index) ); }
-			void setVZ( int index, float (*f)(float) ) { *(vz+index) = (*f)( *(vz+index) ); }
+			//Debugging tools to write position and velocity of a particle.
+			void writePosition(int index) { std::cout << *(x+index) << "," << *(y+index) << "," << *(z+index) << "\n"; }
+			void writeVelocity(int index) { std::cout << *(vx+index) << "," << *(vy+index) << "," << *(vz+index) << "\n"; }
 
 			//Creates an initial distribution of the particles.
 			void init();
-
+			void init(float concentration);
 	};
 
 }

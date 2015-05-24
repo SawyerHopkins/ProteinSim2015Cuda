@@ -13,7 +13,7 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=Sawyer Hopkins
-Date                   :=05/23/15
+Date                   :=05/24/15
 CodeLitePath           :="/home/sawyer/.codelite"
 LinkerName             :=/usr/bin/g++-4.9
 SharedObjectLinkerName :=/usr/bin/g++-4.9 -shared -fPIC
@@ -50,7 +50,7 @@ LibPath                := $(LibraryPathSwitch).
 AR       := /usr/bin/ar rcu
 CXX      := /usr/bin/g++-4.9
 CC       := /usr/bin/gcc-4.9
-CXXFLAGS :=  -g -O0 -Wall $(Preprocessors)
+CXXFLAGS :=  -g -O0 -Wall -std=c++11 $(Preprocessors)
 CFLAGS   :=  -g -O0 -Wall $(Preprocessors)
 ASFLAGS  := 
 AS       := /usr/bin/as
