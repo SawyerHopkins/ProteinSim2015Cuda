@@ -1,5 +1,5 @@
-#ifndef VERLET_H
-#define VERLET_H
+#ifndef INTEGRATOR_H
+#define INTEGRATOR_H
 #include <iostream>
 #include "force.h"
 #include "point.h"
@@ -20,8 +20,7 @@ namespace integrators
 
 		public:
 			//Generic functions for advancing position and velocity
-			virtual int nextPosition(float index, float pos[], float vel[], mathTools::points* pnt, physics::forces* f) =0;
-			virtual int nextVelocity(float index, float pos[], float vel[], mathTools::points* pnt, physics::forces* f) =0;
+			virtual int nextSystem(float index, mathTools::points* pnt, physics::forces* f)=0;
 
 			//getter/setter for 'timeStep'
 			void setTimeStep(float newStep) { timeStep = newStep; }
@@ -43,8 +42,9 @@ namespace integrators
 			~verlet();
 
 			//Gets the next position and velocity terms.
-			int nextPosition(float index, float pos[], float vel[], mathTools::points* pnt, physics::forces* f);
-			int nextVelocity(float index, float pos[], float vel[], mathTools::points* pnt, physics::forces* f);
+			int nextPosition(float index, mathTools::points* pnt, physics::forces* f);
+			int nextVelocity(float index, mathTools::points* pnt, physics::forces* f);
+			int nextSystem(float index, mathTools::points* pnt, physics::forces* f);
 
 			//The velocity verlet Algorithms to obtain the next position and velocity terms.
 			float posAlgorithm(float pos, float vel, float acc, float t);

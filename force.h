@@ -1,6 +1,8 @@
 #ifndef FORCE_H
 #define FORCE_H
 #include <vector>
+#include <cmath>
+#include "point.h"
 
 namespace physics
 {
@@ -10,7 +12,7 @@ namespace physics
 	{
 		public:
 			//virtual methods for forces of various parameters.
-			virtual float getAcceleration(float pos, float vel, float time)=0;
+			virtual void getAcceleration(float index, float time, mathTools::points* pts, float (&acc)[3])=0;
 			//Mark if the force is time dependent.
 			virtual bool isTimeDependent()=0;
 	};
@@ -35,7 +37,8 @@ namespace physics
 			void addForce(IForce* f);
 
 			//Calculates the total acceleration
-			void getAcceleration(float pos[], float vel[], float t, float (&acc)[3]);
+			void getAcceleration(float index, float time, mathTools::points* pts, float (&acc)[3]);
+			bool isTimeDependent() { return timeDependent; }
 	};
 
 	//Coloumb potential.
@@ -48,7 +51,21 @@ namespace physics
 			~electroStaticForce() {};
 
 			//Evaluates the force.
-			float getAcceleration(float pos, float vel, float time);
+			void getAcceleration(float index, float time, mathTools::points* pts, float (&acc)[3]);
+			bool isTimeDependent() { return false; }
+	};
+
+	//Coloumb potential.
+	class dragForce : public IForce
+	{
+		public:
+
+			//Constructor/Destructor
+			dragForce() {};
+			~dragForce() {};
+
+			//Evaluates the force.
+			void getAcceleration(float index, float time, mathTools::points* pts, float (&acc)[3]);
 			bool isTimeDependent() { return false; }
 	};
 

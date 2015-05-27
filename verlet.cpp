@@ -1,6 +1,4 @@
-#include "verlet.h"
-#include "force.h"
-#include "point.h"
+#include "integrator.h"
 
 namespace integrators
 {
@@ -18,27 +16,30 @@ namespace integrators
 		delete[] &systemTime;
 	}
 
-	//Uses velocity verlet to get next position
-	//Iterates across all spacial cordinates.
-	//Directly updates pts through the pointer.
-	//Use float return for debugging if needed.
-	int verlet::nextPosition(float index, float pos[], float vel[], mathTools::points* pts, physics::forces* f)
+	//Calculates the next position and velocity
+	int verlet::nextSystem(float index, mathTools::points* pts, physics::forces* f)
 	{
+		//A(t)
 		float acc[3] = {0.0,0.0,0.0};
-		f->getAcceleration(pos,vel,systemTime,acc);
-		//Error code 0.0 -> No Error.
-		return 0;
-	}
+		//A(t+dt)
+		float accNext[3] = {0.0,0.0,0.0};
 
-	//Uses velocity verlet to get next velocity
-	//Iterates across all velocity cordinates.
-	//Directly updates pts through the pointer.
-	//Use float return for debugging if needed.
-	int verlet::nextVelocity(float index, float pos[], float vel[], mathTools::points* pts, physics::forces* f)
-	{
-		float acc[3] = {0.0,0.0,0.0};
-		f->getAcceleration(pos,vel,systemTime,acc);
-		//Error code 0.0 -> No Error.
+		//Gets A(t)
+		f->getAcceleration(index,systemTime,pts,acc);
+
+		//Gets the new position.
+		pts->setX(index, posAlgorithm(pts->getX(index),pts->getVX(index),acc[0],systemTime));
+		pts->setY(index, posAlgorithm(pts->getY(index),pts->getVY(index),acc[1],systemTime));
+		pts->setZ(index, posAlgorithm(pts->getZ(index),pts->getVZ(index),acc[2],systemTime));
+
+		//Gets A(t+dt)
+		f->getAcceleration(index,systemTime,pts,accNext);
+
+		//Sets the new velocity.
+		pts->setVX(index, velAlgorithm(pts->getX(index),pts->getVX(index),acc[0],accNext[0],systemTime));
+		pts->setVY(index, velAlgorithm(pts->getY(index),pts->getVY(index),acc[1],accNext[1],systemTime));
+		pts->setVZ(index, velAlgorithm(pts->getZ(index),pts->getVZ(index),acc[2],accNext[2],systemTime));
+
 		return 0;
 	}
 

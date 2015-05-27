@@ -1,7 +1,12 @@
-Debug/verlet.cpp.o: verlet.cpp verlet.h force.h point.h
+Debug/verlet.cpp.o: verlet.cpp integrator.h force.h point.h GnuPlotter.h \
+ utilities.h
 
-verlet.h:
+integrator.h:
 
 force.h:
 
 point.h:
+
+GnuPlotter.h:
+
+utilities.h:

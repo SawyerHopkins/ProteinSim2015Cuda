@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CodeLite_Project Name="Clustered" InternalType="Console">
   <Plugins>
+    <Plugin Name="qmake">
+      <![CDATA[00010001N0005Debug000000000000]]>
+    </Plugin>
     <Plugin Name="CMakePlugin">
       <![CDATA[[{
   "name": "Debug",
@@ -13,9 +16,6 @@
   "parentProject": ""
  }]]]>
     </Plugin>
-    <Plugin Name="qmake">
-      <![CDATA[00010001N0005Debug000000000000]]>
-    </Plugin>
   </Plugins>
   <Description/>
   <Dependencies/>
@@ -23,10 +23,16 @@
     <File Name="main.cpp"/>
     <File Name="point.h"/>
     <File Name="point.cpp"/>
-    <File Name="verlet.h"/>
     <File Name="verlet.cpp"/>
     <File Name="force.h"/>
     <File Name="force.cpp"/>
+    <File Name="GnuPlotter.h"/>
+    <File Name="GnuPlotter.cpp"/>
+    <File Name="coulomb.cpp"/>
+    <File Name="drag.cpp"/>
+    <File Name="integrator.h"/>
+    <File Name="utilities.h"/>
+    <File Name="utilities.cpp"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>

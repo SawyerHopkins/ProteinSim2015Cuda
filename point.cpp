@@ -1,8 +1,5 @@
 #include "point.h"
-#include <stdlib.h>
-#include <time.h>
-#include <math.h>
-#include <random>
+
 namespace mathTools
 {
 
@@ -14,6 +11,7 @@ namespace mathTools
 	{
 		arrSize = nParticles;
 		boxSize = size;
+		seed=0;
 	}
 
 	//Copy constructor.
@@ -31,6 +29,7 @@ namespace mathTools
 		*vy = *obj.vy;
 		*vz = *obj.vz;
 		boxSize = obj.boxSize;
+		seed=obj.seed;
 	}
 
 	//Releases the memory blocks
@@ -44,14 +43,15 @@ namespace mathTools
 		delete[] vz;
 		delete[] r;
 		delete[] &boxSize;
+		delete[] &seed;
 	}
 
 	//Function to quickly set all three spacial cordinates of a particle.
 	void points::setAllPos(int i, float xVal, float yVal, float zVal)
 	{
-		*(x+i)=xVal;
-		*(y+i)=yVal;
-		*(z+i)=zVal;
+		setX(i,xVal);
+		setY(i,yVal);
+		setZ(i,zVal);
 	}
 
 	//Function to quickly set all three velocity cordinates of a particle.
@@ -65,17 +65,23 @@ namespace mathTools
 	//Creates a random distribution of the initial points
 	void points::init()
 	{
-		std::default_random_engine generator;
+		if (seed==0)
+		{
+			std::random_device rd;
+			seed=rd();
+		}
+		std::mt19937 gen(seed);
 		std::uniform_real_distribution<double> distribution(0.0,1.0);
+		
 		//Iterates through all points.
 		for(int i = 0; i <arrSize; i++)
 		{
-			setX(i, distribution(generator) * boxSize);
-			setVX(i, distribution(generator) * boxSize);
-			setY(i, distribution(generator) * boxSize);
-			setVY(i, distribution(generator) * boxSize);
-			setZ(i, distribution(generator) * boxSize);
-			setVZ(i, distribution(generator) * boxSize);
+			setX(i, distribution(gen) * boxSize);
+			setVX(i, 0.0);
+			setY(i, distribution(gen) * boxSize);
+			setVY(i, 0.0);
+			setZ(i, distribution(gen) * boxSize);
+			setVZ(i, 0.0);
 			setR(i, 1.0);
 		}
 	}
@@ -84,6 +90,23 @@ namespace mathTools
 	{
 		boxSize = (int) cbrt(arrSize / concentration);
 		init();
+	}
+
+	void points::init(float concentration, int seedling)
+	{
+		seed=seedling;
+		boxSize = (int) cbrt(arrSize / concentration);
+		init();
+	}
+
+	void points::plot()
+	{
+		Plotting::GnuPlotter::plot(arrSize,x,y,z);
+	}
+
+	void points::writeSystem(std::string name)
+	{
+		Plotting::GnuPlotter::writeFile(arrSize,x,y,z,name);
 	}
 
 }

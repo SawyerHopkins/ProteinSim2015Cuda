@@ -2,7 +2,10 @@
 #define POINT_H
 #include <vector>
 #include <iostream>
-#include <math.h>
+#include <random>
+#include <string.h>
+#include "GnuPlotter.h"
+#include "utilities.h"
 
 //Contains point and matrix manipulation.
 namespace mathTools
@@ -25,6 +28,7 @@ namespace mathTools
 
 			//Contains the system information
 			int boxSize;
+			int seed;
 
 		public:
 
@@ -48,10 +52,10 @@ namespace mathTools
 			float getVZ(int index) { return *(vz+index); }
 
 			//Standard setters for position
-			void setX( int index, float val ) { *(x+index) = fmod(val,boxSize); }
-			void setY( int index, float val ) { *(y+index) = fmod(val,boxSize); }
-			void setZ( int index, float val ) { *(z+index) = fmod(val,boxSize); }
-			void setR( int index, float val ) { *(r+index) = fmod(val,boxSize); }
+			void setX( int index, float val ) { *(x+index) = utilities::safeMod(val,boxSize); }
+			void setY( int index, float val ) { *(y+index) = utilities::safeMod(val,boxSize); }
+			void setZ( int index, float val ) { *(z+index) = utilities::safeMod(val,boxSize); }
+			void setR( int index, float val ) { *(r+index) = utilities::safeMod(val,boxSize); }
 			void setAllPos( int index, float xVal, float yVal, float zVal);
 
 			//Setters for velocity
@@ -67,6 +71,9 @@ namespace mathTools
 			//Creates an initial distribution of the particles.
 			void init();
 			void init(float concentration);
+			void init(float concentration, int seedling);
+			void plot();
+			void writeSystem(std::string name);
 	};
 
 }

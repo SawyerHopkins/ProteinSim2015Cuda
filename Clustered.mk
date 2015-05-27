@@ -13,7 +13,7 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=Sawyer Hopkins
-Date                   :=05/24/15
+Date                   :=05/27/15
 CodeLitePath           :="/home/sawyer/.codelite"
 LinkerName             :=/usr/bin/g++-4.9
 SharedObjectLinkerName :=/usr/bin/g++-4.9 -shared -fPIC
@@ -60,7 +60,7 @@ AS       := /usr/bin/as
 ## User defined environment variables
 ##
 CodeLiteDir:=/usr/share/codelite
-Objects0=$(IntermediateDirectory)/main.cpp$(ObjectSuffix) $(IntermediateDirectory)/point.cpp$(ObjectSuffix) $(IntermediateDirectory)/verlet.cpp$(ObjectSuffix) $(IntermediateDirectory)/force.cpp$(ObjectSuffix) 
+Objects0=$(IntermediateDirectory)/main.cpp$(ObjectSuffix) $(IntermediateDirectory)/point.cpp$(ObjectSuffix) $(IntermediateDirectory)/verlet.cpp$(ObjectSuffix) $(IntermediateDirectory)/force.cpp$(ObjectSuffix) $(IntermediateDirectory)/GnuPlotter.cpp$(ObjectSuffix) $(IntermediateDirectory)/coulomb.cpp$(ObjectSuffix) $(IntermediateDirectory)/drag.cpp$(ObjectSuffix) $(IntermediateDirectory)/utilities.cpp$(ObjectSuffix) 
 
 
 
@@ -118,6 +118,38 @@ $(IntermediateDirectory)/force.cpp$(DependSuffix): force.cpp
 
 $(IntermediateDirectory)/force.cpp$(PreprocessSuffix): force.cpp
 	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/force.cpp$(PreprocessSuffix) "force.cpp"
+
+$(IntermediateDirectory)/GnuPlotter.cpp$(ObjectSuffix): GnuPlotter.cpp $(IntermediateDirectory)/GnuPlotter.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/sawyer/Programming/PhDResearch/Clustered/GnuPlotter.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/GnuPlotter.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/GnuPlotter.cpp$(DependSuffix): GnuPlotter.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/GnuPlotter.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/GnuPlotter.cpp$(DependSuffix) -MM "GnuPlotter.cpp"
+
+$(IntermediateDirectory)/GnuPlotter.cpp$(PreprocessSuffix): GnuPlotter.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/GnuPlotter.cpp$(PreprocessSuffix) "GnuPlotter.cpp"
+
+$(IntermediateDirectory)/coulomb.cpp$(ObjectSuffix): coulomb.cpp $(IntermediateDirectory)/coulomb.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/sawyer/Programming/PhDResearch/Clustered/coulomb.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/coulomb.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/coulomb.cpp$(DependSuffix): coulomb.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/coulomb.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/coulomb.cpp$(DependSuffix) -MM "coulomb.cpp"
+
+$(IntermediateDirectory)/coulomb.cpp$(PreprocessSuffix): coulomb.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/coulomb.cpp$(PreprocessSuffix) "coulomb.cpp"
+
+$(IntermediateDirectory)/drag.cpp$(ObjectSuffix): drag.cpp $(IntermediateDirectory)/drag.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/sawyer/Programming/PhDResearch/Clustered/drag.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/drag.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/drag.cpp$(DependSuffix): drag.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/drag.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/drag.cpp$(DependSuffix) -MM "drag.cpp"
+
+$(IntermediateDirectory)/drag.cpp$(PreprocessSuffix): drag.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/drag.cpp$(PreprocessSuffix) "drag.cpp"
+
+$(IntermediateDirectory)/utilities.cpp$(ObjectSuffix): utilities.cpp $(IntermediateDirectory)/utilities.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/sawyer/Programming/PhDResearch/Clustered/utilities.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/utilities.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/utilities.cpp$(DependSuffix): utilities.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/utilities.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/utilities.cpp$(DependSuffix) -MM "utilities.cpp"
+
+$(IntermediateDirectory)/utilities.cpp$(PreprocessSuffix): utilities.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/utilities.cpp$(PreprocessSuffix) "utilities.cpp"
 
 
 -include $(IntermediateDirectory)/*$(DependSuffix)

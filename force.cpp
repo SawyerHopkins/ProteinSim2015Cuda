@@ -34,20 +34,17 @@ namespace physics
 
 	//Calculates the total acceleration to get net force.
 	//Uses pointer to acc to update potentials in the I_Integrator.
-	void forces::getAcceleration(float pos[], float vel[], float t, float (&acc)[3])
+	void forces::getAcceleration(float index, float time, mathTools::points* pts, float (&acc)[3])
 		{
 			//Iterate across all elements in the system.
 			for (std::vector<IForce*>::iterator i = flist.begin(); i != flist.end(); ++i)
 			{
-				acc[0]=(*i)->getAcceleration(pos[0],vel[0],t);
-				acc[1]=(*i)->getAcceleration(pos[1],vel[1],t);
-				acc[2]=(*i)->getAcceleration(pos[2],vel[2],t);
+				float subAcc[3] = {0.0,0.0,0.0};
+				(*i)->getAcceleration(index,time,pts,subAcc);
+				*(acc+0)+=*(subAcc+0);
+				*(acc+1)+=*(subAcc+1);
+				*(acc+2)+=*(subAcc+2);
 			}
 		}
 
-	//Get the acceleration from the Coloumb potential.
-	float electroStaticForce::getAcceleration(float pos, float vel, float time)
-	{
-		return 0.0;
-	}
 }
