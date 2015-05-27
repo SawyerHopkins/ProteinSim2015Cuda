@@ -13,7 +13,11 @@ namespace mathTools
 	//A set of points using parallel arrays.
 	class points
 	{
-		private:
+	private:
+
+/*-----------------------------------------*/
+/*------------SYSTEM VARIABLES-------------*/
+/*-----------------------------------------*/
 
 			//Contains the spacial information for x,y,z cordinates.
 			float * x;
@@ -23,14 +27,20 @@ namespace mathTools
 			float * vx;
 			float * vy;
 			float * vz;
-			//Contains the radius of each particle
+			//Contains the radius of each particle.
 			float * r;
 
-			//Contains the system information
+			//Contains the system information.
 			int boxSize;
+
+			//Seed for random system initialization.
 			int seed;
 
 		public:
+
+/*-----------------------------------------*/
+/*-----------SYSTEM CONSTRUCTION-----------*/
+/*-----------------------------------------*/
 
 			//The number of particles/points
 			int arrSize;
@@ -39,6 +49,10 @@ namespace mathTools
 			points(int nParticles, int size);
 			points( const points &obj );
 			~points();
+
+/*-----------------------------------------*/
+/*--------------SYSTEM GETTERS-------------*/
+/*-----------------------------------------*/
 
 			//Getters for each spacial cordinate.
 			float getX(int index) { return *(x+index); }
@@ -50,6 +64,10 @@ namespace mathTools
 			float getVX(int index) { return *(vx+index); }
 			float getVY(int index) { return *(vy+index); }
 			float getVZ(int index) { return *(vz+index); }
+
+/*-----------------------------------------*/
+/*--------------SYSTEM SETTERS-------------*/
+/*-----------------------------------------*/
 
 			//Standard setters for position
 			void setX( int index, float val ) { *(x+index) = utilities::safeMod(val,boxSize); }
@@ -64,16 +82,33 @@ namespace mathTools
 			void setVZ( int index, float val ) { *(vz+index) = val; }
 			void setAllVel( int index, float vxVal, float vyVal, float vzVal);
 
+/*-----------------------------------------*/
+/*---------------SYSTEM DEBUG--------------*/
+/*-----------------------------------------*/
+
 			//Debugging tools to write position and velocity of a particle.
 			void writePosition(int index) { std::cout << *(x+index) << "," << *(y+index) << "," << *(z+index) << "\n"; }
 			void writeVelocity(int index) { std::cout << *(vx+index) << "," << *(vy+index) << "," << *(vz+index) << "\n"; }
+
+/*-----------------------------------------*/
+/*-----------SYSTEM INITIALIZATION---------*/
+/*-----------------------------------------*/
 
 			//Creates an initial distribution of the particles.
 			void init();
 			void init(float concentration);
 			void init(float concentration, int seedling);
+
+/*-----------------------------------------*/
+/*--------------SYSTEM OUTPUT--------------*/
+/*-----------------------------------------*/
+
+			//Sends the system to GNUPlot.
 			void plot();
+
+			//Writes the system as CSV.
 			void writeSystem(std::string name);
+
 	};
 
 }

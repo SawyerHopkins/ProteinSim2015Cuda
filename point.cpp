@@ -3,6 +3,10 @@
 namespace mathTools
 {
 
+/*-----------------------------------------*/
+/*-----------SYSTEM CONSTRUCTION-----------*/
+/*-----------------------------------------*/
+
 	//Creates a new set if 'size' number of particles all located at the origin.
 	points::points(int nParticles, int size) : 
 	x(new float[nParticles]), y(new float[nParticles]), z(new float[nParticles]), 
@@ -46,6 +50,10 @@ namespace mathTools
 		delete[] &seed;
 	}
 
+/*-----------------------------------------*/
+/*--------------SYSTEM SETTERS-------------*/
+/*-----------------------------------------*/
+
 	//Function to quickly set all three spacial cordinates of a particle.
 	void points::setAllPos(int i, float xVal, float yVal, float zVal)
 	{
@@ -61,6 +69,10 @@ namespace mathTools
 		*(vy+i)=vyVal;
 		*(vz+i)=vzVal;
 	}
+
+/*-----------------------------------------*/
+/*-----------SYSTEM INITIALIZATION---------*/
+/*-----------------------------------------*/
 
 	//Creates a random distribution of the initial points
 	void points::init()
@@ -86,12 +98,15 @@ namespace mathTools
 		}
 	}
 
+	//Creates a box corresponding to # of Particles / boxSize^3 = concentration. 
 	void points::init(float concentration)
 	{
 		boxSize = (int) cbrt(arrSize / concentration);
 		init();
 	}
 
+	//Creates a box corresponding to # of Particles / boxSize^3 = concentration. 
+	//Seeds the random number generator with value seedling.
 	void points::init(float concentration, int seedling)
 	{
 		seed=seedling;
@@ -99,11 +114,17 @@ namespace mathTools
 		init();
 	}
 
+/*-----------------------------------------*/
+/*--------------SYSTEM OUTPUT--------------*/
+/*-----------------------------------------*/
+
+	//Sends the system to GNUPlot.
 	void points::plot()
 	{
 		Plotting::GnuPlotter::plot(arrSize,x,y,z);
 	}
 
+	//Writes the system as CSV.
 	void points::writeSystem(std::string name)
 	{
 		Plotting::GnuPlotter::writeFile(arrSize,x,y,z,name);

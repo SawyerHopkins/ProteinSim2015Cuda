@@ -4,13 +4,16 @@
 namespace mathTools
 {
 
+	//Contains some useful math wrappers.
 	class utilities
 	{
 		public:
-			utilities();
-			~utilities();
 
+			//fmod can't do negative numbers so use this.
 			static float safeMod(float val, float base);
+
+			//gets the distance between to points while
+			//considering periodic boundary conditions.
 			static float dist(float x1, float x2);
 
 	};

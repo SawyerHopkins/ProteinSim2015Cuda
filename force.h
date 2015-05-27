@@ -7,6 +7,10 @@
 namespace physics
 {
 
+/*-----------------------------------------*/
+/*-------------FORCE INTERFACE-------------*/
+/*-----------------------------------------*/
+
 	//A generic force container.
 	class IForce
 	{
@@ -16,6 +20,10 @@ namespace physics
 			//Mark if the force is time dependent.
 			virtual bool isTimeDependent()=0;
 	};
+
+/*-----------------------------------------*/
+/*----------INTEGRATOR MANAGEMENT----------*/
+/*-----------------------------------------*/
 
 	//Management system for a collection of forces.
 	class forces
@@ -41,6 +49,12 @@ namespace physics
 			bool isTimeDependent() { return timeDependent; }
 	};
 
+/*-----------------------------------------*/
+/*-----------ELECTROSTATIC FORCE-----------*/
+/*-----------------------------------------*/
+/*---This is really a strong gravity atm---*/
+/*-----------------------------------------*/
+
 	//Coloumb potential.
 	class electroStaticForce : public IForce
 	{
@@ -55,7 +69,11 @@ namespace physics
 			bool isTimeDependent() { return false; }
 	};
 
-	//Coloumb potential.
+/*-----------------------------------------*/
+/*------------LINEAR DRAG FORCE------------*/
+/*-----------------------------------------*/
+
+	//Drag force.
 	class dragForce : public IForce
 	{
 		public:

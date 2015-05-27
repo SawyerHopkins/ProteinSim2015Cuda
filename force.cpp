@@ -3,6 +3,10 @@
 namespace physics
 {
 
+/*-----------------------------------------*/
+/*-------FORCE MANAGER CONSTRUCTION--------*/
+/*-----------------------------------------*/
+
 	//Constructor for the force manager.
 	forces::forces()
 	{
@@ -23,6 +27,10 @@ namespace physics
 		delete[] &timeDependent;
 	}
 
+/*-----------------------------------------*/
+/*--------------FORCE MANAGER--------------*/
+/*-----------------------------------------*/
+
 	void forces::addForce(IForce* f)
 	{
 		flist.push_back(f);
@@ -41,6 +49,7 @@ namespace physics
 			{
 				float subAcc[3] = {0.0,0.0,0.0};
 				(*i)->getAcceleration(index,time,pts,subAcc);
+				//Update the net acceleration.
 				*(acc+0)+=*(subAcc+0);
 				*(acc+1)+=*(subAcc+1);
 				*(acc+2)+=*(subAcc+2);
