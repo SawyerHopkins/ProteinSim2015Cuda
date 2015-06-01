@@ -28,11 +28,12 @@
     <File Name="force.cpp"/>
     <File Name="GnuPlotter.h"/>
     <File Name="GnuPlotter.cpp"/>
-    <File Name="coulomb.cpp"/>
     <File Name="drag.cpp"/>
     <File Name="integrator.h"/>
     <File Name="utilities.h"/>
     <File Name="utilities.cpp"/>
+    <File Name="aggForce.cpp"/>
+    <File Name="brownianForce.cpp"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>

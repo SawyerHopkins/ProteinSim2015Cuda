@@ -3,12 +3,12 @@
 namespace physics
 {
 	//Get the acceleration from the Coloumb potential.
-	void dragForce::getAcceleration(float index, float time, mathTools::points* pts, float (&acc)[3])
+	void dragForce::getAcceleration(int index, float time, mathTools::points* pts, float (&acc)[3])
 	{
 		//Creates drag in each direction with coefficent 1/1.5
-		float dragX = -(pts->getVX(index))/1.5;
-		float dragY = -(pts->getVY(index))/1.5;
-		float dragZ = -(pts->getVZ(index))/1.5;
+		float dragX = -gamma*(pts->getVX(index));
+		float dragY = -gamma*(pts->getVY(index));
+		float dragZ = -gamma*(pts->getVZ(index));
 
 		//Updates the particle acceleration.
 

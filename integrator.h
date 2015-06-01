@@ -61,6 +61,7 @@ namespace integrators
 			//The velocity verlet Algorithms to obtain the next position and velocity terms.
 			float posAlgorithm(float pos, float vel, float acc, float t);
 			float velAlgorithm(float pos, float vel, float acc, float accnext, float t);
+			void cleanUp(float index, mathTools::points* pnt, physics::forces* f);
 	};
 
 }

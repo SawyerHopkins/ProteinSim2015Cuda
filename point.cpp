@@ -8,21 +8,19 @@ namespace mathTools
 /*-----------------------------------------*/
 
 	//Creates a new set if 'size' number of particles all located at the origin.
-	points::points(int nParticles, int size) : 
+	points::points(int nParticles, float radius) : 
 	x(new float[nParticles]), y(new float[nParticles]), z(new float[nParticles]), 
-	vx(new float[nParticles]), vy(new float[nParticles]), vz(new float[nParticles]),
-	r(new float[nParticles])
+	vx(new float[nParticles]), vy(new float[nParticles]), vz(new float[nParticles])
 	{
 		arrSize = nParticles;
-		boxSize = size;
+		r = radius;
 		seed=0;
 	}
 
 	//Copy constructor.
 	points::points(const points &obj) : 
 	x(new float[obj.arrSize]), y(new float[obj.arrSize]), z(new float[obj.arrSize]), 
-	vx(new float[obj.arrSize]), vy(new float[obj.arrSize]), vz(new float[obj.arrSize]),
-	r(new float[obj.arrSize])
+	vx(new float[obj.arrSize]), vy(new float[obj.arrSize]), vz(new float[obj.arrSize])
 	{
 		//Copies the stored values rather than pointers.
 		arrSize=obj.arrSize;
@@ -32,6 +30,7 @@ namespace mathTools
 		*vx = *obj.vx;
 		*vy = *obj.vy;
 		*vz = *obj.vz;
+		r = obj.r;
 		boxSize = obj.boxSize;
 		seed=obj.seed;
 	}
@@ -45,7 +44,7 @@ namespace mathTools
 		delete[] vx;
 		delete[] vy;
 		delete[] vz;
-		delete[] r;
+		delete[] &r;
 		delete[] &boxSize;
 		delete[] &seed;
 	}
@@ -94,14 +93,14 @@ namespace mathTools
 			setVY(i, 0.0);
 			setZ(i, distribution(gen) * boxSize);
 			setVZ(i, 0.0);
-			setR(i, 1.0);
 		}
 	}
 
 	//Creates a box corresponding to # of Particles / boxSize^3 = concentration. 
 	void points::init(float concentration)
 	{
-		boxSize = (int) cbrt(arrSize / concentration);
+		float vP = arrSize*(4.0/3.0)*atan(1)*4*r*r*r;
+		boxSize = (int) cbrt(vP / concentration);
 		init();
 	}
 

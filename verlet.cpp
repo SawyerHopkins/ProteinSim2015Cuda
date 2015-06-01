@@ -28,9 +28,13 @@ namespace integrators
 		f->getAcceleration(index,systemTime,pts,acc);
 
 		//Gets the new position.
-		pts->setX(index, posAlgorithm(pts->getX(index),pts->getVX(index),acc[0],systemTime));
-		pts->setY(index, posAlgorithm(pts->getY(index),pts->getVY(index),acc[1],systemTime));
-		pts->setZ(index, posAlgorithm(pts->getZ(index),pts->getVZ(index),acc[2],systemTime));
+		float xNew = posAlgorithm(pts->getX(index),pts->getVX(index),acc[0],systemTime);
+		float yNew = posAlgorithm(pts->getY(index),pts->getVY(index),acc[1],systemTime);
+		float zNew = posAlgorithm(pts->getZ(index),pts->getVZ(index),acc[2],systemTime);
+
+		pts->setX(index, xNew);
+		pts->setY(index, yNew);
+		pts->setZ(index, zNew);
 
 		//Gets A(t+dt)
 		f->getAcceleration(index,systemTime,pts,accNext);
@@ -41,6 +45,11 @@ namespace integrators
 		pts->setVZ(index, velAlgorithm(pts->getZ(index),pts->getVZ(index),acc[2],accNext[2],systemTime));
 
 		return 0;
+	}
+
+	//Resolves overlap and positioning.
+	void verlet::cleanUp(float index, mathTools::points* pnt, physics::forces* f)
+	{
 	}
 
 	//The velocity verlet Algorithms to obtain the next position term.

@@ -13,7 +13,7 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=Sawyer Hopkins
-Date                   :=05/27/15
+Date                   :=06/01/15
 CodeLitePath           :="/home/sawyer/.codelite"
 LinkerName             :=/usr/bin/g++-4.9
 SharedObjectLinkerName :=/usr/bin/g++-4.9 -shared -fPIC
@@ -60,7 +60,7 @@ AS       := /usr/bin/as
 ## User defined environment variables
 ##
 CodeLiteDir:=/usr/share/codelite
-Objects0=$(IntermediateDirectory)/main.cpp$(ObjectSuffix) $(IntermediateDirectory)/point.cpp$(ObjectSuffix) $(IntermediateDirectory)/verlet.cpp$(ObjectSuffix) $(IntermediateDirectory)/force.cpp$(ObjectSuffix) $(IntermediateDirectory)/GnuPlotter.cpp$(ObjectSuffix) $(IntermediateDirectory)/coulomb.cpp$(ObjectSuffix) $(IntermediateDirectory)/drag.cpp$(ObjectSuffix) $(IntermediateDirectory)/utilities.cpp$(ObjectSuffix) 
+Objects0=$(IntermediateDirectory)/main.cpp$(ObjectSuffix) $(IntermediateDirectory)/point.cpp$(ObjectSuffix) $(IntermediateDirectory)/verlet.cpp$(ObjectSuffix) $(IntermediateDirectory)/force.cpp$(ObjectSuffix) $(IntermediateDirectory)/GnuPlotter.cpp$(ObjectSuffix) $(IntermediateDirectory)/drag.cpp$(ObjectSuffix) $(IntermediateDirectory)/utilities.cpp$(ObjectSuffix) $(IntermediateDirectory)/aggForce.cpp$(ObjectSuffix) $(IntermediateDirectory)/brownianForce.cpp$(ObjectSuffix) 
 
 
 
@@ -127,14 +127,6 @@ $(IntermediateDirectory)/GnuPlotter.cpp$(DependSuffix): GnuPlotter.cpp
 $(IntermediateDirectory)/GnuPlotter.cpp$(PreprocessSuffix): GnuPlotter.cpp
 	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/GnuPlotter.cpp$(PreprocessSuffix) "GnuPlotter.cpp"
 
-$(IntermediateDirectory)/coulomb.cpp$(ObjectSuffix): coulomb.cpp $(IntermediateDirectory)/coulomb.cpp$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/sawyer/Programming/PhDResearch/Clustered/coulomb.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/coulomb.cpp$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/coulomb.cpp$(DependSuffix): coulomb.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/coulomb.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/coulomb.cpp$(DependSuffix) -MM "coulomb.cpp"
-
-$(IntermediateDirectory)/coulomb.cpp$(PreprocessSuffix): coulomb.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/coulomb.cpp$(PreprocessSuffix) "coulomb.cpp"
-
 $(IntermediateDirectory)/drag.cpp$(ObjectSuffix): drag.cpp $(IntermediateDirectory)/drag.cpp$(DependSuffix)
 	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/sawyer/Programming/PhDResearch/Clustered/drag.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/drag.cpp$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/drag.cpp$(DependSuffix): drag.cpp
@@ -150,6 +142,22 @@ $(IntermediateDirectory)/utilities.cpp$(DependSuffix): utilities.cpp
 
 $(IntermediateDirectory)/utilities.cpp$(PreprocessSuffix): utilities.cpp
 	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/utilities.cpp$(PreprocessSuffix) "utilities.cpp"
+
+$(IntermediateDirectory)/aggForce.cpp$(ObjectSuffix): aggForce.cpp $(IntermediateDirectory)/aggForce.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/sawyer/Programming/PhDResearch/Clustered/aggForce.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/aggForce.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/aggForce.cpp$(DependSuffix): aggForce.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/aggForce.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/aggForce.cpp$(DependSuffix) -MM "aggForce.cpp"
+
+$(IntermediateDirectory)/aggForce.cpp$(PreprocessSuffix): aggForce.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/aggForce.cpp$(PreprocessSuffix) "aggForce.cpp"
+
+$(IntermediateDirectory)/brownianForce.cpp$(ObjectSuffix): brownianForce.cpp $(IntermediateDirectory)/brownianForce.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/sawyer/Programming/PhDResearch/Clustered/brownianForce.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/brownianForce.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/brownianForce.cpp$(DependSuffix): brownianForce.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/brownianForce.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/brownianForce.cpp$(DependSuffix) -MM "brownianForce.cpp"
+
+$(IntermediateDirectory)/brownianForce.cpp$(PreprocessSuffix): brownianForce.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/brownianForce.cpp$(PreprocessSuffix) "brownianForce.cpp"
 
 
 -include $(IntermediateDirectory)/*$(DependSuffix)

@@ -1,6 +1,10 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
 
+#include <iostream>
+#include <iomanip>
+#include <math.h>
+
 namespace mathTools
 {
 
@@ -14,7 +18,12 @@ namespace mathTools
 
 			//gets the distance between to points while
 			//considering periodic boundary conditions.
-			static float dist(float x1, float x2);
+			static float pbcDist(float v1, float v2, float size);
+
+			//Shows the completed progress in the console.
+			static void loadBar(int x, int n, int w = 50);
+
+			static void unitVector(float dX, float dY, float dZ, float r, float (&acc)[3]);
 
 	};
 

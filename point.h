@@ -28,13 +28,16 @@ namespace mathTools
 			float * vy;
 			float * vz;
 			//Contains the radius of each particle.
-			float * r;
+			float r;
 
 			//Contains the system information.
 			int boxSize;
 
 			//Seed for random system initialization.
 			int seed;
+
+			//Base initialization
+			void init();
 
 		public:
 
@@ -46,7 +49,7 @@ namespace mathTools
 			int arrSize;
 
 			//Constructor/Destructor
-			points(int nParticles, int size);
+			points(int nParticles, float radius);
 			points( const points &obj );
 			~points();
 
@@ -58,7 +61,8 @@ namespace mathTools
 			float getX(int index) { return *(x+index); }
 			float getY(int index) { return *(y+index); }
 			float getZ(int index) { return *(z+index); }
-			float getR(int index) { return *(r+index); }
+			float getR() { return r; }
+			float getBoxSize() { return boxSize; }
 
 			//Getters for each velocity cordinate.
 			float getVX(int index) { return *(vx+index); }
@@ -73,7 +77,7 @@ namespace mathTools
 			void setX( int index, float val ) { *(x+index) = utilities::safeMod(val,boxSize); }
 			void setY( int index, float val ) { *(y+index) = utilities::safeMod(val,boxSize); }
 			void setZ( int index, float val ) { *(z+index) = utilities::safeMod(val,boxSize); }
-			void setR( int index, float val ) { *(r+index) = utilities::safeMod(val,boxSize); }
+			void setR( float val ) { r = val; }
 			void setAllPos( int index, float xVal, float yVal, float zVal);
 
 			//Setters for velocity
@@ -95,7 +99,6 @@ namespace mathTools
 /*-----------------------------------------*/
 
 			//Creates an initial distribution of the particles.
-			void init();
 			void init(float concentration);
 			void init(float concentration, int seedling);
 

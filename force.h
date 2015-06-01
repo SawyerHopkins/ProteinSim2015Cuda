@@ -2,7 +2,9 @@
 #define FORCE_H
 #include <vector>
 #include <cmath>
+#include <random>
 #include "point.h"
+#include "utilities.h"
 
 namespace physics
 {
@@ -16,7 +18,7 @@ namespace physics
 	{
 		public:
 			//virtual methods for forces of various parameters.
-			virtual void getAcceleration(float index, float time, mathTools::points* pts, float (&acc)[3])=0;
+			virtual void getAcceleration(int index, float time, mathTools::points* pts, float (&acc)[3])=0;
 			//Mark if the force is time dependent.
 			virtual bool isTimeDependent()=0;
 	};
@@ -50,40 +52,96 @@ namespace physics
 	};
 
 /*-----------------------------------------*/
-/*-----------ELECTROSTATIC FORCE-----------*/
-/*-----------------------------------------*/
-/*---This is really a strong gravity atm---*/
-/*-----------------------------------------*/
-
-	//Coloumb potential.
-	class electroStaticForce : public IForce
-	{
-		public:
-
-			//Constructor/Destructor
-			electroStaticForce() {};
-			~electroStaticForce() {};
-
-			//Evaluates the force.
-			void getAcceleration(float index, float time, mathTools::points* pts, float (&acc)[3]);
-			bool isTimeDependent() { return false; }
-	};
-
-/*-----------------------------------------*/
 /*------------LINEAR DRAG FORCE------------*/
 /*-----------------------------------------*/
 
 	//Drag force.
 	class dragForce : public IForce
 	{
+
+		private:
+
+			float gamma;
+
 		public:
 
 			//Constructor/Destructor
-			dragForce() {};
-			~dragForce() {};
+			dragForce(float coeff) { gamma = coeff; }
+			~dragForce() { delete[] &gamma; };
 
 			//Evaluates the force.
-			void getAcceleration(float index, float time, mathTools::points* pts, float (&acc)[3]);
+			void getAcceleration(int index, float time, mathTools::points* pts, float (&acc)[3]);
+			bool isTimeDependent() { return false; }
+	};
+
+/*-----------------------------------------*/
+/*-------------AGGREGATE FORCE-------------*/
+/*-----------------------------------------*/
+
+	//Drag force.
+	class aggForce : public IForce
+	{
+
+		private:
+
+			float gamma;
+			float cutOff;
+			float coEff1;
+			float coEff2;
+
+		public:
+
+			//Constructor/Destructor
+			aggForce(float coeff, float cut);
+			~aggForce() { delete[] &gamma; };
+
+			//Evaluates the force.
+			void getAcceleration(int index, float time, mathTools::points* pts, float (&acc)[3]);
+			bool isTimeDependent() { return false; }
+	};
+
+/*-----------------------------------------*/
+/*-------------BROWNIAN FORCE--------------*/
+/*-----------------------------------------*/
+
+	//Drag force.
+	class brownianForce : public IForce
+	{
+
+		private:
+
+			float gamma;
+			float sigma;
+
+			float sig1;
+			float sig2;
+			float corr;
+			float rc12;
+			float c0;
+
+			float * memX;
+			float * memY;
+			float * memZ;
+
+			float * memCorrX;
+			float * memCorrY;
+			float * memCorrZ;
+
+			int memSize;
+
+			std::mt19937* gen;
+			std::uniform_real_distribution<double>* distribution;
+
+		public:
+
+			//Constructor/Destructor
+			brownianForce(float coEff, float stDev, float t_initial, float dt, int size);
+			~brownianForce() { delete[] &gamma; };
+
+			void init(float dt, float t_initial);
+
+			//Evaluates the force.
+			void getAcceleration(int index, float time, mathTools::points* pts, float (&acc)[3]);
 			bool isTimeDependent() { return false; }
 	};
 
