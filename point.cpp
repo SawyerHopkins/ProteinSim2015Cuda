@@ -8,12 +8,13 @@ namespace mathTools
 /*-----------------------------------------*/
 
 	//Creates a new set if 'size' number of particles all located at the origin.
-	points::points(int nParticles, float radius) : 
+	points::points(int nParticles, float radius, float t_initial) : 
 	x(new float[nParticles]), y(new float[nParticles]), z(new float[nParticles]), 
 	vx(new float[nParticles]), vy(new float[nParticles]), vz(new float[nParticles])
 	{
 		arrSize = nParticles;
 		r = radius;
+		t_init = t_initial;
 		seed=0;
 	}
 
@@ -33,6 +34,7 @@ namespace mathTools
 		r = obj.r;
 		boxSize = obj.boxSize;
 		seed=obj.seed;
+		t_init = obj.t_init;
 	}
 
 	//Releases the memory blocks
@@ -47,6 +49,7 @@ namespace mathTools
 		delete[] &r;
 		delete[] &boxSize;
 		delete[] &seed;
+		delete[] &t_init;
 	}
 
 /*-----------------------------------------*/
@@ -90,13 +93,11 @@ namespace mathTools
 		for(int i = 0; i <arrSize; i++)
 		{
 			setX(i, distribution(gen) * boxSize);
-			setVX(i, 0.0);
 			setY(i, distribution(gen) * boxSize);
-			setVY(i, 0.0);
 			setZ(i, distribution(gen) * boxSize);
-			setVZ(i, 0.0);
 		}
 		initCheck(&gen, &distribution);
+		maxwellVelocityInit(&gen, &distribution);
 	}
 
 	//Creates a box corresponding to # of Particles / boxSize^3 = concentration. 
@@ -169,6 +170,100 @@ namespace mathTools
 					}
 				}
 			}
+		}
+	}
+
+	void points::maxwellVelocityInit(std::mt19937* gen, std::uniform_real_distribution<double>* distribution)
+	{
+		double r1,r2;
+		double vsum,vsum2;
+		double sigold,vsig,ratio;
+		int i;
+		
+		for(i=0; i<arrSize; i++)
+		{
+			r1=(*distribution)(*gen);
+			r2=(*distribution)(*gen);
+			setVX(i, sqrt(-2.0 * log(r1) ) * cos(8.0*atan(1)*r2));
+		}
+
+		for(i=0; i<arrSize; i++)
+		{
+			r1=(*distribution)(*gen);
+			r2=(*distribution)(*gen);
+			setVY(i, sqrt(-2.0 * log(r1) ) * cos(8.0*atan(1)*r2));
+		}
+
+		for(i=0; i<arrSize; i++)
+		{
+			r1=(*distribution)(*gen);
+			r2=(*distribution)(*gen);
+			setVZ(i, sqrt(-2.0 * log(r1) ) * cos(8.0*atan(1)*r2));
+		}
+		
+		//maxwell for vx//
+		vsum=0;
+		vsum2=0;
+		
+		for(i=0; i<arrSize; i++)
+		{
+			vsum=vsum+getVX(i);
+			vsum2=vsum2+(getVX(i)*getVX(i));
+		}
+		vsum=vsum/arrSize;
+		vsum2=vsum2/arrSize;
+		sigold=sqrt(vsum2-(vsum*vsum));
+
+		vsig= sqrt(double(t_init)) ;
+		ratio=vsig/sigold;
+
+		for(i=0; i<arrSize; i++)
+		{
+			setVX(i,ratio*(getVX(i)-vsum));
+		}
+	////////////////////
+
+		//maxwell for vy//
+		vsum=0;
+		vsum2=0;
+		
+		for(i=0; i<arrSize; i++)
+		{
+			vsum=vsum+getVY(i);
+			vsum2=vsum2+(getVY(i)*getVY(i));
+		}
+		vsum=vsum/arrSize;
+		vsum2=vsum2/arrSize;
+		sigold=sqrt(vsum2-(vsum*vsum));
+
+		vsig= sqrt(double(t_init)) ;
+		ratio=vsig/sigold;
+
+		for(i=0; i<arrSize; i++)
+		{
+			setVY(i,ratio*(getVY(i)-vsum));
+		}
+	////////////////////
+
+		//maxwell for vz//
+		vsum=0;
+		vsum2=0;
+		
+		for(i=0; i<arrSize; i++)
+		{
+			vsum=vsum+getVZ(i);
+			vsum2=vsum2+(getVZ(i)*getVZ(i));
+		}
+		vsum=vsum/arrSize;
+		vsum2=vsum2/arrSize;
+		sigold=sqrt(vsum2-(vsum*vsum));
+
+		vsig= sqrt(double(t_init)) ;
+		ratio=vsig/sigold;
+
+		for(i=0; i<arrSize; i++)
+		{
+			setVZ(i,ratio*(getVZ(i)-vsum));
 		}
 	}
 

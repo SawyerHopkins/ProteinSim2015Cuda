@@ -7,7 +7,7 @@ namespace mathTools
 	//fmod can't do negative numbers so use this.
 	float utilities::safeMod(float val, float base)
 	{
-		float output;
+		float output = 0.0;
 		//0 mod n is always zero
 		if (val == 0)
 		{

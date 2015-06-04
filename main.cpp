@@ -35,13 +35,15 @@ int main(int argc, char **argv)
 	//Initialize random number generator.
 	srand (time(NULL));
 	//Set the maximum time.
-	float endTime = 500;
+	float endTime = 2000;
 	//Set the time step for the integrator.
 	float timeStep = .001;
 	//Set the number of particles.
-	float nParticles = 10000;
+	float nParticles = 1000;
 	//Set drag coefficent.
 	float gamma = 750.0;
+	//Set initial temperature.
+	float t_initial = 1.0;
 
 	/*-------------Setup-------------*/
 
@@ -51,7 +53,7 @@ int main(int argc, char **argv)
 
 	cout << "Creating particle system.\n";
 	//Creates the particle system.
-	mathTools::points * pt = new mathTools::points(nParticles, 0.5);
+	mathTools::points * pt = new mathTools::points(nParticles, 0.5, t_initial);
 	//Initialize the particle system with random position and velocity.
 	pt->init(0.10);
 
@@ -60,7 +62,7 @@ int main(int argc, char **argv)
 	physics::forces * force = new physics::forces();
 	force->addForce(new physics::aggForce(.46,1.1)); //Adds the aggregation force.
 	//force->addForce(new physics::dragForce(gamma)); //Adds drag.
-	//force->addForce(new physics::brownianForce(gamma,1.0,1.0,timeStep,nParticles)); //Adds brownian dynamics.
+	//force->addForce(new physics::brownianForce(gamma,1.0,t_initial,timeStep,nParticles)); //Adds brownian dynamics.
 
 	//Output the stats.
 	cout << "Number of Particles: " << pt->arrSize << "\n";
@@ -115,5 +117,5 @@ void debug(mathTools::points* pt)
 void greeting()
 {
 	cout << "---Particle Simulator 2015---\n";
-	cout << "---Sawyer Hopkins et al.---\n\n";
+	cout << "----Sawyer Hopkins et al.----\n\n";
 }

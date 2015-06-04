@@ -36,6 +36,9 @@ namespace mathTools
 			//Seed for random system initialization.
 			int seed;
 
+			//Initial system temperature
+			float t_init;
+
 			//Base initialization
 			void init();
 
@@ -49,7 +52,7 @@ namespace mathTools
 			int arrSize;
 
 			//Constructor/Destructor
-			points(int nParticles, float radius);
+			points(int nParticles, float radius, float t_initial);
 			points( const points &obj );
 			~points();
 
@@ -102,6 +105,7 @@ namespace mathTools
 			void init(float concentration);
 			void init(float concentration, int seedling);
 			void initCheck(std::mt19937* gen, std::uniform_real_distribution<double>* distribution);
+			void maxwellVelocityInit(std::mt19937* gen, std::uniform_real_distribution<double>* distribution);
 
 /*-----------------------------------------*/
 /*--------------SYSTEM OUTPUT--------------*/
