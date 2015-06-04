@@ -23,6 +23,7 @@ namespace mathTools
 			//Shows the completed progress in the console.
 			static void loadBar(int x, int n, int w = 50);
 
+			//Normalizes the distances to create a unit vector in &acc[3].
 			static void unitVector(float dX, float dY, float dZ, float r, float (&acc)[3]);
 
 	};

@@ -47,11 +47,6 @@ namespace integrators
 		return 0;
 	}
 
-	//Resolves overlap and positioning.
-	void verlet::cleanUp(float index, mathTools::points* pnt, physics::forces* f)
-	{
-	}
-
 	//The velocity verlet Algorithms to obtain the next position term.
 	//Performs operation on one spacial cordinate.
 	float verlet::posAlgorithm(float pos, float vel, float acc, float t)

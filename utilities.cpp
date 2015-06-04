@@ -46,10 +46,14 @@ namespace mathTools
 		cout << "]\r" << flush;
 	}
 
+	//Gets the distance between to particles considering periodic boundary conditions.
 	float utilities::pbcDist(float v1, float v2, float size)
 	{
+		//If the particles are further than half the box size away from each other
+		//then then they are closer periodically.
 		if (fabs(v1-v2) > size/2)
 		{
+			//Set the periodic distance and reverse the relative sign.
 			if (v1 < v2)
 			{
 				return (size-fabs(v1-v2));
@@ -66,6 +70,7 @@ namespace mathTools
 		}
 	}
 
+	//Normalizes the distances to create a unit vector in &acc[3].
 	void utilities::unitVector(float dX, float dY, float dZ, float r, float (&acc)[3])
 	{
 		acc[0]=-dX/r;

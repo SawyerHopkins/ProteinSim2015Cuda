@@ -18,6 +18,8 @@ using namespace std;
 /*-----------------------------------------*/
 
 static inline void debug(mathTools::points* pt);
+static inline void greeting();
+
 
 /*-----------------------------------------*/
 /*--------------PROGRAM MAIN---------------*/
@@ -25,6 +27,9 @@ static inline void debug(mathTools::points* pt);
 
 int main(int argc, char **argv)
 {
+
+	greeting();
+
 	/*-------------Variables-------------*/
 
 	//Initialize random number generator.
@@ -41,27 +46,34 @@ int main(int argc, char **argv)
 	/*-------------Setup-------------*/
 
 	//Create the integrator.
+	cout << "Creating integrator.\n";
 	integrators::verlet * difeq = new integrators::verlet(timeStep);
 
+	cout << "Creating particle system.\n";
 	//Creates the particle system.
 	mathTools::points * pt = new mathTools::points(nParticles, 0.5);
 	//Initialize the particle system with random position and velocity.
 	pt->init(0.10);
 
 	//Creates a force manager.
+	cout << "Adding required forces.\n\n";
 	physics::forces * force = new physics::forces();
 	force->addForce(new physics::aggForce(.46,1.1)); //Adds the aggregation force.
 	//force->addForce(new physics::dragForce(gamma)); //Adds drag.
-	force->addForce(new physics::brownianForce(gamma,1.0,1.0,timeStep,nParticles)); //Adds brownian dynamics.
+	//force->addForce(new physics::brownianForce(gamma,1.0,1.0,timeStep,nParticles)); //Adds brownian dynamics.
 
+	//Output the stats.
 	cout << "Number of Particles: " << pt->arrSize << "\n";
-	cout << "Box Size: " << pt->getBoxSize() << "\n";
+	cout << "Box Size: " << pt->getBoxSize() << "\n\n";
 
+	//Write the initial system.
+	cout << "Writing initial system to file.\n\n";
 	pt->writeSystem("initSys");
 
 	//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 
 	/*-------------Iterator-------------*/
+	cout << "Starting integration.\n\n";
 	while(difeq->getSystemTime() < endTime)
 	{
 		for (int i =0; i < pt->arrSize; i++)
@@ -74,6 +86,8 @@ int main(int argc, char **argv)
 		utilities::loadBar(difeq->getSystemTime(),endTime);
 	}
 
+	//Write the final system.
+	cout << "\n" << "Integration complete. Writing final system to file.";
 	pt->writeSystem("finSys");
 
 	//Debug code 0 -> No Error:
@@ -95,4 +109,11 @@ void debug(mathTools::points* pt)
 	}
 	cout << "\n";
 	//cout << "\n" << dist(pt->getX(0),pt->getX(1),pt->getY(0),pt->getY(1),pt->getZ(0),pt->getZ(1)) << "\n\n";
+}
+
+//Output the program name and information.
+void greeting()
+{
+	cout << "---Particle Simulator 2015---\n";
+	cout << "---Sawyer Hopkins et al.---\n\n";
 }

@@ -76,11 +76,13 @@ namespace mathTools
 	//Creates a random distribution of the initial points
 	void points::init()
 	{
+		//If there is no inital seed create one.
 		if (seed==0)
 		{
 			std::random_device rd;
 			seed=rd();
 		}
+		//Setup random uniform distribution generator.
 		std::mt19937 gen(seed);
 		std::uniform_real_distribution<double> distribution(0.0,1.0);
 		
@@ -114,36 +116,52 @@ namespace mathTools
 		init();
 	}
 
-
+	//Looks for overlapping particles in the initial random distribution.
 	void points::initCheck(std::mt19937* gen, std::uniform_real_distribution<double>* distribution)
 	{
+		//Keeps track of how many resolutions we have attempted.
 		int counter = 0;
 
+		//Search each particle for overlap.
 		for(int i = 0; i < arrSize; i++)
 		{
+			//Is the problem resolved?
 			bool resolution = false;
+
+			//If not loop.
 			while (resolution == false)
 			{
+				//Assume resolution.
 				resolution = true;
 				for(int j = 0; j < arrSize; j++)
 				{
+					//Exclude self interation.
 					if (i != j)
 					{
+						//Gets the distance between the two particles.
 						float distX = utilities::pbcDist(getX(i),getX(j),boxSize);
 						float distY = utilities::pbcDist(getY(i),getY(j),boxSize);
 						float distZ = utilities::pbcDist(getZ(i),getZ(j),boxSize);
 
 						float radius = std::sqrt((distX*distX)+(distY*distY)+(distZ*distZ));
 
+						//If the particles are slightly closer than twice their radius resolve conflict.
 						if (radius < 2.1*r)
 						{
+							//Update resolution counter.
 							counter++;
+
+							//Throw warnings if stuck in resolution loop.
 							if (counter > 10*arrSize)
 							{
 								std::cout << "Could create initial system.\n";
 								std::cout << "Try decreasing particle density.";
 							}
+
+							//Assume new system in not resolved.
 							resolution = false;
+
+							//Set new uniform random position.
 							setX(i, (*distribution)(*gen) * boxSize);
 							setY(i, (*distribution)(*gen) * boxSize);
 							setZ(i, (*distribution)(*gen) * boxSize);

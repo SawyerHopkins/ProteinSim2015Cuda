@@ -59,8 +59,9 @@ namespace physics
 	class dragForce : public IForce
 	{
 
-		private:
+	private:
 
+			//Variables vital to the force.
 			float gamma;
 
 		public:
@@ -82,10 +83,13 @@ namespace physics
 	class aggForce : public IForce
 	{
 
-		private:
+	private:
 
+			//Variables vital to the force.
 			float gamma;
 			float cutOff;
+
+			//Secondary variables.
 			float coEff1;
 			float coEff2;
 
@@ -93,7 +97,7 @@ namespace physics
 
 			//Constructor/Destructor
 			aggForce(float coeff, float cut);
-			~aggForce() { delete[] &gamma; };
+			~aggForce();
 
 			//Evaluates the force.
 			void getAcceleration(int index, float time, mathTools::points* pts, float (&acc)[3]);
@@ -108,36 +112,43 @@ namespace physics
 	class brownianForce : public IForce
 	{
 
-		private:
+	private:
 
+			//Variables vital to the force.
 			float gamma;
 			float sigma;
 
+			//Secondary variables.
 			float sig1;
 			float sig2;
 			float corr;
 			float rc12;
 			float c0;
 
+			//The previous kick.
 			float * memX;
 			float * memY;
 			float * memZ;
 
+			//The correlation to the previous kick.
 			float * memCorrX;
 			float * memCorrY;
 			float * memCorrZ;
 
+			//Number of particles to remember.
 			int memSize;
 
+			//Random gaussian generator for the random kicks.
 			std::mt19937* gen;
-			std::uniform_real_distribution<double>* distribution;
+			std::normal_distribution<double>* distribution;
 
 		public:
 
 			//Constructor/Destructor
 			brownianForce(float coEff, float stDev, float t_initial, float dt, int size);
-			~brownianForce() { delete[] &gamma; };
+			~brownianForce();
 
+			//Setup the secondary variables.
 			void init(float dt, float t_initial);
 
 			//Evaluates the force.
