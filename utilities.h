@@ -14,17 +14,17 @@ namespace mathTools
 		public:
 
 			//fmod can't do negative numbers so use this.
-			static float safeMod(float val, float base);
+			static double safeMod(double val, double base);
 
 			//gets the distance between to points while
 			//considering periodic boundary conditions.
-			static float pbcDist(float v1, float v2, float size);
+			static double pbcDist(double v1, double v2, double size);
 
 			//Shows the completed progress in the console.
-			static void loadBar(int x, int n, int w = 50);
+			static void loadBar(double x0, int n, long counter ,int w = 50);
 
 			//Normalizes the distances to create a unit vector in &acc[3].
-			static void unitVector(float dX, float dY, float dZ, float r, float (&acc)[3]);
+			static void unitVector(double dX, double dY, double dZ, double r, double (&acc)[3]);
 
 	};
 

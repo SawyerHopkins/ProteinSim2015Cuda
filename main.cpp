@@ -1,5 +1,5 @@
 #include <math.h>
-#include <string.h>
+#include <string>
 #include <iostream>
 #include <chrono>
 #include <thread>
@@ -35,15 +35,15 @@ int main(int argc, char **argv)
 	//Initialize random number generator.
 	srand (time(NULL));
 	//Set the maximum time.
-	float endTime = 2000;
+	double endTime = 10000;
 	//Set the time step for the integrator.
-	float timeStep = .001;
+	double timeStep = .001;
 	//Set the number of particles.
-	float nParticles = 1000;
+	double nParticles = 10000;
 	//Set drag coefficent.
-	float gamma = 750.0;
+	double gamma = 750.0;
 	//Set initial temperature.
-	float t_initial = 1.0;
+	double t_initial = 1.0;
 
 	/*-------------Setup-------------*/
 
@@ -62,7 +62,7 @@ int main(int argc, char **argv)
 	physics::forces * force = new physics::forces();
 	force->addForce(new physics::aggForce(.46,1.1)); //Adds the aggregation force.
 	//force->addForce(new physics::dragForce(gamma)); //Adds drag.
-	//force->addForce(new physics::brownianForce(gamma,1.0,t_initial,timeStep,nParticles)); //Adds brownian dynamics.
+	force->addForce(new physics::brownianForce(gamma,1.0,t_initial,timeStep,nParticles)); //Adds brownian dynamics.
 
 	//Output the stats.
 	cout << "Number of Particles: " << pt->arrSize << "\n";
@@ -76,16 +76,25 @@ int main(int argc, char **argv)
 
 	/*-------------Iterator-------------*/
 	cout << "Starting integration.\n\n";
+	long counter = 0;
 	while(difeq->getSystemTime() < endTime)
 	{
 		for (int i =0; i < pt->arrSize; i++)
 		{
 			difeq->nextSystem(i,pt,force);
-			difeq->advanceTime();
 		}
+		utilities::loadBar(difeq->getSystemTime(),endTime,counter);
+		counter++;
+		difeq->advanceTime();
+
+		if ((counter % 1000) == 0)
+		{
+			std::string name = "system" + std::to_string(counter) + ".txt";
+			//pt->writeSystem(name);
+		}
+
 		//debug(pt);
 		//std::this_thread::sleep_for(std::chrono::milliseconds(3000));
-		utilities::loadBar(difeq->getSystemTime(),endTime);
 	}
 
 	//Write the final system.

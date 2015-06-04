@@ -5,9 +5,9 @@ using namespace std;
 namespace mathTools
 {
 	//fmod can't do negative numbers so use this.
-	float utilities::safeMod(float val, float base)
+	double utilities::safeMod(double val, double base)
 	{
-		float output = 0.0;
+		double output = 0.0;
 		//0 mod n is always zero
 		if (val == 0)
 		{
@@ -28,26 +28,32 @@ namespace mathTools
 
 	// Process has done i out of n rounds,
 	// and we want a bar of width w and resolution r.
-	void utilities::loadBar(int x, int n, int w)
+	void utilities::loadBar(double x0, int n, long counter, int w)
 	{
 		/*-----------------------------------------*/
 		/*---------------SOURCE FROM---------------*/
 		/*-----------------------------------------*/
 		/* https://www.ross.click/2011/02/creating-a-progress-bar-in-c-or-any-other-console-app/*/
 		/*-----------------------------------------*/
-		if ( (x != n) && (x % (n/100+1) != 0) ) return;
-	 
-		float ratio  =  x/(float)n;
+		//if ( (x != n) && (x % (n/100+1) != 0) ) return;
+
+		int x = (int)x0;
+
+		if ( (x != n) && (counter % 10 != 0) ) return;
+
+		double ratio  =  x/(double)n;
 		int   c      =  ratio * w;
-	 
+
+		cout.precision(3);
+
 		cout << setw(3) << (int)(ratio*100) << "% [";
 		for (int x=0; x<c; x++) cout << "=";
 		for (int x=c; x<w; x++) cout << " ";
-		cout << "]\r" << flush;
+		cout << "] - " << x0 << "\r" << flush;
 	}
 
 	//Gets the distance between to particles considering periodic boundary conditions.
-	float utilities::pbcDist(float v1, float v2, float size)
+	double utilities::pbcDist(double v1, double v2, double size)
 	{
 		//If the particles are further than half the box size away from each other
 		//then then they are closer periodically.
@@ -71,7 +77,7 @@ namespace mathTools
 	}
 
 	//Normalizes the distances to create a unit vector in &acc[3].
-	void utilities::unitVector(float dX, float dY, float dZ, float r, float (&acc)[3])
+	void utilities::unitVector(double dX, double dY, double dZ, double r, double (&acc)[3])
 	{
 		acc[0]=-dX/r;
 		acc[1]=-dY/r;

@@ -18,7 +18,7 @@ namespace physics
 	{
 		public:
 			//virtual methods for forces of various parameters.
-			virtual void getAcceleration(int index, float time, mathTools::points* pts, float (&acc)[3])=0;
+			virtual void getAcceleration(int index, double time, mathTools::points* pts, double (&acc)[3])=0;
 			//Mark if the force is time dependent.
 			virtual bool isTimeDependent()=0;
 	};
@@ -47,7 +47,7 @@ namespace physics
 			void addForce(IForce* f);
 
 			//Calculates the total acceleration
-			void getAcceleration(float index, float time, mathTools::points* pts, float (&acc)[3]);
+			void getAcceleration(double index, double time, mathTools::points* pts, double (&acc)[3]);
 			bool isTimeDependent() { return timeDependent; }
 	};
 
@@ -62,16 +62,16 @@ namespace physics
 	private:
 
 			//Variables vital to the force.
-			float gamma;
+			double gamma;
 
 		public:
 
 			//Constructor/Destructor
-			dragForce(float coeff) { gamma = coeff; }
+			dragForce(double coeff) { gamma = coeff; }
 			~dragForce() { delete[] &gamma; };
 
 			//Evaluates the force.
-			void getAcceleration(int index, float time, mathTools::points* pts, float (&acc)[3]);
+			void getAcceleration(int index, double time, mathTools::points* pts, double (&acc)[3]);
 			bool isTimeDependent() { return false; }
 	};
 
@@ -86,21 +86,21 @@ namespace physics
 	private:
 
 			//Variables vital to the force.
-			float gamma;
-			float cutOff;
+			double gamma;
+			double cutOff;
 
 			//Secondary variables.
-			float coEff1;
-			float coEff2;
+			double coEff1;
+			double coEff2;
 
 		public:
 
 			//Constructor/Destructor
-			aggForce(float coeff, float cut);
+			aggForce(double coeff, double cut);
 			~aggForce();
 
 			//Evaluates the force.
-			void getAcceleration(int index, float time, mathTools::points* pts, float (&acc)[3]);
+			void getAcceleration(int index, double time, mathTools::points* pts, double (&acc)[3]);
 			bool isTimeDependent() { return false; }
 	};
 
@@ -115,25 +115,25 @@ namespace physics
 	private:
 
 			//Variables vital to the force.
-			float gamma;
-			float sigma;
+			double gamma;
+			double sigma;
 
 			//Secondary variables.
-			float sig1;
-			float sig2;
-			float corr;
-			float rc12;
-			float c0;
+			double sig1;
+			double sig2;
+			double corr;
+			double rc12;
+			double c0;
 
 			//The previous kick.
-			float * memX;
-			float * memY;
-			float * memZ;
+			double * memX;
+			double * memY;
+			double * memZ;
 
 			//The correlation to the previous kick.
-			float * memCorrX;
-			float * memCorrY;
-			float * memCorrZ;
+			double * memCorrX;
+			double * memCorrY;
+			double * memCorrZ;
 
 			//Number of particles to remember.
 			int memSize;
@@ -145,14 +145,14 @@ namespace physics
 		public:
 
 			//Constructor/Destructor
-			brownianForce(float coEff, float stDev, float t_initial, float dt, int size);
+			brownianForce(double coEff, double stDev, double t_initial, double dt, int size);
 			~brownianForce();
 
 			//Setup the secondary variables.
-			void init(float dt, float t_initial);
+			void init(double dt, double t_initial);
 
 			//Evaluates the force.
-			void getAcceleration(int index, float time, mathTools::points* pts, float (&acc)[3]);
+			void getAcceleration(int index, double time, mathTools::points* pts, double (&acc)[3]);
 			bool isTimeDependent() { return false; }
 	};
 

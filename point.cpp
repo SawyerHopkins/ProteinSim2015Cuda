@@ -8,9 +8,9 @@ namespace mathTools
 /*-----------------------------------------*/
 
 	//Creates a new set if 'size' number of particles all located at the origin.
-	points::points(int nParticles, float radius, float t_initial) : 
-	x(new float[nParticles]), y(new float[nParticles]), z(new float[nParticles]), 
-	vx(new float[nParticles]), vy(new float[nParticles]), vz(new float[nParticles])
+	points::points(int nParticles, double radius, double t_initial) : 
+	x(new double[nParticles]), y(new double[nParticles]), z(new double[nParticles]), 
+	vx(new double[nParticles]), vy(new double[nParticles]), vz(new double[nParticles])
 	{
 		arrSize = nParticles;
 		r = radius;
@@ -20,8 +20,8 @@ namespace mathTools
 
 	//Copy constructor.
 	points::points(const points &obj) : 
-	x(new float[obj.arrSize]), y(new float[obj.arrSize]), z(new float[obj.arrSize]), 
-	vx(new float[obj.arrSize]), vy(new float[obj.arrSize]), vz(new float[obj.arrSize])
+	x(new double[obj.arrSize]), y(new double[obj.arrSize]), z(new double[obj.arrSize]), 
+	vx(new double[obj.arrSize]), vy(new double[obj.arrSize]), vz(new double[obj.arrSize])
 	{
 		//Copies the stored values rather than pointers.
 		arrSize=obj.arrSize;
@@ -57,7 +57,7 @@ namespace mathTools
 /*-----------------------------------------*/
 
 	//Function to quickly set all three spacial cordinates of a particle.
-	void points::setAllPos(int i, float xVal, float yVal, float zVal)
+	void points::setAllPos(int i, double xVal, double yVal, double zVal)
 	{
 		setX(i,xVal);
 		setY(i,yVal);
@@ -65,7 +65,7 @@ namespace mathTools
 	}
 
 	//Function to quickly set all three velocity cordinates of a particle.
-	void points::setAllVel(int i, float vxVal, float vyVal, float vzVal)
+	void points::setAllVel(int i, double vxVal, double vyVal, double vzVal)
 	{
 		*(vx+i)=vxVal;
 		*(vy+i)=vyVal;
@@ -101,16 +101,16 @@ namespace mathTools
 	}
 
 	//Creates a box corresponding to # of Particles / boxSize^3 = concentration. 
-	void points::init(float concentration)
+	void points::init(double concentration)
 	{
-		float vP = arrSize*(4.0/3.0)*atan(1)*4*r*r*r;
+		double vP = arrSize*(4.0/3.0)*atan(1)*4*r*r*r;
 		boxSize = (int) cbrt(vP / concentration);
 		init();
 	}
 
 	//Creates a box corresponding to # of Particles / boxSize^3 = concentration. 
 	//Seeds the random number generator with value seedling.
-	void points::init(float concentration, int seedling)
+	void points::init(double concentration, int seedling)
 	{
 		seed=seedling;
 		boxSize = (int) cbrt(arrSize / concentration);
@@ -140,11 +140,11 @@ namespace mathTools
 					if (i != j)
 					{
 						//Gets the distance between the two particles.
-						float distX = utilities::pbcDist(getX(i),getX(j),boxSize);
-						float distY = utilities::pbcDist(getY(i),getY(j),boxSize);
-						float distZ = utilities::pbcDist(getZ(i),getZ(j),boxSize);
+						double distX = utilities::pbcDist(getX(i),getX(j),boxSize);
+						double distY = utilities::pbcDist(getY(i),getY(j),boxSize);
+						double distZ = utilities::pbcDist(getZ(i),getZ(j),boxSize);
 
-						float radius = std::sqrt((distX*distX)+(distY*distY)+(distZ*distZ));
+						double radius = std::sqrt((distX*distX)+(distY*distY)+(distZ*distZ));
 
 						//If the particles are slightly closer than twice their radius resolve conflict.
 						if (radius < 2.1*r)

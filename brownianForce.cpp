@@ -30,9 +30,9 @@ namespace physics
 	}
 
 	//Creates the brownian motion force.
-	brownianForce::brownianForce(float coEff, float stDev, float t_initial, float dt, int size) :
-	memX(new float[size]), memY(new float[size]), memZ(new float[size]),
-	memCorrX(new float[size]), memCorrY(new float[size]), memCorrZ(new float[size])
+	brownianForce::brownianForce(double coEff, double stDev, double t_initial, double dt, int size) :
+	memX(new double[size]), memY(new double[size]), memZ(new double[size]),
+	memCorrX(new double[size]), memCorrY(new double[size]), memCorrZ(new double[size])
 	{
 		//Set vital variables.
 		gamma = coEff;
@@ -52,14 +52,14 @@ namespace physics
 	//Sets secondary variables.
 	//Copied from the old code.
 	//How does this work?
-	void brownianForce::init(float dt, float t_initial)
+	void brownianForce::init(double dt, double t_initial)
 	{
-		float y = gamma*dt;
+		double y = gamma*dt;
 		double y1,y2,y3,y4,y5,y6,y7,y8,y9;
-		float ty = 2*y;
-		float cpn = 0.0;
-		float cmn = 0.0;
-		float gn = 0.0;
+		double ty = 2*y;
+		double cpn = 0.0;
+		double cmn = 0.0;
+		double gn = 0.0;
 
 		if (y != 0)
 		{
@@ -95,7 +95,7 @@ namespace physics
 			c0=1.0;
 		}
 
-		float gammaSq = gamma*gamma;
+		double gammaSq = gamma*gamma;
 
 		sig1 = std::sqrt( (t_initial*cpn)/gammaSq );
 		sig2 = std::sqrt( (-t_initial*cmn)/gammaSq );
@@ -105,12 +105,16 @@ namespace physics
 	}
 
 	//Get the acceleration from the Coloumb potential.
-	void brownianForce::getAcceleration(int index, float time, mathTools::points* pts, float (&acc)[3])
+	void brownianForce::getAcceleration(int index, double time, mathTools::points* pts, double (&acc)[3])
 	{
 
 		//Gets the correlated part of the force from the previous random kick.
 		if (time > 0)
 		{
+			*(memCorrX+index) = (*distribution)(*gen);
+			*(memCorrY+index) = (*distribution)(*gen);
+			*(memCorrZ+index) = (*distribution)(*gen);
+
 			*(memCorrX+index)=sig2 * ((corr * *(memX+index)) + (rc12 * *(memCorrX+index)));
 			*(memCorrY+index)=sig2 * ((corr * *(memY+index)) + (rc12 * *(memCorrY+index)));
 			*(memCorrZ+index)=sig2 * ((corr * *(memZ+index)) + (rc12 * *(memCorrZ+index)));

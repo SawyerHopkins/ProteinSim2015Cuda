@@ -42,12 +42,12 @@ namespace physics
 
 	//Calculates the total acceleration to get net force.
 	//Uses pointer to acc to update potentials in the I_Integrator.
-	void forces::getAcceleration(float index, float time, mathTools::points* pts, float (&acc)[3])
+	void forces::getAcceleration(double index, double time, mathTools::points* pts, double (&acc)[3])
 		{
 			//Iterate across all elements in the system.
 			for (std::vector<IForce*>::iterator i = flist.begin(); i != flist.end(); ++i)
 			{
-				float subAcc[3] = {0.0,0.0,0.0};
+				double subAcc[3] = {0.0,0.0,0.0};
 				(*i)->getAcceleration(index,time,pts,subAcc);
 				//Update the net acceleration.
 				*(acc+0)+=*(subAcc+0);

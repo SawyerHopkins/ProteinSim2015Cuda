@@ -15,9 +15,9 @@ class GnuPlotter
 	public:
 
 		//Sends the system to GNUPlot.
-		static void plot(int size, float* x, float* y, float* z);
+		static void plot(int size, double* x, double* y, double* z);
 		//Writes the system as CSV.
-		static void writeFile(int size, float* x, float* y, float* z, std::string name);
+		static void writeFile(int size, double* x, double* y, double* z, std::string name);
 
 };
 

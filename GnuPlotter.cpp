@@ -7,7 +7,7 @@ namespace Plotting
 {
 
 	//Sends the system to GNUPlot.
-	void GnuPlotter::plot(int size, float* x, float* y, float* z)
+	void GnuPlotter::plot(int size, double* x, double* y, double* z)
 	{
 		/*-----------------------------------------*/
 		/*---------------SOURCE FROM---------------*/
@@ -37,7 +37,7 @@ namespace Plotting
 	}
 
 	//Writes the system as CSV.
-	void GnuPlotter::writeFile(int size, float* x, float* y, float* z, std::string name)
+	void GnuPlotter::writeFile(int size, double* x, double* y, double* z, std::string name)
 	{
 		//Create a stream to the desired file.
 		ofstream myFile;
