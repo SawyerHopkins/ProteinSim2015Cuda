@@ -94,6 +94,7 @@ namespace mathTools
 			setZ(i, distribution(gen) * boxSize);
 			setVZ(i, 0.0);
 		}
+		initCheck(&gen, &distribution);
 	}
 
 	//Creates a box corresponding to # of Particles / boxSize^3 = concentration. 
@@ -111,6 +112,46 @@ namespace mathTools
 		seed=seedling;
 		boxSize = (int) cbrt(arrSize / concentration);
 		init();
+	}
+
+
+	void points::initCheck(std::mt19937* gen, std::uniform_real_distribution<double>* distribution)
+	{
+		int counter = 0;
+
+		for(int i = 0; i < arrSize; i++)
+		{
+			bool resolution = false;
+			while (resolution == false)
+			{
+				resolution = true;
+				for(int j = 0; j < arrSize; j++)
+				{
+					if (i != j)
+					{
+						float distX = utilities::pbcDist(getX(i),getX(j),boxSize);
+						float distY = utilities::pbcDist(getY(i),getY(j),boxSize);
+						float distZ = utilities::pbcDist(getZ(i),getZ(j),boxSize);
+
+						float radius = std::sqrt((distX*distX)+(distY*distY)+(distZ*distZ));
+
+						if (radius < 2.1*r)
+						{
+							counter++;
+							if (counter > 10*arrSize)
+							{
+								std::cout << "Could create initial system.\n";
+								std::cout << "Try decreasing particle density.";
+							}
+							resolution = false;
+							setX(i, (*distribution)(*gen) * boxSize);
+							setY(i, (*distribution)(*gen) * boxSize);
+							setZ(i, (*distribution)(*gen) * boxSize);
+						}
+					}
+				}
+			}
+		}
 	}
 
 /*-----------------------------------------*/

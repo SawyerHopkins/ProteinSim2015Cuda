@@ -101,6 +101,7 @@ namespace mathTools
 			//Creates an initial distribution of the particles.
 			void init(float concentration);
 			void init(float concentration, int seedling);
+			void initCheck(std::mt19937* gen, std::uniform_real_distribution<double>* distribution);
 
 /*-----------------------------------------*/
 /*--------------SYSTEM OUTPUT--------------*/

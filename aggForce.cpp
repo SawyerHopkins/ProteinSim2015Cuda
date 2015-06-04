@@ -38,7 +38,7 @@ namespace physics
 					float dist = std::sqrt(distSquared);
 
 					//Throw warning if particles are acting badly.
-					if (dist < 1.5*pts->getR())
+					if (dist < 1.6*pts->getR())
 					{
 						std::cout << "\nSignificant particle overlap. Consider time-step reduction.\n";
 					}

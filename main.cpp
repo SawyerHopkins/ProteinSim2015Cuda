@@ -30,13 +30,13 @@ int main(int argc, char **argv)
 	//Initialize random number generator.
 	srand (time(NULL));
 	//Set the maximum time.
-	float endTime = 10000;
+	float endTime = 500;
 	//Set the time step for the integrator.
 	float timeStep = .001;
 	//Set the number of particles.
-	float nParticles = 100;
+	float nParticles = 10000;
 	//Set drag coefficent.
-	float gamma = 1.0;
+	float gamma = 750.0;
 
 	/*-------------Setup-------------*/
 
@@ -46,7 +46,7 @@ int main(int argc, char **argv)
 	//Creates the particle system.
 	mathTools::points * pt = new mathTools::points(nParticles, 0.5);
 	//Initialize the particle system with random position and velocity.
-	pt->init(0.02);
+	pt->init(0.10);
 
 	//Creates a force manager.
 	physics::forces * force = new physics::forces();
@@ -58,6 +58,8 @@ int main(int argc, char **argv)
 	cout << "Box Size: " << pt->getBoxSize() << "\n";
 
 	pt->writeSystem("initSys");
+
+	//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 
 	/*-------------Iterator-------------*/
 	while(difeq->getSystemTime() < endTime)
