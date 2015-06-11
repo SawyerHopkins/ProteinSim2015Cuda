@@ -3,13 +3,17 @@
 namespace simulation
 {
 
-particle::particle()
-{
-}
+/*-----------------------------------------*/
+/*-----------SYSTEM CONSTRUCTION-----------*/
+/*-----------------------------------------*/
 
-particle::~particle()
-{
-}
+	particle::particle()
+	{
+	}
+
+	particle::~particle()
+	{
+	}
 
 
 }

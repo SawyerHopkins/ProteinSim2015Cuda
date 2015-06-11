@@ -32,8 +32,15 @@
     <File Name="integrator.h"/>
     <File Name="utilities.h"/>
     <File Name="utilities.cpp"/>
-    <File Name="aggForce.cpp"/>
     <File Name="brownianForce.cpp"/>
+    <File Name="cell.cpp"/>
+    <File Name="cell.h"/>
+    <File Name="particle.h"/>
+    <File Name="particle.cpp"/>
+    <File Name="system.h"/>
+    <File Name="system.cpp"/>
+    <File Name="brownian.cpp"/>
+    <File Name="AOPotential.cpp"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>

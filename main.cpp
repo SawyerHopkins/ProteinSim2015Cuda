@@ -60,9 +60,9 @@ int main(int argc, char **argv)
 	//Creates a force manager.
 	cout << "Adding required forces.\n\n";
 	physics::forces * force = new physics::forces();
-	force->addForce(new physics::aggForce(.46,1.1)); //Adds the aggregation force.
+	force->addForce(new physics::AOPotential(.46,1.1)); //Adds the aggregation force.
 	//force->addForce(new physics::dragForce(gamma)); //Adds drag.
-	force->addForce(new physics::brownianForce(gamma,1.0,t_initial,timeStep,nParticles)); //Adds brownian dynamics.
+	//force->addForce(new physics::brownianForce(gamma,1.0,t_initial,timeStep,nParticles)); //Adds brownian dynamics.
 
 	//Output the stats.
 	cout << "Number of Particles: " << pt->arrSize << "\n";

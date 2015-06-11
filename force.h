@@ -80,7 +80,7 @@ namespace physics
 /*-----------------------------------------*/
 
 	//Drag force.
-	class aggForce : public IForce
+	class AOPotential : public IForce
 	{
 
 	private:
@@ -96,8 +96,8 @@ namespace physics
 		public:
 
 			//Constructor/Destructor
-			aggForce(double coeff, double cut);
-			~aggForce();
+			AOPotential(double coeff, double cut);
+			~AOPotential();
 
 			//Evaluates the force.
 			void getAcceleration(int index, double time, mathTools::points* pts, double (&acc)[3]);

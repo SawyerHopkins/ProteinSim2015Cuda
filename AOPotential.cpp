@@ -4,7 +4,7 @@ namespace physics
 {
 
 	//Releases the memory blocks
-	aggForce::~aggForce()
+	AOPotential::~AOPotential()
 	{
 		delete[] &gamma;
 		delete[] &cutOff;
@@ -13,7 +13,7 @@ namespace physics
 	}
 
 	//Create the aggregation force.
-	aggForce::aggForce(double coeff, double cut)
+	AOPotential::AOPotential(double coeff, double cut)
 	{
 		//Set vital variables.
 		gamma = coeff; 
@@ -29,7 +29,7 @@ namespace physics
 	}
 
 	//Get the acceleration from the Coloumb potential.
-	void aggForce::getAcceleration(int index, double time, mathTools::points* pts, double (&acc)[3])
+	void AOPotential::getAcceleration(int index, double time, mathTools::points* pts, double (&acc)[3])
 	{
 
 		//Iterate across all particles.

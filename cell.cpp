@@ -1,16 +1,24 @@
-#include "Cell.h"
+#include "cell.h"
 
 namespace simulation
 {
 
-Cell::Cell()
-{
-}
+	cell::cell()
+	{
+	}
 
-Cell::~Cell()
-{
-}
+	cell::~cell()
+	{
+	}
 
+	void cell::removeMember(int index)
+	{
+		members.erase(members.begin() + index); 
+		if (members.size() != members.capacity()) 
+		{
+			members.shrink_to_fit();
+		}
+	}
 
 }
 
