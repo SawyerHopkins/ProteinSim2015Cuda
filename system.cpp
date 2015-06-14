@@ -331,6 +331,12 @@ namespace simulation
 
 	void system::moveParticle(int index, double x, double y, double z)
 	{
+
+		//Update the position of the particle.
+		particles[index]->setX(x,boxSize);
+		particles[index]->setY(x,boxSize);
+		particles[index]->setZ(x,boxSize);
+
 		//New cell
 		int cX = particles[index]->getX() / cellSize;
 		int cY = particles[index]->getY() / cellSize;
@@ -350,10 +356,34 @@ namespace simulation
 			cells[cX][cY][cZ]->addMember(particles[index]);
 		}
 
-		//Update the position of the particle.
-		particles[index]->setX(x,boxSize);
-		particles[index]->setY(x,boxSize);
-		particles[index]->setZ(x,boxSize);
+	}
+
+	void system::updateCells()
+	{
+
+		for (int index=0; index < nParticles; index++)
+		{
+
+			//New cell
+			int cX = particles[index]->getX() / cellSize;
+			int cY = particles[index]->getY() / cellSize;
+			int cZ = particles[index]->getZ() / cellSize;
+
+			//Old cell
+			int cX0 = particles[index]->getCX();
+			int cY0 = particles[index]->getCY();
+			int cZ0 = particles[index]->getCZ();
+
+			//If cell has changed
+			if ((cX != cX0) || (cY != cY0) || (cZ != cZ0))
+			{
+				//Remove from old.
+				cells[cX0][cY0][cZ0]->removeMember(particles[index]->getIndex());
+				//Add to new.
+				cells[cX][cY][cZ]->addMember(particles[index]);
+			}
+
+		}
 
 	}
 
@@ -361,6 +391,8 @@ namespace simulation
 	{
 		while (currentTime < endTime)
 		{
+			integrator->nextSystem(currentTime, dTime, nParticles, boxSize, particles, sysForces);
+			updateCells();
 			currentTime += dTime;
 		}
 	}

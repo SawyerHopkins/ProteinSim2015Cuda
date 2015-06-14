@@ -1,10 +1,10 @@
-Debug/brownianForce.cpp.o: brownianForce.cpp force.h utilities.h \
- particle.h cell.h
+Debug/brownianForce.cpp.o: brownianForce.cpp force.h cell.h particle.h \
+ utilities.h
 
 force.h:
 
-utilities.h:
+cell.h:
 
 particle.h:
 
-cell.h:
+utilities.h:

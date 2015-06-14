@@ -1,5 +1,4 @@
 #include "system.h"
-#include "integrator.h"
 
 using namespace std;
 
@@ -55,7 +54,7 @@ int main(int argc, char **argv)
 
 	//Create the integrator.
 	cout << "Creating integrator.\n";
-	//integrators::verlet * difeq = new integrators::verlet(timeStep);
+	integrators::brownianIntegrator * difeq = new integrators::brownianIntegrator(nParticles, temp, m, gamma, timeStep);
 
 	/*---------------FORCES---------------*/
 
@@ -68,7 +67,7 @@ int main(int argc, char **argv)
 
 	cout << "Creating particle system.\n";
 	//Creates the particle system.
-	simulation::system * sys = new simulation::system(nParticles,conc,scale,m,r,temp,timeStep,rnd,NULL,force);
+	simulation::system * sys = new simulation::system(nParticles, conc, scale, m, r, temp, timeStep, rnd, difeq, force);
 
 	/*---------------RUNNING--------------*/
 

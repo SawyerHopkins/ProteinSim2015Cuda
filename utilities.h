@@ -7,6 +7,8 @@
 #include <iomanip>
 #include <math.h>
 #include <string>
+#include <random>
+#include <vector>
 
 namespace utilities
 {

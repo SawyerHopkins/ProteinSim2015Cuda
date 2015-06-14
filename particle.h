@@ -1,6 +1,5 @@
 #ifndef PARTICLE_H
 #define PARTICLE_H
-#include <iostream>
 #include "utilities.h"
 
 namespace simulation
@@ -105,27 +104,28 @@ namespace simulation
 			/*-----------------------------------------*/
  
 			//Setters for current position.
-			void setX(float val, float boxSize) { x0 = x; x = utilities::util::safeMod(val,boxSize); }
-			void setY(float val, float boxSize) { y0 = y; y = utilities::util::safeMod(val,boxSize); }
-			void setZ(float val, float boxSize) { z0 = z; z = utilities::util::safeMod(val,boxSize); }
+			void setX(double val, double boxSize) { x0 = x; x = utilities::util::safeMod(val,boxSize); }
+			void setY(double val, double boxSize) { y0 = y; y = utilities::util::safeMod(val,boxSize); }
+			void setZ(double val, double boxSize) { z0 = z; z = utilities::util::safeMod(val,boxSize); }
+			void setPos(double xVal, double yVal, double zVal, double boxSize);
 
 			//Setters for velocity
-			void setVX(float val) { vx = val; }
-			void setVY(float val) { vy = val; }
-			void setVZ(float val) { vz = val; }
+			void setVX(double val) { vx = val; }
+			void setVY(double val) { vy = val; }
+			void setVZ(double val) { vz = val; }
 
 			//Setters for current force.
-			void setFX(float val) { fx0 = fx; fx = val; }
-			void setFY(float val) { fy0 = fy; fy = val; }
-			void setFZ(float val) { fz0 = fz; fz = val; }
+			void setFX(double val) { fx0 = fx; fx = val; }
+			void setFY(double val) { fy0 = fy; fy = val; }
+			void setFZ(double val) { fz0 = fz; fz = val; }
 
 			//Setter for containing cell.
 			void setCell(int x, int y, int z) { cx = x; cy = y; cz = z; }
 			void setIndex(int i) { index = i; }
 
 			//Setters for particle properties
-			void setRadius(float val) { r = val; }
-			void setMass(float val) { m = val; }
+			void setRadius(double val) { r = val; }
+			void setMass(double val) { m = val; }
 
 			/*-----------------------------------------*/
 			/*--------------SYSTEM OUTPUT--------------*/

@@ -37,7 +37,7 @@ namespace physics
 		}
 	}
 
-	void forces::getAcceleration(double index, double time, simulation::particle* item, double (&acc)[3])
+	void forces::getAcceleration(int index, double time, simulation::particle** items)
 		{
 			//Iterate across all elements in the system.
 			//for (std::vector<IForce*>::iterator i = flist.begin(); i != flist.end(); ++i)

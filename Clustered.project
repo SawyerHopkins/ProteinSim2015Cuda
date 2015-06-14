@@ -20,19 +20,19 @@
   <Description/>
   <Dependencies/>
   <VirtualDirectory Name="src">
-    <File Name="main.cpp"/>
     <VirtualDirectory Name="forces">
       <File Name="AOPotential.cpp"/>
       <File Name="brownianForce.cpp"/>
       <File Name="force.cpp"/>
-      <VirtualDirectory Name="headers"/>
+      <VirtualDirectory Name="headers">
+        <File Name="force.h"/>
+      </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="Integrators">
       <File Name="brownianIntegrator.cpp"/>
       <VirtualDirectory Name="headers">
         <File Name="integrator.h"/>
       </VirtualDirectory>
-      <File Name="force.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="system">
       <File Name="cell.cpp"/>
@@ -50,6 +50,7 @@
         <File Name="utilities.h"/>
       </VirtualDirectory>
     </VirtualDirectory>
+    <File Name="main.cpp"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>

@@ -1,13 +1,7 @@
 #ifndef SYSTEM_H
 #define SYSTEM_H
-#include <iostream>
-#include <math.h>
-#include <random>
 #include "cell.h"
-#include "particle.h"
 #include "integrator.h"
-#include "force.h"
-#include "utilities.h"
 
 namespace simulation
 {
@@ -82,6 +76,12 @@ namespace simulation
 			 */
 			void moveParticle(int index, double x, double y, double z);
 
+			/**
+			 * @brief Updates the cells that the particles are located in.
+			 * @return 
+			 */
+			void updateCells();
+
 		public:
 
 			/********************************************//**
@@ -138,7 +138,6 @@ namespace simulation
 			 * @param name The name of the file to write to.
 			 */
 			void writeSystem(std::string name);
-
 
 	};
 

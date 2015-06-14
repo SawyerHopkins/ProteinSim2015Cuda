@@ -105,7 +105,7 @@ namespace physics
 	}
 
 	//Get the acceleration from the Coloumb potential.
-	void brownianForce::getAcceleration(int index, double time, simulation::particle* item, double (&acc)[3])
+	void brownianForce::getAcceleration(int index, double time, simulation::particle** items)
 	{
 
 		//Gets the correlated part of the force from the previous random kick.

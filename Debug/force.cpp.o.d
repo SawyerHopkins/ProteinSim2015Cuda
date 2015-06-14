@@ -1,9 +1,9 @@
-Debug/force.cpp.o: force.cpp force.h utilities.h particle.h cell.h
+Debug/force.cpp.o: force.cpp force.h cell.h particle.h utilities.h
 
 force.h:
 
-utilities.h:
+cell.h:
 
 particle.h:
 
-cell.h:
+utilities.h:

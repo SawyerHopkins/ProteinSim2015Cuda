@@ -29,7 +29,7 @@ namespace physics
 	}
 
 	//Get the acceleration from the Coloumb potential.
-	void AOPotential::getAcceleration(int index, double time, simulation::particle* item, double (&acc)[3])
+	void AOPotential::getAcceleration(int index, double time, simulation::particle** items)
 	{
 
 		//Iterate across all particles.

@@ -36,6 +36,12 @@ namespace simulation
 		delete[] &index;
 	}
 
+	void particle::setPos(double xVal, double yVal, double zVal, double boxSize)
+	{
+		setX(xVal,boxSize);
+		setY(yVal,boxSize);
+		setZ(zVal,boxSize);
+	}
 
 }
 

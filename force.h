@@ -1,10 +1,5 @@
 #ifndef FORCE_H
 #define FORCE_H
-#include <vector>
-#include <cmath>
-#include <random>
-#include "utilities.h"
-#include "particle.h"
 #include "cell.h"
 
 namespace physics
@@ -19,7 +14,7 @@ namespace physics
 	{
 		public:
 			//virtual methods for forces of various parameters.
-			virtual void getAcceleration(int index, double time, simulation::particle* item, double (&acc)[3])=0;
+			virtual void getAcceleration(int index, double time, simulation::particle** items)=0;
 			//Mark if the force is time dependent.
 			virtual bool isTimeDependent()=0;
 	};
@@ -48,7 +43,7 @@ namespace physics
 			void addForce(IForce* f);
 
 			//Calculates the total acceleration
-			void getAcceleration(double index, double time, simulation::particle* item, double (&acc)[3]);
+			void getAcceleration(int index, double time, simulation::particle** items);
 			bool isTimeDependent() { return timeDependent; }
 	};
 
@@ -77,7 +72,7 @@ namespace physics
 			~AOPotential();
 
 			//Evaluates the force.
-			void getAcceleration(int index, double time, simulation::particle* item, double (&acc)[3]);
+			void getAcceleration(int index, double time, simulation::particle** items);
 			bool isTimeDependent() { return false; }
 	};
 
@@ -129,7 +124,7 @@ namespace physics
 			void init(double dt, double t_initial);
 
 			//Evaluates the force.
-			void getAcceleration(int index, double time, simulation::particle* item, double (&acc)[3]);
+			void getAcceleration(int index, double time, simulation::particle** items);
 			bool isTimeDependent() { return false; }
 	};
 

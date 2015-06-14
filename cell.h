@@ -1,6 +1,5 @@
 #ifndef CELL_H
 #define CELL_H
-#include <vector>
 #include "particle.h"
 
 namespace simulation

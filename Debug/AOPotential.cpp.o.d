@@ -1,10 +1,10 @@
-Debug/AOPotential.cpp.o: AOPotential.cpp force.h utilities.h particle.h \
- cell.h
+Debug/AOPotential.cpp.o: AOPotential.cpp force.h cell.h particle.h \
+ utilities.h
 
 force.h:
 
-utilities.h:
+cell.h:
 
 particle.h:
 
-cell.h:
+utilities.h:
