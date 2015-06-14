@@ -1,9 +1,11 @@
-Debug/main.cpp.o: main.cpp point.h GnuPlotter.h utilities.h integrator.h \
- force.h
+Debug/main.cpp.o: main.cpp system.h cell.h particle.h utilities.h \
+ integrator.h force.h
 
-point.h:
+system.h:
 
-GnuPlotter.h:
+cell.h:
+
+particle.h:
 
 utilities.h:
 

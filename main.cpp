@@ -1,13 +1,5 @@
-#include <math.h>
-#include <string>
-#include <iostream>
-#include <chrono>
-#include <thread>
-
-#include "point.h"
+#include "system.h"
 #include "integrator.h"
-#include "force.h"
-#include "utilities.h"
 
 using namespace std;
 
@@ -17,7 +9,7 @@ using namespace std;
 /*----See function for full description----*/
 /*-----------------------------------------*/
 
-static inline void debug(mathTools::points* pt);
+static inline void debug(simulation::system* sys);
 static inline void greeting();
 
 
@@ -39,67 +31,63 @@ int main(int argc, char **argv)
 	//Set the time step for the integrator.
 	double timeStep = .001;
 	//Set the number of particles.
-	double nParticles = 10000;
+	int nParticles = 10000;
 	//Set drag coefficent.
 	double gamma = 750.0;
 	//Set initial temperature.
-	double t_initial = 1.0;
+	double temp = 1.0;
+	//Set concentration.
+	double conc = 0.10;
+	//Set cell scale.
+	int scale = 4;
+	//Set rnd seed. 0 for random seed.
+	int rnd = 90210;
+	//Set particle radius.
+	double r = 0.5;
+	//Set particle mass.
+	double m = 1.0;
+	//Set the cutoff.
+	double cutOff = 1.1;
+	//Set the kT well depth.
+	double kT = 0.46;
 
-	/*-------------Setup-------------*/
+	/*-------------INTEGRATOR-------------*/
 
 	//Create the integrator.
 	cout << "Creating integrator.\n";
-	integrators::verlet * difeq = new integrators::verlet(timeStep);
+	//integrators::verlet * difeq = new integrators::verlet(timeStep);
 
-	cout << "Creating particle system.\n";
-	//Creates the particle system.
-	mathTools::points * pt = new mathTools::points(nParticles, 0.5, t_initial);
-	//Initialize the particle system with random position and velocity.
-	pt->init(0.10);
+	/*---------------FORCES---------------*/
 
 	//Creates a force manager.
 	cout << "Adding required forces.\n\n";
 	physics::forces * force = new physics::forces();
-	force->addForce(new physics::AOPotential(.46,1.1)); //Adds the aggregation force.
-	//force->addForce(new physics::dragForce(gamma)); //Adds drag.
-	//force->addForce(new physics::brownianForce(gamma,1.0,t_initial,timeStep,nParticles)); //Adds brownian dynamics.
+	force->addForce(new physics::AOPotential(kT,cutOff)); //Adds the aggregation force.
+
+	/*---------------SYSTEM---------------*/
+
+	cout << "Creating particle system.\n";
+	//Creates the particle system.
+	simulation::system * sys = new simulation::system(nParticles,conc,scale,m,r,temp,timeStep,rnd,NULL,force);
+
+	/*---------------RUNNING--------------*/
 
 	//Output the stats.
-	cout << "Number of Particles: " << pt->arrSize << "\n";
-	cout << "Box Size: " << pt->getBoxSize() << "\n\n";
+	cout << "Number of Particles: " << sys->getNParticles() << "\n";
+	cout << "Box Size: " << sys->getBoxSize() << "\n\n";
 
 	//Write the initial system.
 	cout << "Writing initial system to file.\n\n";
-	pt->writeSystem("initSys");
-
-	//std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+	sys->writeSystem("initSys");
 
 	/*-------------Iterator-------------*/
 	cout << "Starting integration.\n\n";
-	long counter = 0;
-	while(difeq->getSystemTime() < endTime)
-	{
-		for (int i =0; i < pt->arrSize; i++)
-		{
-			difeq->nextSystem(i,pt,force);
-		}
-		utilities::loadBar(difeq->getSystemTime(),endTime,counter);
-		counter++;
-		difeq->advanceTime();
 
-		if ((counter % 1000) == 0)
-		{
-			std::string name = "system" + std::to_string(counter) + ".txt";
-			//pt->writeSystem(name);
-		}
-
-		//debug(pt);
-		//std::this_thread::sleep_for(std::chrono::milliseconds(3000));
-	}
+	sys->run(endTime);
 
 	//Write the final system.
 	cout << "\n" << "Integration complete. Writing final system to file.";
-	pt->writeSystem("finSys");
+	sys->writeSystem("finSys");
 
 	//Debug code 0 -> No Error:
 	return 0;
@@ -109,20 +97,24 @@ int main(int argc, char **argv)
 /*--------------AUX FUNCTIONS--------------*/
 /*-----------------------------------------*/
 
-//Writes the state of the system to the console.
-void debug(mathTools::points* pt)
+/**
+ * @brief Writes the state of the system to the console.
+ * @param sys The system to output.
+ */
+void debug(simulation::system* sys)
 {
 	/*-------------Debugging-------------*/
 	/*-Out the position of each particle-*/
-	for (int i = 0; i < pt->arrSize; i++)
+	for (int i = 0; i < sys->getNParticles(); i++)
 	{
-		pt->writePosition(i);
+		sys->writePosition(i);
 	}
 	cout << "\n";
-	//cout << "\n" << dist(pt->getX(0),pt->getX(1),pt->getY(0),pt->getY(1),pt->getZ(0),pt->getZ(1)) << "\n\n";
 }
 
-//Output the program name and information.
+/**
+ * @brief Output the program name and information.
+ */
 void greeting()
 {
 	cout << "---Particle Simulator 2015---\n";

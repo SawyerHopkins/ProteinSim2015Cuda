@@ -6,6 +6,8 @@
 #include "cell.h"
 #include "particle.h"
 #include "integrator.h"
+#include "force.h"
+#include "utilities.h"
 
 namespace simulation
 {
@@ -15,16 +17,18 @@ namespace simulation
 
 		private:
 
-			/*-----------------------------------------*/
-			/*------------SYSTEM VARIABLES-------------*/
-			/*-----------------------------------------*/
+			/********************************************//**
+			*-----------------SYSTEM VARIABLES---------------
+			 ***********************************************/
 
 			//Information about the system.
 			int nParticles;
-			float concentration;
+			double concentration;
 			int boxSize;
 			int cellSize;
-			float temp;
+			double temp;
+			double currentTime;
+			double dTime;
 
 			//Random number seed.
 			int seed;
@@ -35,35 +39,106 @@ namespace simulation
 
 			//System integrator.
 			integrators::I_integrator* integrator;
+			physics::forces* sysForces;
 
-			/*-----------------------------------------*/
-			/*---------------SYSTEM INIT---------------*/
-			/*-----------------------------------------*/
+			/********************************************//**
+			*-------------------SYSTEM INIT------------------
+			 ***********************************************/
 
-			//System setup.
+			/**
+			 * @brief Creates the cell system.
+			 * @param numCells The number of cells to be created.
+			 * @param scale The number of cells in each dimension. (numCells^1/3)
+			 */
 			void initCells(int numCells, int scale);
-			void initParticles();
+			/**
+			 * @brief Creates an initial uniform distribution of particles.
+			 * @param r The radius of the particles
+			 * @param m The mass of the particles.
+			 */
+			void initParticles(int r, int m);
 
-			//System tools.
+			/**
+			 * @brief Creates a maxwell distribution of velocities for the system temperature.
+			 * @param gen The random generator the initalize particles.
+			 * @param distribution The distribution for the particles.
+			 */
 			void maxwellVelocityInit(std::mt19937* gen, std::uniform_real_distribution<double>* distribution);
+			/**
+			 * @brief Fixes any particle overlap in the random initalization.
+			 * @param gen The random generator the initalize particles.
+			 * @param distribution The distribution for the particles.
+			 */
 			void initCheck(std::mt19937* gen, std::uniform_real_distribution<double>* distribution);
 
-			/*-----------------------------------------*/
-			/*-------------SYSTEM HANDLING-------------*/
-			/*-----------------------------------------*/
+			/********************************************//**
+			*-----------------SYSTEM HANDLING----------------
+			 ***********************************************/
 
-			//Particle handling.
-			void moveParticle(int index, float x, float y, float z);
+			/**
+			 * @brief Handes moving the particles.
+			 * @param index The index of the particle to be moved.
+			 * @param x,y,z The new coordinates of the particle.
+			 */
+			void moveParticle(int index, double x, double y, double z);
 
 		public:
 
-			/*-----------------------------------------*/
-			/*-----------SYSTEM CONSTRUCTION-----------*/
-			/*-----------------------------------------*/
+			/********************************************//**
+			*---------------SYSTEM CONSTRUCTION--------------
+			 ***********************************************/
 
-			//Constructor/Destructor
-			system(int nPart, float conc, int scale, float r, float sysTemp, int rnd, integrators::I_integrator* sysInt);
+			/**
+			 * @brief Constructs the particle system.
+			 * @return Nothing.
+			 */
+			system(int nPart, double conc, int scale, double m, double r, double sysTemp, double sysDT, int rnd, integrators::I_integrator* sysInt, physics::forces* sysFcs);
+			/**
+			 * @brief Destructs the particle system.
+			 * @return Nothing.
+			 */
 			~system();
+
+			/********************************************//**
+			*-----------------SYSTEM GETTERS-----------------
+			 ***********************************************/
+
+			/**
+			 * @brief Gets the number of particles in the system.
+			 * @return Number of particles.
+			 */
+			const int getNParticles() const { return nParticles; }
+			/**
+			 * @brief Gets the length of the system box.
+			 * @return length of the system box.
+			 */
+			const int getBoxSize() const { return boxSize; }
+
+			/********************************************//**
+			*-----------------SYSTEM HANDLING----------------
+			 ***********************************************/
+
+			/**
+			 * @brief Runs the system.
+			 * @param endTime When to stop running the simulation.
+			 */
+			void run(double endTime);
+
+			/********************************************//**
+			*------------------SYSTEM OUTPUT-----------------
+			 ***********************************************/
+
+			/**
+			 * @brief Writes the position of a particle.
+			 * @param index The index of the particle to write.
+			 */
+			void writePosition(int index) { particles[index]->writePosition(); }
+			/**
+			 * @brief Writes the system to file.
+			 * @param name The name of the file to write to.
+			 */
+			void writeSystem(std::string name);
+
 
 	};
 

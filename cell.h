@@ -26,10 +26,16 @@ namespace simulation
 			cell* front;
 			cell* back;
 
-			//Add member particle.
+			/**
+			 * @brief Adds a particle to the cell.
+			 * @param item The particle to add.
+			 */
 			void addMember(particle* item) { members.push_back(item); item->setIndex(members.size() - 1); }
 
-			//Remove member particle
+			/**
+			 * @brief Removes a particle from the cell.
+			 * @param index The index of the particle to remove.
+			 */
 			void removeMember(int index);
 
 	};

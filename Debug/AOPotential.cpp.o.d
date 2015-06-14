@@ -1,10 +1,10 @@
-Debug/AOPotential.cpp.o: AOPotential.cpp force.h point.h GnuPlotter.h \
- utilities.h
+Debug/AOPotential.cpp.o: AOPotential.cpp force.h utilities.h particle.h \
+ cell.h
 
 force.h:
 
-point.h:
-
-GnuPlotter.h:
-
 utilities.h:
+
+particle.h:
+
+cell.h:

@@ -21,26 +21,35 @@
   <Dependencies/>
   <VirtualDirectory Name="src">
     <File Name="main.cpp"/>
-    <File Name="point.h"/>
-    <File Name="point.cpp"/>
-    <File Name="verlet.cpp"/>
-    <File Name="force.h"/>
-    <File Name="force.cpp"/>
-    <File Name="GnuPlotter.h"/>
-    <File Name="GnuPlotter.cpp"/>
-    <File Name="drag.cpp"/>
-    <File Name="integrator.h"/>
-    <File Name="utilities.h"/>
-    <File Name="utilities.cpp"/>
-    <File Name="brownianForce.cpp"/>
-    <File Name="cell.cpp"/>
-    <File Name="cell.h"/>
-    <File Name="particle.h"/>
-    <File Name="particle.cpp"/>
-    <File Name="system.h"/>
-    <File Name="system.cpp"/>
-    <File Name="brownian.cpp"/>
-    <File Name="AOPotential.cpp"/>
+    <VirtualDirectory Name="forces">
+      <File Name="AOPotential.cpp"/>
+      <File Name="brownianForce.cpp"/>
+      <File Name="force.cpp"/>
+      <VirtualDirectory Name="headers"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="Integrators">
+      <File Name="brownianIntegrator.cpp"/>
+      <VirtualDirectory Name="headers">
+        <File Name="integrator.h"/>
+      </VirtualDirectory>
+      <File Name="force.h"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="system">
+      <File Name="cell.cpp"/>
+      <File Name="particle.cpp"/>
+      <File Name="system.cpp"/>
+      <VirtualDirectory Name="headers">
+        <File Name="cell.h"/>
+        <File Name="particle.h"/>
+        <File Name="system.h"/>
+      </VirtualDirectory>
+    </VirtualDirectory>
+    <VirtualDirectory Name="utilities">
+      <File Name="utilities.cpp"/>
+      <VirtualDirectory Name="headers">
+        <File Name="utilities.h"/>
+      </VirtualDirectory>
+    </VirtualDirectory>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>

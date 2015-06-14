@@ -7,8 +7,12 @@ namespace simulation
 	/*----------CONSTRUCTOR/DESTRUCTOR---------*/
 	/*-----------------------------------------*/
 
-	system::system(int nPart, float conc, int scale, float r, float sysTemp, int rnd, integrators::I_integrator* sysInt)
+	system::system(int nPart, double conc, int scale, double m, double r, double sysTemp, double sysDT, int rnd, integrators::I_integrator* sysInt, physics::forces* sysFcs)
 	{
+
+		//Set time information
+		currentTime = 0;
+		dTime = sysDT;
 
 		//Set the random number generator seed.
 		seed = rnd;
@@ -22,6 +26,9 @@ namespace simulation
 		//Set the integration method.
 		integrator = sysInt;
 
+		//Set the internal forces.
+		sysForces = sysFcs;
+
 		//Create a box based on desired concentration.
 		double vP = nPart*(4.0/3.0)*atan(1)*4*r*r*r;
 		boxSize = (int) cbrt(vP / conc);
@@ -33,25 +40,61 @@ namespace simulation
 
 		//Calculates the number of cells needed.
 		cellSize = boxSize / scale;
-		int numCells = pow(scale,3.0);
+		int realScale = boxSize / cellSize;
+		int numCells = pow(realScale,3.0);
 
 		//Create cells.
-		initCells(numCells, scale);
+		initCells(numCells, realScale);
 
 		//Create particles.
-		initParticles();
+		initParticles(r,m);
 
 	}
 
 	system::~system()
 	{
+		//Deletes the particles
+		for (int i=0; i < nParticles; i++)
+		{
+			delete[] particles[i];
+		}
+		delete[] particles;
+
+		int scale = boxSize/cellSize;
+
+		//Deletes the cell system.
+		for (int x=0; x < scale; x++)
+		{
+			for (int y=0; y < scale; y++)
+			{
+				for (int z=0; z < scale; z++)
+				{
+					delete[] cells[x][y][z];
+				}
+				delete[] cells[x][y];
+			}
+			delete[] cells[x];
+		}
+
+		delete[] cells;
+
+		//Delete the constants.
+		delete[] &nParticles;
+		delete[] &concentration;
+		delete[] &boxSize;
+		delete[] &cellSize;
+		delete[] &temp;
+		delete[] &currentTime;
+		delete[] &dTime;
+		delete[] &seed;
+		delete[] integrator;
+		delete[] sysForces;
 	}
 
 	/*-----------------------------------------*/
 	/*---------------SYSTEM INIT---------------*/
 	/*-----------------------------------------*/
 
-	//Create cells and initialize their neighbors.
 	void system::initCells(int numCells, int scale)
 	{
 
@@ -78,8 +121,7 @@ namespace simulation
 		
 	}
 
-	//Create particles and assign initial cells.
-	void system::initParticles()
+	void system::initParticles(int r, int m)
 	{
 
 		particles = new particle*[nParticles];
@@ -101,6 +143,10 @@ namespace simulation
 			particles[i]->setX( distribution(gen) * boxSize , boxSize);
 			particles[i]->setY( distribution(gen) * boxSize , boxSize);
 			particles[i]->setZ( distribution(gen) * boxSize , boxSize);
+
+			particles[i]->setRadius(r);
+			particles[i]->setMass(m);
+
 		}
 
 		//Checks the system for overlap.
@@ -123,7 +169,6 @@ namespace simulation
 
 	}
 
-	//Looks for overlapping particles in the initial random distribution.
 	void system::initCheck(std::mt19937* gen, std::uniform_real_distribution<double>* distribution)
 	{
 		//Keeps track of how many resolutions we have attempted.
@@ -146,9 +191,9 @@ namespace simulation
 					if (i != j)
 					{
 						//Gets the distance between the two particles.
-						double distX = utilities::pbcDist(particles[i]->getX(),particles[j]->getX(),boxSize);
-						double distY = utilities::pbcDist(particles[i]->getY(),particles[j]->getY(),boxSize);
-						double distZ = utilities::pbcDist(particles[i]->getZ(),particles[j]->getZ(),boxSize);
+						double distX = utilities::util::pbcDist(particles[i]->getX(),particles[j]->getX(),boxSize);
+						double distY = utilities::util::pbcDist(particles[i]->getY(),particles[j]->getY(),boxSize);
+						double distZ = utilities::util::pbcDist(particles[i]->getZ(),particles[j]->getZ(),boxSize);
 
 						double radius = std::sqrt((distX*distX)+(distY*distY)+(distZ*distZ));
 
@@ -182,7 +227,6 @@ namespace simulation
 		}
 	}
 
-	//Create an initial maxwell distribution of velocities at the specified system temperature.
 	void system::maxwellVelocityInit(std::mt19937* gen, std::uniform_real_distribution<double>* distribution)
 	{
 		double r1,r2;
@@ -285,7 +329,7 @@ namespace simulation
 	/*------------PARTICLE HANDLING------------*/
 	/*-----------------------------------------*/
 
-	void system::moveParticle(int index, float x, float y, float z)
+	void system::moveParticle(int index, double x, double y, double z)
 	{
 		//New cell
 		int cX = particles[index]->getX() / cellSize;
@@ -311,6 +355,32 @@ namespace simulation
 		particles[index]->setY(x,boxSize);
 		particles[index]->setZ(x,boxSize);
 
+	}
+
+	void system::run(double endTime)
+	{
+		while (currentTime < endTime)
+		{
+			currentTime += dTime;
+		}
+	}
+
+	/*-----------------------------------------*/
+	/*--------------SYSTEM OUTPUT--------------*/
+	/*-----------------------------------------*/
+
+	void system::writeSystem(std::string name)
+	{
+		//Create a stream to the desired file.
+		std::ofstream myFile;
+		myFile.open(name + ".txt");
+		//Write each point in the system as a line of csv formatted as: X,Y,Z
+		for (int i = 0; i < nParticles; i++)
+		{
+			myFile << particles[i]->getX() << "," << particles[i]->getY() << "," << particles[i]->getZ() << "\n";
+		}
+		//Close the stream.
+		myFile.close();
 	}
 
 }

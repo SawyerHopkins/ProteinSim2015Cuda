@@ -13,7 +13,7 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=Sawyer Hopkins
-Date                   :=06/11/15
+Date                   :=06/14/15
 CodeLitePath           :="/home/sawyer/.codelite"
 LinkerName             :=/usr/bin/g++-4.9
 SharedObjectLinkerName :=/usr/bin/g++-4.9 -shared -fPIC
@@ -60,8 +60,7 @@ AS       := /usr/bin/as
 ## User defined environment variables
 ##
 CodeLiteDir:=/usr/share/codelite
-Objects0=$(IntermediateDirectory)/main.cpp$(ObjectSuffix) $(IntermediateDirectory)/point.cpp$(ObjectSuffix) $(IntermediateDirectory)/verlet.cpp$(ObjectSuffix) $(IntermediateDirectory)/force.cpp$(ObjectSuffix) $(IntermediateDirectory)/GnuPlotter.cpp$(ObjectSuffix) $(IntermediateDirectory)/drag.cpp$(ObjectSuffix) $(IntermediateDirectory)/utilities.cpp$(ObjectSuffix) $(IntermediateDirectory)/brownianForce.cpp$(ObjectSuffix) $(IntermediateDirectory)/cell.cpp$(ObjectSuffix) $(IntermediateDirectory)/particle.cpp$(ObjectSuffix) \
-	$(IntermediateDirectory)/system.cpp$(ObjectSuffix) $(IntermediateDirectory)/brownian.cpp$(ObjectSuffix) $(IntermediateDirectory)/AOPotential.cpp$(ObjectSuffix) 
+Objects0=$(IntermediateDirectory)/main.cpp$(ObjectSuffix) $(IntermediateDirectory)/AOPotential.cpp$(ObjectSuffix) $(IntermediateDirectory)/brownianForce.cpp$(ObjectSuffix) $(IntermediateDirectory)/force.cpp$(ObjectSuffix) $(IntermediateDirectory)/brownianIntegrator.cpp$(ObjectSuffix) $(IntermediateDirectory)/cell.cpp$(ObjectSuffix) $(IntermediateDirectory)/particle.cpp$(ObjectSuffix) $(IntermediateDirectory)/system.cpp$(ObjectSuffix) $(IntermediateDirectory)/utilities.cpp$(ObjectSuffix) 
 
 
 
@@ -96,21 +95,21 @@ $(IntermediateDirectory)/main.cpp$(DependSuffix): main.cpp
 $(IntermediateDirectory)/main.cpp$(PreprocessSuffix): main.cpp
 	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/main.cpp$(PreprocessSuffix) "main.cpp"
 
-$(IntermediateDirectory)/point.cpp$(ObjectSuffix): point.cpp $(IntermediateDirectory)/point.cpp$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/sawyer/Programming/PhDResearch/Clustered/point.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/point.cpp$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/point.cpp$(DependSuffix): point.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/point.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/point.cpp$(DependSuffix) -MM "point.cpp"
+$(IntermediateDirectory)/AOPotential.cpp$(ObjectSuffix): AOPotential.cpp $(IntermediateDirectory)/AOPotential.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/sawyer/Programming/PhDResearch/Clustered/AOPotential.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/AOPotential.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/AOPotential.cpp$(DependSuffix): AOPotential.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/AOPotential.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/AOPotential.cpp$(DependSuffix) -MM "AOPotential.cpp"
 
-$(IntermediateDirectory)/point.cpp$(PreprocessSuffix): point.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/point.cpp$(PreprocessSuffix) "point.cpp"
+$(IntermediateDirectory)/AOPotential.cpp$(PreprocessSuffix): AOPotential.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/AOPotential.cpp$(PreprocessSuffix) "AOPotential.cpp"
 
-$(IntermediateDirectory)/verlet.cpp$(ObjectSuffix): verlet.cpp $(IntermediateDirectory)/verlet.cpp$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/sawyer/Programming/PhDResearch/Clustered/verlet.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/verlet.cpp$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/verlet.cpp$(DependSuffix): verlet.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/verlet.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/verlet.cpp$(DependSuffix) -MM "verlet.cpp"
+$(IntermediateDirectory)/brownianForce.cpp$(ObjectSuffix): brownianForce.cpp $(IntermediateDirectory)/brownianForce.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/sawyer/Programming/PhDResearch/Clustered/brownianForce.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/brownianForce.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/brownianForce.cpp$(DependSuffix): brownianForce.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/brownianForce.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/brownianForce.cpp$(DependSuffix) -MM "brownianForce.cpp"
 
-$(IntermediateDirectory)/verlet.cpp$(PreprocessSuffix): verlet.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/verlet.cpp$(PreprocessSuffix) "verlet.cpp"
+$(IntermediateDirectory)/brownianForce.cpp$(PreprocessSuffix): brownianForce.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/brownianForce.cpp$(PreprocessSuffix) "brownianForce.cpp"
 
 $(IntermediateDirectory)/force.cpp$(ObjectSuffix): force.cpp $(IntermediateDirectory)/force.cpp$(DependSuffix)
 	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/sawyer/Programming/PhDResearch/Clustered/force.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/force.cpp$(ObjectSuffix) $(IncludePath)
@@ -120,37 +119,13 @@ $(IntermediateDirectory)/force.cpp$(DependSuffix): force.cpp
 $(IntermediateDirectory)/force.cpp$(PreprocessSuffix): force.cpp
 	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/force.cpp$(PreprocessSuffix) "force.cpp"
 
-$(IntermediateDirectory)/GnuPlotter.cpp$(ObjectSuffix): GnuPlotter.cpp $(IntermediateDirectory)/GnuPlotter.cpp$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/sawyer/Programming/PhDResearch/Clustered/GnuPlotter.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/GnuPlotter.cpp$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/GnuPlotter.cpp$(DependSuffix): GnuPlotter.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/GnuPlotter.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/GnuPlotter.cpp$(DependSuffix) -MM "GnuPlotter.cpp"
+$(IntermediateDirectory)/brownianIntegrator.cpp$(ObjectSuffix): brownianIntegrator.cpp $(IntermediateDirectory)/brownianIntegrator.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/sawyer/Programming/PhDResearch/Clustered/brownianIntegrator.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/brownianIntegrator.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/brownianIntegrator.cpp$(DependSuffix): brownianIntegrator.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/brownianIntegrator.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/brownianIntegrator.cpp$(DependSuffix) -MM "brownianIntegrator.cpp"
 
-$(IntermediateDirectory)/GnuPlotter.cpp$(PreprocessSuffix): GnuPlotter.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/GnuPlotter.cpp$(PreprocessSuffix) "GnuPlotter.cpp"
-
-$(IntermediateDirectory)/drag.cpp$(ObjectSuffix): drag.cpp $(IntermediateDirectory)/drag.cpp$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/sawyer/Programming/PhDResearch/Clustered/drag.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/drag.cpp$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/drag.cpp$(DependSuffix): drag.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/drag.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/drag.cpp$(DependSuffix) -MM "drag.cpp"
-
-$(IntermediateDirectory)/drag.cpp$(PreprocessSuffix): drag.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/drag.cpp$(PreprocessSuffix) "drag.cpp"
-
-$(IntermediateDirectory)/utilities.cpp$(ObjectSuffix): utilities.cpp $(IntermediateDirectory)/utilities.cpp$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/sawyer/Programming/PhDResearch/Clustered/utilities.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/utilities.cpp$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/utilities.cpp$(DependSuffix): utilities.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/utilities.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/utilities.cpp$(DependSuffix) -MM "utilities.cpp"
-
-$(IntermediateDirectory)/utilities.cpp$(PreprocessSuffix): utilities.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/utilities.cpp$(PreprocessSuffix) "utilities.cpp"
-
-$(IntermediateDirectory)/brownianForce.cpp$(ObjectSuffix): brownianForce.cpp $(IntermediateDirectory)/brownianForce.cpp$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/sawyer/Programming/PhDResearch/Clustered/brownianForce.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/brownianForce.cpp$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/brownianForce.cpp$(DependSuffix): brownianForce.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/brownianForce.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/brownianForce.cpp$(DependSuffix) -MM "brownianForce.cpp"
-
-$(IntermediateDirectory)/brownianForce.cpp$(PreprocessSuffix): brownianForce.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/brownianForce.cpp$(PreprocessSuffix) "brownianForce.cpp"
+$(IntermediateDirectory)/brownianIntegrator.cpp$(PreprocessSuffix): brownianIntegrator.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/brownianIntegrator.cpp$(PreprocessSuffix) "brownianIntegrator.cpp"
 
 $(IntermediateDirectory)/cell.cpp$(ObjectSuffix): cell.cpp $(IntermediateDirectory)/cell.cpp$(DependSuffix)
 	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/sawyer/Programming/PhDResearch/Clustered/cell.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/cell.cpp$(ObjectSuffix) $(IncludePath)
@@ -176,21 +151,13 @@ $(IntermediateDirectory)/system.cpp$(DependSuffix): system.cpp
 $(IntermediateDirectory)/system.cpp$(PreprocessSuffix): system.cpp
 	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/system.cpp$(PreprocessSuffix) "system.cpp"
 
-$(IntermediateDirectory)/brownian.cpp$(ObjectSuffix): brownian.cpp $(IntermediateDirectory)/brownian.cpp$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/sawyer/Programming/PhDResearch/Clustered/brownian.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/brownian.cpp$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/brownian.cpp$(DependSuffix): brownian.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/brownian.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/brownian.cpp$(DependSuffix) -MM "brownian.cpp"
+$(IntermediateDirectory)/utilities.cpp$(ObjectSuffix): utilities.cpp $(IntermediateDirectory)/utilities.cpp$(DependSuffix)
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/sawyer/Programming/PhDResearch/Clustered/utilities.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/utilities.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/utilities.cpp$(DependSuffix): utilities.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/utilities.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/utilities.cpp$(DependSuffix) -MM "utilities.cpp"
 
-$(IntermediateDirectory)/brownian.cpp$(PreprocessSuffix): brownian.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/brownian.cpp$(PreprocessSuffix) "brownian.cpp"
-
-$(IntermediateDirectory)/AOPotential.cpp$(ObjectSuffix): AOPotential.cpp $(IntermediateDirectory)/AOPotential.cpp$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/sawyer/Programming/PhDResearch/Clustered/AOPotential.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/AOPotential.cpp$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/AOPotential.cpp$(DependSuffix): AOPotential.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/AOPotential.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/AOPotential.cpp$(DependSuffix) -MM "AOPotential.cpp"
-
-$(IntermediateDirectory)/AOPotential.cpp$(PreprocessSuffix): AOPotential.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/AOPotential.cpp$(PreprocessSuffix) "AOPotential.cpp"
+$(IntermediateDirectory)/utilities.cpp$(PreprocessSuffix): utilities.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/utilities.cpp$(PreprocessSuffix) "utilities.cpp"
 
 
 -include $(IntermediateDirectory)/*$(DependSuffix)

@@ -2,10 +2,10 @@
 
 using namespace std;
 
-namespace mathTools
+namespace utilities
 {
 	//fmod can't do negative numbers so use this.
-	double utilities::safeMod(double val, double base)
+	double util::safeMod(double val, double base)
 	{
 		double output = 0.0;
 		//0 mod n is always zero
@@ -28,7 +28,7 @@ namespace mathTools
 
 	// Process has done i out of n rounds,
 	// and we want a bar of width w and resolution r.
-	void utilities::loadBar(double x0, int n, long counter, int w)
+	void util::loadBar(double x0, int n, long counter, int w)
 	{
 		/*-----------------------------------------*/
 		/*---------------SOURCE FROM---------------*/
@@ -53,7 +53,7 @@ namespace mathTools
 	}
 
 	//Gets the distance between to particles considering periodic boundary conditions.
-	double utilities::pbcDist(double v1, double v2, double size)
+	double util::pbcDist(double v1, double v2, double size)
 	{
 		//If the particles are further than half the box size away from each other
 		//then then they are closer periodically.
@@ -77,13 +77,12 @@ namespace mathTools
 	}
 
 	//Normalizes the distances to create a unit vector in &acc[3].
-	void utilities::unitVector(double dX, double dY, double dZ, double r, double (&acc)[3])
+	void util::unitVector(double dX, double dY, double dZ, double r, double (&acc)[3])
 	{
 		acc[0]=-dX/r;
 		acc[1]=-dY/r;
 		acc[2]=-dZ/r;
 	}
-
 
 }
 

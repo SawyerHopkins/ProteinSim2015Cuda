@@ -105,36 +105,36 @@ namespace physics
 	}
 
 	//Get the acceleration from the Coloumb potential.
-	void brownianForce::getAcceleration(int index, double time, mathTools::points* pts, double (&acc)[3])
+	void brownianForce::getAcceleration(int index, double time, simulation::particle* item, double (&acc)[3])
 	{
 
 		//Gets the correlated part of the force from the previous random kick.
-		if (time > 0)
-		{
-			*(memCorrX+index) = (*distribution)(*gen);
-			*(memCorrY+index) = (*distribution)(*gen);
-			*(memCorrZ+index) = (*distribution)(*gen);
+		//if (time > 0)
+		//{
+		//	*(memCorrX+index) = (*distribution)(*gen);
+		//	*(memCorrY+index) = (*distribution)(*gen);
+		//	*(memCorrZ+index) = (*distribution)(*gen);
 
-			*(memCorrX+index)=sig2 * ((corr * *(memX+index)) + (rc12 * *(memCorrX+index)));
-			*(memCorrY+index)=sig2 * ((corr * *(memY+index)) + (rc12 * *(memCorrY+index)));
-			*(memCorrZ+index)=sig2 * ((corr * *(memZ+index)) + (rc12 * *(memCorrZ+index)));
-		}
-		else
-		{
-			//If t=0 there was no previous kick.
-			*(memCorrX+index)=0.0;
-			*(memCorrY+index)=0.0;
-			*(memCorrZ+index)=0.0;
-		}
+		//	*(memCorrX+index)=sig2 * ((corr * *(memX+index)) + (rc12 * *(memCorrX+index)));
+		//	*(memCorrY+index)=sig2 * ((corr * *(memY+index)) + (rc12 * *(memCorrY+index)));
+		//	*(memCorrZ+index)=sig2 * ((corr * *(memZ+index)) + (rc12 * *(memCorrZ+index)));
+		//}
+		//else
+		//{
+		//	//If t=0 there was no previous kick.
+		//	*(memCorrX+index)=0.0;
+		//	*(memCorrY+index)=0.0;
+		//	*(memCorrZ+index)=0.0;
+		//}
 
 		//Remember this brownian kick for the next iteration.
-		*(memX+index) = (*distribution)(*gen);
-		*(memY+index) = (*distribution)(*gen);
-		*(memZ+index) = (*distribution)(*gen);
+		//*(memX+index) = (*distribution)(*gen);
+		//*(memY+index) = (*distribution)(*gen);
+		//*(memZ+index) = (*distribution)(*gen);
 
 		//Put these two parts of the force together with the appropriate coefficents.
 		//See Pathria chapter 15 and/or GUNSTEREN & BERENDSEN 1981.
-		acc[0] = (sig1 * *(memX+index)) + (c0 * *(memCorrX+index));
+		//acc[0] = (sig1 * *(memX+index)) + (c0 * *(memCorrX+index));
 
 	}
 }

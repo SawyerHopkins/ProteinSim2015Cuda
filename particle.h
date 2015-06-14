@@ -1,5 +1,6 @@
 #ifndef PARTICLE_H
 #define PARTICLE_H
+#include <iostream>
 #include "utilities.h"
 
 namespace simulation
@@ -65,48 +66,48 @@ namespace simulation
 			/*-----------------------------------------*/
 
 			//Getters for current position.
-			double getX() { return x; }
-			double getY() { return y; }
-			double getZ() { return z; }
+			const double getX() const { return x; }
+			const double getY() const { return y; }
+			const double getZ() const { return z; }
 
 			//Getters for previous position.
-			double getX0() { return x0; }
-			double getY0() { return y0; }
-			double getZ0() { return z0; }
+			const double getX0() const { return x0; }
+			const double getY0() const { return y0; }
+			const double getZ0() const { return z0; }
 
 			//Getters for velocity.
-			double getVX() { return vx; }
-			double getVY() { return vy; }
-			double getVZ() { return vz; }
+			const double getVX() const { return vx; }
+			const double getVY() const { return vy; }
+			const double getVZ() const { return vz; }
  
 			//Getters for current force.
-			double getFX() { return fx; }
-			double getFY() { return fy; }
-			double getFZ() { return fz; }
+			const double getFX() const { return fx; }
+			const double getFY() const { return fy; }
+			const double getFZ() const { return fz; }
 
 			//Getters for previous force.
-			double getFX0() { return fx0; }
-			double getFY0() { return fy0; }
-			double getFZ0() { return fz0; }
+			const double getFX0() const { return fx0; }
+			const double getFY0() const { return fy0; }
+			const double getFZ0() const { return fz0; }
 
 			//Getters for containing cell.
-			double getCX() { return cx; }
-			double getCY() { return cy; }
-			double getCZ() { return cz; }
-			double getIndex() { return index; }
+			const double getCX() const { return cx; }
+			const double getCY() const { return cy; }
+			const double getCZ() const { return cz; }
+			const double getIndex() const { return index; }
 
 			//Getters for particle properties
-			double getRadius() { return r; }
-			double getMass() { return m; }
+			const double getRadius() const { return r; }
+			const double getMass() const { return m; }
  
 			/*-----------------------------------------*/
 			/*--------------SYSTEM SETTERS-------------*/
 			/*-----------------------------------------*/
  
 			//Setters for current position.
-			void setX(float val, float boxSize) { x0 = x; x = mathTools::utilities::safeMod(val,boxSize); }
-			void setY(float val, float boxSize) { y0 = y; y = mathTools::utilities::safeMod(val,boxSize); }
-			void setZ(float val, float boxSize) { z0 = z; z = mathTools::utilities::safeMod(val,boxSize); }
+			void setX(float val, float boxSize) { x0 = x; x = utilities::util::safeMod(val,boxSize); }
+			void setY(float val, float boxSize) { y0 = y; y = utilities::util::safeMod(val,boxSize); }
+			void setZ(float val, float boxSize) { z0 = z; z = utilities::util::safeMod(val,boxSize); }
 
 			//Setters for velocity
 			void setVX(float val) { vx = val; }
@@ -125,6 +126,15 @@ namespace simulation
 			//Setters for particle properties
 			void setRadius(float val) { r = val; }
 			void setMass(float val) { m = val; }
+
+			/*-----------------------------------------*/
+			/*--------------SYSTEM OUTPUT--------------*/
+			/*-----------------------------------------*/
+
+			/**
+			 * @brief Writes the position of the particle to the console.
+			 */
+			void writePosition() { std::cout << x << ", " << y << ", " << z << "\n"; }
 
 	};
 

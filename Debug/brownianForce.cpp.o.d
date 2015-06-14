@@ -1,10 +1,10 @@
-Debug/brownianForce.cpp.o: brownianForce.cpp force.h point.h GnuPlotter.h \
- utilities.h
+Debug/brownianForce.cpp.o: brownianForce.cpp force.h utilities.h \
+ particle.h cell.h
 
 force.h:
 
-point.h:
-
-GnuPlotter.h:
-
 utilities.h:
+
+particle.h:
+
+cell.h:

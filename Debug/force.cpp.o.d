@@ -1,9 +1,9 @@
-Debug/force.cpp.o: force.cpp force.h point.h GnuPlotter.h utilities.h
+Debug/force.cpp.o: force.cpp force.h utilities.h particle.h cell.h
 
 force.h:
 
-point.h:
-
-GnuPlotter.h:
-
 utilities.h:
+
+particle.h:
+
+cell.h:

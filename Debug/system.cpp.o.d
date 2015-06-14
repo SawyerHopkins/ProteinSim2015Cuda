@@ -1,5 +1,5 @@
 Debug/system.cpp.o: system.cpp system.h cell.h particle.h utilities.h \
- integrator.h force.h point.h GnuPlotter.h
+ integrator.h force.h
 
 system.h:
 
@@ -12,7 +12,3 @@ utilities.h:
 integrator.h:
 
 force.h:
-
-point.h:
-
-GnuPlotter.h:

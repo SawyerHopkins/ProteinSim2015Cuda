@@ -3,8 +3,9 @@
 #include <vector>
 #include <cmath>
 #include <random>
-#include "point.h"
 #include "utilities.h"
+#include "particle.h"
+#include "cell.h"
 
 namespace physics
 {
@@ -18,7 +19,7 @@ namespace physics
 	{
 		public:
 			//virtual methods for forces of various parameters.
-			virtual void getAcceleration(int index, double time, mathTools::points* pts, double (&acc)[3])=0;
+			virtual void getAcceleration(int index, double time, simulation::particle* item, double (&acc)[3])=0;
 			//Mark if the force is time dependent.
 			virtual bool isTimeDependent()=0;
 	};
@@ -47,36 +48,12 @@ namespace physics
 			void addForce(IForce* f);
 
 			//Calculates the total acceleration
-			void getAcceleration(double index, double time, mathTools::points* pts, double (&acc)[3]);
+			void getAcceleration(double index, double time, simulation::particle* item, double (&acc)[3]);
 			bool isTimeDependent() { return timeDependent; }
 	};
 
 /*-----------------------------------------*/
-/*------------LINEAR DRAG FORCE------------*/
-/*-----------------------------------------*/
-
-	//Drag force.
-	class dragForce : public IForce
-	{
-
-	private:
-
-			//Variables vital to the force.
-			double gamma;
-
-		public:
-
-			//Constructor/Destructor
-			dragForce(double coeff) { gamma = coeff; }
-			~dragForce() { delete[] &gamma; };
-
-			//Evaluates the force.
-			void getAcceleration(int index, double time, mathTools::points* pts, double (&acc)[3]);
-			bool isTimeDependent() { return false; }
-	};
-
-/*-----------------------------------------*/
-/*-------------AGGREGATE FORCE-------------*/
+/*---------------AO POTENTIAL--------------*/
 /*-----------------------------------------*/
 
 	//Drag force.
@@ -100,7 +77,7 @@ namespace physics
 			~AOPotential();
 
 			//Evaluates the force.
-			void getAcceleration(int index, double time, mathTools::points* pts, double (&acc)[3]);
+			void getAcceleration(int index, double time, simulation::particle* item, double (&acc)[3]);
 			bool isTimeDependent() { return false; }
 	};
 
@@ -152,7 +129,7 @@ namespace physics
 			void init(double dt, double t_initial);
 
 			//Evaluates the force.
-			void getAcceleration(int index, double time, mathTools::points* pts, double (&acc)[3]);
+			void getAcceleration(int index, double time, simulation::particle* item, double (&acc)[3]);
 			bool isTimeDependent() { return false; }
 	};
 
