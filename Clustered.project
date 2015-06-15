@@ -34,11 +34,9 @@
       </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="system">
-      <File Name="cell.cpp"/>
       <File Name="particle.cpp"/>
       <File Name="system.cpp"/>
       <VirtualDirectory Name="headers">
-        <File Name="cell.h"/>
         <File Name="particle.h"/>
         <File Name="system.h"/>
       </VirtualDirectory>

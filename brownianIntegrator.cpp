@@ -79,27 +79,27 @@ namespace integrators
 		return (2*gdt) - 3.0 + (4.0*exp(-gdt)) - exp(-2.0*gdt);
 	}
 
-	int brownianIntegrator::nextSystem(double time, double dt, int nParticles, int boxSize, simulation::particle** items, simulation::cell **** cells, physics::forces* f)
+	int brownianIntegrator::nextSystem(double time, double dt, int nParticles, int boxSize, int cellScale, simulation::particle** items, physics::forces* f)
 	{
 		//Updates the force.
 		for (int i=0; i < nParticles; i++)
 		{
-			f->getAcceleration(nParticles, boxSize, time, items, cells);
+			f->getAcceleration(nParticles, boxSize, cellScale, time, items);
 		}
 
 		//Checks what method is needed.
 		if (time == 0)
 		{
-			firstStep(time, dt, nParticles, boxSize, items, f);
+			firstStep(time, dt, nParticles, boxSize, cellScale, items, f);
 		}
 		else
 		{
-			normalStep(time, dt, nParticles, boxSize, items, f);
+			normalStep(time, dt, nParticles, boxSize, cellScale, items, f);
 		}
 		return 0;
 	}
 
-	int brownianIntegrator::firstStep(double time, double dt, int nParticles, int boxSize, simulation::particle** items, physics::forces* f)
+	int brownianIntegrator::firstStep(double time, double dt, int nParticles, int boxSize, int cellScale, simulation::particle** items, physics::forces* f)
 	{
 
 		for (int i=0; i < nParticles; i++)
@@ -126,7 +126,7 @@ namespace integrators
 		return 0;
 	}
 
-	int brownianIntegrator::normalStep(double time, double dt, int nParticles, int boxSize, simulation::particle** items, physics::forces* f)
+	int brownianIntegrator::normalStep(double time, double dt, int nParticles, int boxSize, int cellScale, simulation::particle** items, physics::forces* f)
 	{
 
 		for (int i=0; i < nParticles; i++)

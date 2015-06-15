@@ -23,7 +23,7 @@ namespace integrators
 			 * @param f The force acting on the system.
 			 * @return Return 0 for no error.
 			 */
-			virtual int nextSystem(double time, double dt, int nParticles, int boxSize, simulation::particle** items, simulation::cell **** cells, physics::forces* f)=0;
+			virtual int nextSystem(double time, double dt, int nParticles, int boxSize, int cellScale, simulation::particle** items, physics::forces* f)=0;
 
 	};
 
@@ -98,7 +98,7 @@ namespace integrators
 			 * @param f The force acting on the system.
 			 * @return Return 0 for no error.
 			 */
-			int nextSystem(double time, double dt, int nParticles, int boxSize, simulation::particle** items, simulation::cell **** cells, physics::forces* f);
+			int nextSystem(double time, double dt, int nParticles, int boxSize, int cellScale, simulation::particle** items, physics::forces* f);
 
 			/**
 			 * @brief Special integration for the first time step.
@@ -108,7 +108,7 @@ namespace integrators
 			 * @param f The force acting on the system.
 			 * @return Return 0 for no error.
 			 */
-			int firstStep(double time, double dt, int nParticles, int boxSize, simulation::particle** items, physics::forces* f);
+			int firstStep(double time, double dt, int nParticles, int boxSize, int cellScale, simulation::particle** items, physics::forces* f);
 
 			/**
 			 * @brief Standard integration for the next time steps.
@@ -118,7 +118,7 @@ namespace integrators
 			 * @param f The force acting on the system.
 			 * @return Return 0 for no error.
 			 */
-			int normalStep(double time, double dt, int nParticles, int boxSize, simulation::particle** items, physics::forces* f);
+			int normalStep(double time, double dt, int nParticles, int boxSize, int cellScale, simulation::particle** items, physics::forces* f);
 
 	};
 

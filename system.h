@@ -1,6 +1,6 @@
 #ifndef SYSTEM_H
 #define SYSTEM_H
-#include "cell.h"
+#include "particle.h"
 #include "integrator.h"
 
 namespace simulation
@@ -20,6 +20,7 @@ namespace simulation
 			double concentration;
 			int boxSize;
 			int cellSize;
+			int cellScale;
 			double temp;
 			double currentTime;
 			double dTime;
@@ -28,7 +29,6 @@ namespace simulation
 			int seed;
 
 			//System entities.
-			cell **** cells;
 			particle** particles;
 
 			//System integrator.
