@@ -37,18 +37,22 @@ namespace physics
 		}
 	}
 
-	void forces::getAcceleration(int index, double time, simulation::particle** items)
+	void forces::getAcceleration(int nPart, int boxSize, double time, simulation::particle** items, simulation::cell **** cells)
 		{
 			//Iterate across all elements in the system.
-			//for (std::vector<IForce*>::iterator i = flist.begin(); i != flist.end(); ++i)
-			//{
-			//	double subAcc[3] = {0.0,0.0,0.0};
-			//	(*i)->getAcceleration(index,time,pts,subAcc);
-			//	//Update the net acceleration.
-			//	*(acc+0)+=*(subAcc+0);
-			//	*(acc+1)+=*(subAcc+1);
-			//	*(acc+2)+=*(subAcc+2);
-			//}
+			for (int index = 0; index < nPart; index++)
+			{
+				//Resets the force on the particle.
+				items[index]->clearForce();
+				//Iterates through all forces.
+				for (std::vector<IForce*>::iterator i = flist.begin(); i != flist.end(); ++i)
+				{
+					simulation::particle* p = items[index];
+					simulation::cell* c = cells[p->getCX()][p->getCY()][p->getCZ()];
+					//Gets the acceleration from the force.
+					(*i)->getAcceleration(index, nPart, boxSize, time, items, c);
+				}
+			}
 		}
 
 }

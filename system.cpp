@@ -33,18 +33,19 @@ namespace simulation
 		double vP = nPart*(4.0/3.0)*atan(1)*4*r*r*r;
 		boxSize = (int) cbrt(vP / conc);
 
+		//Calculates the number of cells needed.
+		cellSize = boxSize / scale;
+		boxSize = cellSize * scale;
+		int numCells = pow(scale,3.0);
+
 		//Sets the actual concentration.
 		concentration = vP/pow(boxSize,3.0);
 
-		std::cout << "\nSystem concentration: " << concentration << "\n";
-
-		//Calculates the number of cells needed.
-		cellSize = boxSize / scale;
-		int realScale = boxSize / cellSize;
-		int numCells = pow(realScale,3.0);
+		std::cout << "---System concentration: " << concentration << "\n";
 
 		//Create cells.
-		initCells(numCells, realScale);
+		initCells(numCells, scale);
+		std::cout << "---Created: " << numCells << " cells from scale: " <<  scale << "\n";
 
 		//Create particles.
 		initParticles(r,m);
@@ -79,14 +80,14 @@ namespace simulation
 		delete[] cells;
 
 		//Delete the constants.
-		delete[] &nParticles;
-		delete[] &concentration;
-		delete[] &boxSize;
-		delete[] &cellSize;
-		delete[] &temp;
-		delete[] &currentTime;
-		delete[] &dTime;
-		delete[] &seed;
+		delete &nParticles;
+		delete &concentration;
+		delete &boxSize;
+		delete &cellSize;
+		delete &temp;
+		delete &currentTime;
+		delete &dTime;
+		delete &seed;
 		delete[] integrator;
 		delete[] sysForces;
 	}
@@ -118,10 +119,62 @@ namespace simulation
 				}
 			}
 		}
-		
+
+		for (int x = 0; x < scale; x++)
+		{
+			for (int y = 0; y < scale; y++)
+			{
+				for (int z =0; z < scale; z++)
+				{
+
+					int left = x-1;
+					int right = x+1;
+					int top = y-1;
+					int bottom = y+1;
+					int front = z-1;
+					int back = z+1;
+
+					if (x == 0)
+					{
+						left = (scale-1);
+					}
+					if (x == (scale-1))
+					{
+						right = 0;
+					}
+
+					if (y == 0)
+					{
+						top = (scale-1);
+					}
+					if (y == (scale-1))
+					{
+						bottom = 0;
+					}
+
+					if (z == 0)
+					{
+						front = (scale-1);
+					}
+					if (z == (scale-1))
+					{
+						back = 0;
+					}
+
+					cells[x][y][z]->left = cells[left][y][z];
+					cells[x][y][z]->right = cells[right][y][z];
+					cells[x][y][z]->top = cells[x][top][z];
+					cells[x][y][z]->bot = cells[x][bottom][z];
+					cells[x][y][z]->front = cells[x][y][front];
+					cells[x][y][z]->back = cells[x][y][back];
+
+				}
+			}
+		}
+
 	}
 
-	void system::initParticles(int r, int m)
+	void system::initParticles(double r, double m)
 	{
 
 		particles = new particle*[nParticles];
@@ -149,11 +202,17 @@ namespace simulation
 
 		}
 
+		std::cout << "---Added " << nParticles << " particles. Checking for overlap.\n";
+
 		//Checks the system for overlap.
 		initCheck(&gen, &distribution);
 
+		std::cout << "---Overlap resolved. Created Maxwell distribution.\n";
+
 		//Set initial velocity.
 		maxwellVelocityInit(&gen, &distribution);
+
+		std::cout << "---Maxwell distribution created. Creating cell assignment.\n\n";
 
 		//Assign cells.
 		for(int i = 0; i < nParticles; i++)
@@ -179,7 +238,7 @@ namespace simulation
 		{
 			//Is the problem resolved?
 			bool resolution = false;
-
+			std::cout << i << "\n";
 			//If not loop.
 			while (resolution == false)
 			{
@@ -201,7 +260,7 @@ namespace simulation
 						double r = particles[i]->getRadius() + particles[j]->getRadius();
 
 						//If the particles are slightly closer than twice their radius resolve conflict.
-						if (radius < 2.1*r)
+						if (radius < 1.1*r)
 						{
 							//Update resolution counter.
 							counter++;
@@ -210,7 +269,7 @@ namespace simulation
 							if (counter > 10*nParticles)
 							{
 								std::cout << "Could create initial system.\n";
-								std::cout << "Try decreasing particle density.";
+								std::cout << "Try decreasing particle density\n.";
 							}
 
 							//Assume new system in not resolved.
@@ -389,11 +448,14 @@ namespace simulation
 
 	void system::run(double endTime)
 	{
+		int counter = 0;
 		while (currentTime < endTime)
 		{
-			integrator->nextSystem(currentTime, dTime, nParticles, boxSize, particles, sysForces);
+			utilities::util::loadBar(currentTime,endTime,counter);
+			integrator->nextSystem(currentTime, dTime, nParticles, boxSize, particles, cells, sysForces);
 			updateCells();
 			currentTime += dTime;
+			counter++;
 		}
 	}
 

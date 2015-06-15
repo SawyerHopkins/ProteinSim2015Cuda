@@ -9,11 +9,8 @@ namespace simulation
 
 	cell::~cell()
 	{
-		for (std::vector<particle*>::iterator i = members.begin(); i != members.end(); i++)
-		{
-			delete[] &i;
-		}
-		delete[] &members;
+		members.erase(members.begin(),members.end());
+		delete &members;
 	}
 
 	void cell::removeMember(int index)

@@ -90,10 +90,10 @@ namespace simulation
 			const double getFZ0() const { return fz0; }
 
 			//Getters for containing cell.
-			const double getCX() const { return cx; }
-			const double getCY() const { return cy; }
-			const double getCZ() const { return cz; }
-			const double getIndex() const { return index; }
+			const int getCX() const { return cx; }
+			const int getCY() const { return cy; }
+			const int getCZ() const { return cz; }
+			const int getIndex() const { return index; }
 
 			//Getters for particle properties
 			const double getRadius() const { return r; }
@@ -115,9 +115,9 @@ namespace simulation
 			void setVZ(double val) { vz = val; }
 
 			//Setters for current force.
-			void setFX(double val) { fx0 = fx; fx = val; }
-			void setFY(double val) { fy0 = fy; fy = val; }
-			void setFZ(double val) { fz0 = fz; fz = val; }
+			void updateForce(double xVal, double yVal, double zVal);
+			void clearForce();
+
 
 			//Setter for containing cell.
 			void setCell(int x, int y, int z) { cx = x; cy = y; cz = z; }

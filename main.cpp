@@ -30,7 +30,7 @@ int main(int argc, char **argv)
 	//Set the time step for the integrator.
 	double timeStep = .001;
 	//Set the number of particles.
-	int nParticles = 10000;
+	int nParticles = 100;
 	//Set drag coefficent.
 	double gamma = 750.0;
 	//Set initial temperature.
@@ -59,7 +59,7 @@ int main(int argc, char **argv)
 	/*---------------FORCES---------------*/
 
 	//Creates a force manager.
-	cout << "Adding required forces.\n\n";
+	cout << "Adding required forces.\n";
 	physics::forces * force = new physics::forces();
 	force->addForce(new physics::AOPotential(kT,cutOff)); //Adds the aggregation force.
 

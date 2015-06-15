@@ -60,7 +60,7 @@ AS       := /usr/bin/as
 ## User defined environment variables
 ##
 CodeLiteDir:=/usr/share/codelite
-Objects0=$(IntermediateDirectory)/main.cpp$(ObjectSuffix) $(IntermediateDirectory)/AOPotential.cpp$(ObjectSuffix) $(IntermediateDirectory)/brownianForce.cpp$(ObjectSuffix) $(IntermediateDirectory)/force.cpp$(ObjectSuffix) $(IntermediateDirectory)/brownianIntegrator.cpp$(ObjectSuffix) $(IntermediateDirectory)/cell.cpp$(ObjectSuffix) $(IntermediateDirectory)/particle.cpp$(ObjectSuffix) $(IntermediateDirectory)/system.cpp$(ObjectSuffix) $(IntermediateDirectory)/utilities.cpp$(ObjectSuffix) 
+Objects0=$(IntermediateDirectory)/main.cpp$(ObjectSuffix) $(IntermediateDirectory)/AOPotential.cpp$(ObjectSuffix) $(IntermediateDirectory)/force.cpp$(ObjectSuffix) $(IntermediateDirectory)/brownianIntegrator.cpp$(ObjectSuffix) $(IntermediateDirectory)/cell.cpp$(ObjectSuffix) $(IntermediateDirectory)/particle.cpp$(ObjectSuffix) $(IntermediateDirectory)/system.cpp$(ObjectSuffix) $(IntermediateDirectory)/utilities.cpp$(ObjectSuffix) 
 
 
 
@@ -102,14 +102,6 @@ $(IntermediateDirectory)/AOPotential.cpp$(DependSuffix): AOPotential.cpp
 
 $(IntermediateDirectory)/AOPotential.cpp$(PreprocessSuffix): AOPotential.cpp
 	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/AOPotential.cpp$(PreprocessSuffix) "AOPotential.cpp"
-
-$(IntermediateDirectory)/brownianForce.cpp$(ObjectSuffix): brownianForce.cpp $(IntermediateDirectory)/brownianForce.cpp$(DependSuffix)
-	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/sawyer/Programming/PhDResearch/Clustered/brownianForce.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/brownianForce.cpp$(ObjectSuffix) $(IncludePath)
-$(IntermediateDirectory)/brownianForce.cpp$(DependSuffix): brownianForce.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) -MG -MP -MT$(IntermediateDirectory)/brownianForce.cpp$(ObjectSuffix) -MF$(IntermediateDirectory)/brownianForce.cpp$(DependSuffix) -MM "brownianForce.cpp"
-
-$(IntermediateDirectory)/brownianForce.cpp$(PreprocessSuffix): brownianForce.cpp
-	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/brownianForce.cpp$(PreprocessSuffix) "brownianForce.cpp"
 
 $(IntermediateDirectory)/force.cpp$(ObjectSuffix): force.cpp $(IntermediateDirectory)/force.cpp$(DependSuffix)
 	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/sawyer/Programming/PhDResearch/Clustered/force.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/force.cpp$(ObjectSuffix) $(IncludePath)

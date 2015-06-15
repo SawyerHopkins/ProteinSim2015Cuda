@@ -36,6 +36,9 @@ namespace simulation
 			 * @param index The index of the particle to remove.
 			 */
 			void removeMember(int index);
+			particle* getMember( int index ) const { return members[index]; }
+
+			int memberCount() { return members.size(); }
 
 	};
 

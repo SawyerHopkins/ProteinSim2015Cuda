@@ -14,7 +14,7 @@ namespace physics
 	{
 		public:
 			//virtual methods for forces of various parameters.
-			virtual void getAcceleration(int index, double time, simulation::particle** items)=0;
+			virtual void getAcceleration(int index, int nPart, int boxSize, double time, simulation::particle** items, simulation::cell* block)=0;
 			//Mark if the force is time dependent.
 			virtual bool isTimeDependent()=0;
 	};
@@ -43,7 +43,7 @@ namespace physics
 			void addForce(IForce* f);
 
 			//Calculates the total acceleration
-			void getAcceleration(int index, double time, simulation::particle** items);
+			void getAcceleration(int nPart, int boxSize, double time, simulation::particle** items, simulation::cell **** cells);
 			bool isTimeDependent() { return timeDependent; }
 	};
 
@@ -72,59 +72,9 @@ namespace physics
 			~AOPotential();
 
 			//Evaluates the force.
-			void getAcceleration(int index, double time, simulation::particle** items);
-			bool isTimeDependent() { return false; }
-	};
-
-/*-----------------------------------------*/
-/*-------------BROWNIAN FORCE--------------*/
-/*-----------------------------------------*/
-
-	//Drag force.
-	class brownianForce : public IForce
-	{
-
-	private:
-
-			//Variables vital to the force.
-			double gamma;
-			double sigma;
-
-			//Secondary variables.
-			double sig1;
-			double sig2;
-			double corr;
-			double rc12;
-			double c0;
-
-			//The previous kick.
-			double * memX;
-			double * memY;
-			double * memZ;
-
-			//The correlation to the previous kick.
-			double * memCorrX;
-			double * memCorrY;
-			double * memCorrZ;
-
-			//Number of particles to remember.
-			int memSize;
-
-			//Random gaussian generator for the random kicks.
-			std::mt19937* gen;
-			std::normal_distribution<double>* distribution;
-
-		public:
-
-			//Constructor/Destructor
-			brownianForce(double coEff, double stDev, double t_initial, double dt, int size);
-			~brownianForce();
-
-			//Setup the secondary variables.
-			void init(double dt, double t_initial);
-
-			//Evaluates the force.
-			void getAcceleration(int index, double time, simulation::particle** items);
+			void getAcceleration(int index, int nPart, int boxSize, double time, simulation::particle** items, simulation::cell* block);
+			void getAcceleration(int index, int nPart, int boxSize, double time, simulation::cell* item);
+			void getAcceleration(simulation::particle* index, simulation::particle* item, int boxSize, double time);
 			bool isTimeDependent() { return false; }
 	};
 

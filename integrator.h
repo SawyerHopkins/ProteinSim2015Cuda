@@ -23,7 +23,7 @@ namespace integrators
 			 * @param f The force acting on the system.
 			 * @return Return 0 for no error.
 			 */
-			virtual int nextSystem(double time, double dt, int nParticles, int boxSize, simulation::particle** items, physics::forces* f)=0;
+			virtual int nextSystem(double time, double dt, int nParticles, int boxSize, simulation::particle** items, simulation::cell **** cells, physics::forces* f)=0;
 
 	};
 
@@ -59,10 +59,15 @@ namespace integrators
 			double * memCorrY;
 			double * memCorrZ;
 
+			//Gaussian width.
+			double sig1;
+			double sig2;
+			double corr;
+			double dev;
+
 			//Random gaussian generator for the random kicks.
 			std::mt19937* gen;
-			std::normal_distribution<double>* posDist;
-			std::normal_distribution<double>* negDist;
+			std::normal_distribution<double>* Dist;
 
 			/**
 			 * @brief Gets the width of the random gaussians according to G+B 2.12
@@ -83,7 +88,7 @@ namespace integrators
 			 * @brief Deconstructs the integrator.
 			 * @return Nothing.
 			 */
-			~brownianIntegrator() {};
+			~brownianIntegrator();
 
 			/**
 			 * @brief Integrates to the next system state.
@@ -93,7 +98,7 @@ namespace integrators
 			 * @param f The force acting on the system.
 			 * @return Return 0 for no error.
 			 */
-			int nextSystem(double time, double dt, int nParticles, int boxSize, simulation::particle** items, physics::forces* f);
+			int nextSystem(double time, double dt, int nParticles, int boxSize, simulation::particle** items, simulation::cell **** cells, physics::forces* f);
 
 			/**
 			 * @brief Special integration for the first time step.

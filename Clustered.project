@@ -22,7 +22,6 @@
   <VirtualDirectory Name="src">
     <VirtualDirectory Name="forces">
       <File Name="AOPotential.cpp"/>
-      <File Name="brownianForce.cpp"/>
       <File Name="force.cpp"/>
       <VirtualDirectory Name="headers">
         <File Name="force.h"/>

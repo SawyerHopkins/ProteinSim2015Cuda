@@ -50,7 +50,7 @@ namespace simulation
 			 * @param r The radius of the particles
 			 * @param m The mass of the particles.
 			 */
-			void initParticles(int r, int m);
+			void initParticles(double r, double m);
 
 			/**
 			 * @brief Creates a maxwell distribution of velocities for the system temperature.
