@@ -82,13 +82,83 @@ namespace simulation
 	void system::initCells(int numCells, int scale)
 	{
 
+		//Create the cells.
+		cells = new cell***[scale];
+		for(int i=0; i < scale; i++)
+		{
+			cells[i] = new cell**[scale];
+			for(int j=0; j < scale; j++)
+			{
+				cells[i][j] = new cell*[scale];
+				for(int k=0; k < scale; k++)
+				{
+					cells[i][j][k] = new cell;
+				}
+			}
+		}
+
+		//Set the cell neighbors.
+		for(int x=0; x < scale; x++)
+		{
+			for(int y=0; y < scale; y++)
+			{
+				for(int z=0; z < scale; z++)
+				{
+					int left = x-1;
+					int right = x+1;
+					int top = y-1;
+					int bot = y+1;
+					int front = z-1;
+					int back = z+1;
+
+					if (x == 0)
+					{
+						left = (scale-1);
+					}
+					if (x == (scale-1))
+					{
+						right = 0;
+					}
+
+					if (y == 0)
+					{
+						top = (scale-1);
+					}
+					if (y == (scale-1))
+					{
+						bot = 0;
+					}
+
+					if (z == 0)
+					{
+						front = (scale-1);
+					}
+					if (z == (scale-1))
+					{
+						back = 0;
+					}
+
+					cells[x][y][z]->left = cells[left][y][z];
+					cells[x][y][z]->right = cells[right][y][z];
+					cells[x][y][z]->top = cells[x][top][z];
+					cells[x][y][z]->bot = cells[x][bot][z];
+					cells[x][y][z]->front = cells[x][y][front];
+					cells[x][y][z]->back = cells[x][y][back];
+
+				}
+			}
+		}
+
+		//Assign the particle to their starting cell.
 		for(int i=0; i < nParticles; i++)
 		{
-			double cx = particles[i]->getX() / cellSize;
-			double cy = particles[i]->getY() / cellSize;
-			double cz = particles[i]->getZ() / cellSize;
+			int cx = particles[i]->getX() / cellSize;
+			int cy = particles[i]->getY() / cellSize;
+			int cz = particles[i]->getZ() / cellSize;
 
 			particles[i]->setCell(cx,cy,cz);
+
+			cells[cx][cy][cz]->addMember(particles[i]);
 
 		}
 
@@ -112,7 +182,7 @@ namespace simulation
 		//Iterates through all points.
 		for(int i = 0; i < nParticles; i++)
 		{
-			particles[i] = new particle();
+			particles[i] = new particle(i);
 			particles[i]->setX( distribution(gen) * boxSize , boxSize);
 			particles[i]->setY( distribution(gen) * boxSize , boxSize);
 			particles[i]->setZ( distribution(gen) * boxSize , boxSize);
@@ -146,7 +216,6 @@ namespace simulation
 		{
 			//Is the problem resolved?
 			bool resolution = false;
-			std::cout << i << "\n";
 			//If not loop.
 			while (resolution == false)
 			{
@@ -341,6 +410,8 @@ namespace simulation
 			//If cell has changed
 			if ((cX != cX0) || (cY != cY0) || (cZ != cZ0))
 			{
+				cells[cX0][cY0][cZ0]->removeMember(particles[index]);
+				cells[cX][cY][cZ]->addMember(particles[index]);
 				particles[index]->setCell(cX,cY,cZ);
 			}
 
@@ -353,11 +424,12 @@ namespace simulation
 		int counter = 0;
 		while (currentTime < endTime)
 		{
-			utilities::util::loadBar(currentTime,endTime,counter);
-			integrator->nextSystem(currentTime, dTime, nParticles, boxSize, cellScale, particles, sysForces);
+			//utilities::util::loadBar(currentTime,endTime,counter);
+			integrator->nextSystem(currentTime, dTime, nParticles, boxSize, cells, particles, sysForces);
 			updateCells();
 			currentTime += dTime;
 			counter++;
+			std::cout << "time: " << counter << "\n";
 		}
 	}
 

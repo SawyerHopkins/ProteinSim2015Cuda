@@ -1,6 +1,6 @@
 #ifndef SYSTEM_H
 #define SYSTEM_H
-#include "particle.h"
+#include "cell.h"
 #include "integrator.h"
 
 namespace simulation
@@ -30,6 +30,7 @@ namespace simulation
 
 			//System entities.
 			particle** particles;
+			cell**** cells;
 
 			//System integrator.
 			integrators::I_integrator* integrator;

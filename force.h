@@ -1,6 +1,7 @@
 #ifndef FORCE_H
 #define FORCE_H
-#include "particle.h"
+#include <ctime>
+#include "cell.h"
 
 namespace physics
 {
@@ -14,7 +15,7 @@ namespace physics
 	{
 		public:
 			//virtual methods for forces of various parameters.
-			virtual void getAcceleration(int index, int nPart, int boxSize, int cellScale, double time, simulation::particle** items)=0;
+			virtual void getAcceleration(int index, int nPart, int boxSize, double time, simulation::cell* itemCell, simulation::particle** items)=0;
 			//Mark if the force is time dependent.
 			virtual bool isTimeDependent()=0;
 	};
@@ -43,8 +44,13 @@ namespace physics
 			void addForce(IForce* f);
 
 			//Calculates the total acceleration
-			void getAcceleration(int nPart, int boxSize, int cellScale, double time, simulation::particle** items);
+			void getAcceleration(int nPart, int boxSize, double time, simulation::cell**** cells, simulation::particle** items);
 			bool isTimeDependent() { return timeDependent; }
+
+			//Iterators
+			std::vector<IForce*>::iterator getBegin() { return flist.begin(); }
+			std::vector<IForce*>::iterator getEnd() { return flist.end(); }
+
 	};
 
 /*-----------------------------------------*/
@@ -72,10 +78,10 @@ namespace physics
 			~AOPotential();
 
 			//Evaluates the force.
-			void getAcceleration(int index, int nPart, int boxSize, int cellScale, double time, simulation::particle** items);
+			void getAcceleration(int index, int nPart, int boxSize, double time, simulation::cell* itemCell, simulation::particle** items);
 			bool isTimeDependent() { return false; }
 
-			bool isInRange(int index, int j, int cellScale, simulation::particle** items);
+			void iterCells(int boxSize, double time, simulation::particle* index, simulation::cell* itemCell);
 
 	};
 

@@ -22,10 +22,10 @@
   <VirtualDirectory Name="src">
     <VirtualDirectory Name="forces">
       <File Name="AOPotential.cpp"/>
-      <File Name="force.cpp"/>
       <VirtualDirectory Name="headers">
         <File Name="force.h"/>
       </VirtualDirectory>
+      <File Name="force.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Integrators">
       <File Name="brownianIntegrator.cpp"/>
@@ -39,7 +39,9 @@
       <VirtualDirectory Name="headers">
         <File Name="particle.h"/>
         <File Name="system.h"/>
+        <File Name="cell.h"/>
       </VirtualDirectory>
+      <File Name="cell.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="utilities">
       <File Name="utilities.cpp"/>

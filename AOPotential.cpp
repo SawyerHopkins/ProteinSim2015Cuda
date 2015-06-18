@@ -30,23 +30,16 @@ namespace physics
 
 	}
 
-	//Get the acceleration from the Coloumb potential.
-	void AOPotential::getAcceleration(int index, int nPart, int boxSize, int cellScale, double time, simulation::particle** items)
+	void AOPotential::iterCells(int boxSize, double time, simulation::particle* index, simulation::cell* itemCell)
 	{
-
-		//Iterate across all particles.
-		for (int i = 0; i < nPart; i++)
+		for(std::map<int,simulation::particle*>::iterator it=itemCell->getBegin(); it != itemCell->getEnd(); it++)
 		{
-			//Excluse self interation.
-			if ( (i != index) && (isInRange(index,i,cellScale,items)) )
+			if (it->second->getName() != index->getName())
 			{
+				double difX = utilities::util::pbcDist(index->getX(), it->second->getX(), boxSize);
+				double difY = utilities::util::pbcDist(index->getY(), it->second->getY(), boxSize);
+				double difZ = utilities::util::pbcDist(index->getZ(), it->second->getZ(), boxSize);
 
-				//Get the distance between the two particles.
-				double difX = utilities::util::pbcDist(items[index]->getX(), items[i]->getX(), boxSize);
-				double difY = utilities::util::pbcDist(items[index]->getY(), items[i]->getY(), boxSize);
-				double difZ = utilities::util::pbcDist(items[index]->getZ(), items[i]->getZ(), boxSize);
-
-				//Gets the square distance between the two particles.
 				double distSquared = (difX*difX)+(difY*difY)+(difZ*difZ);
 
 				if (distSquared <= cutOff)
@@ -55,7 +48,7 @@ namespace physics
 					double dist = std::sqrt(distSquared);
 
 					//Throw warning if particles are acting badly.
-					if (dist < 0.75*cutOff)
+					if (dist < 0.5*cutOff)
 					{
 						std::cout << "\nSignificant particle overlap. Consider time-step reduction.\n";
 						exit(100);
@@ -76,37 +69,23 @@ namespace physics
 					double fy = forceMag*unitVec[1];
 					double fz = forceMag*unitVec[2];
 
-					items[index]->updateForce(fx,fy,fz);
-
+					index->updateForce(fx,fy,fz);
 				}
-
 			}
 		}
-
 	}
 
-	bool AOPotential::isInRange(int index, int j, int cellScale, simulation::particle** items)
+	//Get the acceleration from the Coloumb potential.
+	void AOPotential::getAcceleration(int index, int nPart, int boxSize, double time, simulation::cell* itemCell ,simulation::particle** items)
 	{
-		bool inRange = true;
 
-		int dX = items[index]->getCX() - items[j]->getCX();
-		int dY = items[index]->getCY() - items[j]->getCY();
-		int dZ = items[index]->getCZ() - items[j]->getCZ();
-
-		if ( (dX != 1) && (dX != 0) && (dX != cellScale) )
-		{
-			inRange = false;
-		}
-		if ( (dY != 1) && (dY != 0) && (dY != cellScale) )
-		{
-			inRange = false;
-		}
-			if ( (dZ != 1) && (dZ != 0) && (dZ != cellScale) )
-		{
-			inRange = false;
-		}
-
-		return inRange;
+		iterCells(boxSize,time,items[index],itemCell);
+		iterCells(boxSize,time,items[index],itemCell->left);
+		iterCells(boxSize,time,items[index],itemCell->right);
+		iterCells(boxSize,time,items[index],itemCell->top);
+		iterCells(boxSize,time,items[index],itemCell->bot);
+		iterCells(boxSize,time,items[index],itemCell->front);
+		iterCells(boxSize,time,items[index],itemCell->back);
 
 	}
 

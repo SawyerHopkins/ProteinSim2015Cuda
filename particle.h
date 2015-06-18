@@ -13,6 +13,10 @@ namespace simulation
 		/*-----------------------------------------*/
 
 		private:
+
+			//The particle identifier.
+			int name;
+
 			//Contains the current spacial information for x,y,z cordinates.
 			double x;
 			double y;
@@ -48,7 +52,6 @@ namespace simulation
 			int cx;
 			int cy;
 			int cz;
-			int index;
 
 		public:
 
@@ -57,7 +60,7 @@ namespace simulation
 			/*-----------------------------------------*/
 
 			//Constructor/Destructor
-			particle();
+			particle(int pid);
 			~particle();
 
 			/*-----------------------------------------*/
@@ -93,11 +96,11 @@ namespace simulation
 			const int getCX() const { return cx; }
 			const int getCY() const { return cy; }
 			const int getCZ() const { return cz; }
-			const int getIndex() const { return index; }
 
 			//Getters for particle properties
 			const double getRadius() const { return r; }
 			const double getMass() const { return m; }
+			const double getName() const { return name; }
  
 			/*-----------------------------------------*/
 			/*--------------SYSTEM SETTERS-------------*/
@@ -121,7 +124,6 @@ namespace simulation
 
 			//Setter for containing cell.
 			void setCell(int x, int y, int z) { cx = x; cy = y; cz = z; }
-			void setIndex(int i) { index = i; }
 
 			//Setters for particle properties
 			void setRadius(double val) { r = val; }

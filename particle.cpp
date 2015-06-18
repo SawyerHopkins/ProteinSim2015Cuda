@@ -7,8 +7,10 @@ namespace simulation
 /*-----------SYSTEM CONSTRUCTION-----------*/
 /*-----------------------------------------*/
 
-	particle::particle()
+	particle::particle(int pid)
 	{
+		name = pid;
+
 		x = 0.0;
 		y = 0.0;
 		z = 0.0;
@@ -33,7 +35,6 @@ namespace simulation
 		cx = -1;
 		cy = -1;
 		cz = -1;
-		index = -1;
 
 		r = 0.0;
 		m = 0.0;
@@ -62,7 +63,7 @@ namespace simulation
 		delete &cx;
 		delete &cy;
 		delete &cz;
-		delete &index;
+		delete &name;
 	}
 
 	void particle::setPos(double xVal, double yVal, double zVal, double boxSize)

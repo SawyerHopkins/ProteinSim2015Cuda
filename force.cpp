@@ -37,7 +37,7 @@ namespace physics
 		}
 	}
 
-	void forces::getAcceleration(int nPart, int boxSize, int cellScale, double time, simulation::particle** items)
+	void forces::getAcceleration(int nPart, int boxSize, double time, simulation::cell**** cells, simulation::particle** items)
 		{
 			//Iterate across all elements in the system.
 			for (int index = 0; index < nPart; index++)
@@ -45,10 +45,13 @@ namespace physics
 				//Resets the force on the particle.
 				items[index]->clearForce();
 				//Iterates through all forces.
-				for (std::vector<IForce*>::iterator i = flist.begin(); i != flist.end(); ++i)
+
+				simulation::particle* p = items[index];
+				simulation::cell* itemCell = cells[p->getCX()][p->getCY()][p->getCZ()];
+
+				for (std::vector<IForce*>::iterator it = flist.begin(); it != flist.end(); it++)
 				{
-					//Gets the acceleration from the force.
-					(*i)->getAcceleration(index, nPart, boxSize, cellScale, time, items);
+					(*it)->getAcceleration(index, nPart, boxSize, time, itemCell, items);
 				}
 			}
 		}
