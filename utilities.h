@@ -26,13 +26,22 @@ namespace utilities
 			static double safeMod(double val, double base);
 
 			/**
-			 * @brief Gets the distance between to points.
-			 * @param v1 The position of the reference particle.
-			 * @param v2 The position of the second particle.
-			 * @param size The size of the system.
-			 * @return 
+			 * @brief Looks for PBC check on original position.
+			 * @param val0 Original position.
+			 * @param val New position.
+			 * @param base The size of the system.
+			 * @return The new old position.
 			 */
-			static double pbcDist(double v1, double v2, double size);
+			static double safeMode0(double val0, double val, double base);
+
+			/**
+			 * @brief Method for getting distance between two points.
+			 * @param X,Y,Z The position of the first particle
+			 * @param X1,Y1,Z1 The position of the second particle.
+			 * @param L The size of the system.
+			 * @return The distance between the two particles.
+			 */
+			static double pbcDistAlt(double X,double Y, double Z,double X1, double Y1,double Z1,double L);
 
 			//
 			/**
@@ -52,6 +61,15 @@ namespace utilities
 			 * @param r The magnitude of the distance.
 			 */
 			static void unitVector(double dX, double dY, double dZ, double r, double (&acc)[3]);
+
+			/**
+			 * @brief Alternative method for getting the normalized distance between two particles.
+			 * @param X,Y,Z The position of the first particle
+			 * @param X1,Y1,Z1 The position of the second particle.
+			 * @param uv The array to hold teh unit vectors
+			 * @param r The distance between the particles.
+			 */
+			static void unitVectorAlt(double X,double Y, double Z,double X1, double Y1,double Z1,double (&acc)[3],double r,int L);
 
 	};
 

@@ -5,9 +5,9 @@
 namespace integrators
 {
 
-/*-----------------------------------------*/
-/*----------INTEGRATOR INTERFACE-----------*/
-/*-----------------------------------------*/
+	/********************************************//**
+	*--------------INTEGRATOR INTERFACE--------------
+	************************************************/
 
 	//Creates an abstract parent class (interface) for a generic integrator.
 	class I_integrator
@@ -19,6 +19,9 @@ namespace integrators
 			 * @brief Integrates to the next system state.
 			 * @param time The current system time.
 			 * @param dt The amount of time to advance.
+			 * @param nParticles The number of particles in the system.
+			 * @param boxSize The size of the system.
+			 * @param cells The cells manager for the system.
 			 * @param items The particles in the the system.
 			 * @param f The force acting on the system.
 			 * @return Return 0 for no error.
@@ -27,10 +30,14 @@ namespace integrators
 
 	};
 
+	/********************************************//**
+	*-----------BROWNIAN MOTION INTEGRATOR-----------
+	************************************************/
+
 	class brownianIntegrator : public I_integrator
 	{
 
-	private:
+		private:
 
 			//System variables
 			double mass;
@@ -94,6 +101,9 @@ namespace integrators
 			 * @brief Integrates to the next system state.
 			 * @param time The current system time.
 			 * @param dt The amount of time to advance.
+			 * @param nParticles The number of particles in the system.
+			 * @param boxSize The size of the system.
+			 * @param cells The cells manager for the system.
 			 * @param items The particles in the the system.
 			 * @param f The force acting on the system.
 			 * @return Return 0 for no error.
@@ -101,9 +111,11 @@ namespace integrators
 			int nextSystem(double time, double dt, int nParticles, int boxSize, simulation::cell**** cells, simulation::particle** items, physics::forces* f);
 
 			/**
-			 * @brief Special integration for the first time step.
+			 * @brief Integrates to the next system state.
 			 * @param time The current system time.
 			 * @param dt The amount of time to advance.
+			 * @param nParticles The number of particles in the system.
+			 * @param boxSize The size of the system.
 			 * @param items The particles in the the system.
 			 * @param f The force acting on the system.
 			 * @return Return 0 for no error.
@@ -111,9 +123,11 @@ namespace integrators
 			int firstStep(double time, double dt, int nParticles, int boxSize, simulation::particle** items, physics::forces* f);
 
 			/**
-			 * @brief Standard integration for the next time steps.
+			 * @brief Integrates to the next system state.
 			 * @param time The current system time.
 			 * @param dt The amount of time to advance.
+			 * @param nParticles The number of particles in the system.
+			 * @param boxSize The size of the system.
 			 * @param items The particles in the the system.
 			 * @param f The force acting on the system.
 			 * @return Return 0 for no error.

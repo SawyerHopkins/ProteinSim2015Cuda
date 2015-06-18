@@ -3,9 +3,9 @@
 namespace simulation
 {
 
-	/*-----------------------------------------*/
-	/*----------CONSTRUCTOR/DESTRUCTOR---------*/
-	/*-----------------------------------------*/
+	/********************************************//**
+	*-------------CONSTRUCTOR/DESTRUCTOR-------------
+	************************************************/
 
 	system::system(int nPart, double conc, int scale, double m, double r, double sysTemp, double sysDT, int rnd, integrators::I_integrator* sysInt, physics::forces* sysFcs)
 	{
@@ -48,8 +48,8 @@ namespace simulation
 		initParticles(r,m);
 
 		//Create cells.
-		initCells(numCells, scale);
-		std::cout << "---Created: " << numCells << " cells from scale: " <<  scale << "\n";
+		initCells(numCells, cellScale);
+		std::cout << "Created: " << numCells << " cells from scale: " <<  cellScale << "\n";
 
 	}
 
@@ -58,7 +58,7 @@ namespace simulation
 		//Deletes the particles
 		for (int i=0; i < nParticles; i++)
 		{
-			delete[] particles[i];
+			delete particles[i];
 		}
 		delete[] particles;
 
@@ -75,9 +75,9 @@ namespace simulation
 		delete[] sysForces;
 	}
 
-	/*-----------------------------------------*/
-	/*---------------SYSTEM INIT---------------*/
-	/*-----------------------------------------*/
+	/********************************************//**
+	*------------------SYSTEM INIT-------------------
+	************************************************/
 
 	void system::initCells(int numCells, int scale)
 	{
@@ -197,7 +197,7 @@ namespace simulation
 		//Checks the system for overlap.
 		initCheck(&gen, &distribution);
 
-		std::cout << "---Overlap resolved. Created Maxwell distribution.\n";
+		std::cout << "---Overlap resolved. Creating Maxwell distribution.\n";
 
 		//Set initial velocity.
 		maxwellVelocityInit(&gen, &distribution);
@@ -227,11 +227,10 @@ namespace simulation
 					if (i != j)
 					{
 						//Gets the distance between the two particles.
-						double distX = utilities::util::pbcDist(particles[i]->getX(),particles[j]->getX(),boxSize);
-						double distY = utilities::util::pbcDist(particles[i]->getY(),particles[j]->getY(),boxSize);
-						double distZ = utilities::util::pbcDist(particles[i]->getZ(),particles[j]->getZ(),boxSize);
 
-						double radius = std::sqrt((distX*distX)+(distY*distY)+(distZ*distZ));
+						double radius = utilities::util::pbcDistAlt(particles[i]->getX(), particles[i]->getY(), particles[i]->getZ(),
+																			particles[j]->getX(), particles[j]->getY(), particles[j]->getZ(),
+																			boxSize);
 
 						//Gets the sum of the particle radius.
 						double r = particles[i]->getRadius() + particles[j]->getRadius();
@@ -247,6 +246,7 @@ namespace simulation
 							{
 								std::cout << "Could create initial system.\n";
 								std::cout << "Try decreasing particle density\n.";
+								exit(100);
 							}
 
 							//Assume new system in not resolved.
@@ -261,6 +261,7 @@ namespace simulation
 				}
 			}
 		}
+
 	}
 
 	void system::maxwellVelocityInit(std::mt19937* gen, std::uniform_real_distribution<double>* distribution)
@@ -313,7 +314,6 @@ namespace simulation
 		{
 			particles[i]->setVX(ratio*(particles[i]->getVX()-vsum));
 		}
-	////////////////////
 
 		//maxwell for vy//
 		vsum=0;
@@ -336,7 +336,6 @@ namespace simulation
 		{
 			particles[i]->setVY(ratio*(particles[i]->getVY()-vsum));
 		}
-	////////////////////
 
 		//maxwell for vz//
 		vsum=0;
@@ -359,38 +358,12 @@ namespace simulation
 		{
 			particles[i]->setVZ(ratio*(particles[i]->getVZ()-vsum));
 		}
+		writeTemp();
 	}
 
-	/*-----------------------------------------*/
-	/*------------PARTICLE HANDLING------------*/
-	/*-----------------------------------------*/
-
-	void system::moveParticle(int index, double x, double y, double z)
-	{
-
-		//Update the position of the particle.
-		particles[index]->setX(x,boxSize);
-		particles[index]->setY(x,boxSize);
-		particles[index]->setZ(x,boxSize);
-
-		//New cell
-		int cX = particles[index]->getX() / cellSize;
-		int cY = particles[index]->getY() / cellSize;
-		int cZ = particles[index]->getZ() / cellSize;
-
-		//Old cell
-		int cX0 = particles[index]->getCX();
-		int cY0 = particles[index]->getCY();
-		int cZ0 = particles[index]->getCZ();
-
-		//If cell has changed
-		if ((cX != cX0) || (cY != cY0) || (cZ != cZ0))
-		{
-			particles[index]->setCell(cX,cY,cZ);
-		}
-
-	}
-
+	/********************************************//**
+	*---------------PARTICLE HANDLING----------------
+	************************************************/
 	void system::updateCells()
 	{
 
@@ -398,9 +371,9 @@ namespace simulation
 		{
 
 			//New cell
-			int cX = particles[index]->getX() / cellSize;
-			int cY = particles[index]->getY() / cellSize;
-			int cZ = particles[index]->getZ() / cellSize;
+			int cX = int( particles[index]->getX() / double(cellSize) );
+			int cY = int( particles[index]->getY() / double(cellSize) );
+			int cZ = int( particles[index]->getZ() / double(cellSize) );
 
 			//Old cell
 			int cX0 = particles[index]->getCX();
@@ -410,6 +383,23 @@ namespace simulation
 			//If cell has changed
 			if ((cX != cX0) || (cY != cY0) || (cZ != cZ0))
 			{
+
+				if (cX > (cellScale-1))
+				{
+					std::cout << "\nGreater than x cell bounds.";
+					std::cout << "\n" << particles[index]->getX(); 
+				}
+				if (cY > (cellScale-1))
+				{
+					std::cout << "\nGreater than y cell bounds.";
+					std::cout << "\n" << particles[index]->getY(); 
+				}
+				if (cZ > (cellScale-1))
+				{
+					std::cout << "\nGreater than z cell bounds.";
+					std::cout << "\n" << particles[index]->getZ(); 
+				}
+
 				cells[cX0][cY0][cZ0]->removeMember(particles[index]);
 				cells[cX][cY][cZ]->addMember(particles[index]);
 				particles[index]->setCell(cX,cY,cZ);
@@ -424,18 +414,18 @@ namespace simulation
 		int counter = 0;
 		while (currentTime < endTime)
 		{
-			//utilities::util::loadBar(currentTime,endTime,counter);
+			utilities::util::loadBar(currentTime,endTime,counter);
 			integrator->nextSystem(currentTime, dTime, nParticles, boxSize, cells, particles, sysForces);
 			updateCells();
 			currentTime += dTime;
 			counter++;
-			std::cout << "time: " << counter << "\n";
+			//std::cout << "time: " << currentTime << "\n";
 		}
 	}
 
-	/*-----------------------------------------*/
-	/*--------------SYSTEM OUTPUT--------------*/
-	/*-----------------------------------------*/
+	/********************************************//**
+	*-----------------SYSTEM OUTPUT------------------
+	************************************************/
 
 	void system::writeSystem(std::string name)
 	{
@@ -449,6 +439,19 @@ namespace simulation
 		}
 		//Close the stream.
 		myFile.close();
+	}
+
+	void system::writeTemp()
+	{
+		double v2 = 0.0;
+		for (int i = 0; i < nParticles; i++)
+		{
+			v2 += particles[i]->getVX()*particles[i]->getVX();
+			v2 += particles[i]->getVY()*particles[i]->getVY();
+			v2 += particles[i]->getVZ()*particles[i]->getVZ();
+		}
+		double temp = v2 / float(nParticles);
+		std::cout << "---Temp: " << temp/3.0 << "\n";
 	}
 
 }

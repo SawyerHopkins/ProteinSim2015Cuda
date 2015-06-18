@@ -3,9 +3,9 @@
 namespace physics
 {
 
-/*-----------------------------------------*/
-/*-------FORCE MANAGER CONSTRUCTION--------*/
-/*-----------------------------------------*/
+	/********************************************//**
+	*---------------MANAGER CONSTRUCTION-------------
+	 ***********************************************/
 
 	forces::forces()
 	{
@@ -24,9 +24,9 @@ namespace physics
 		delete[] &timeDependent;
 	}
 
-/*-----------------------------------------*/
-/*--------------FORCE MANAGER--------------*/
-/*-----------------------------------------*/
+	/********************************************//**
+	*-----------------FORCE MANAGEMENT---------------
+	 ***********************************************/
 
 	void forces::addForce(IForce* f)
 	{
@@ -38,22 +38,22 @@ namespace physics
 	}
 
 	void forces::getAcceleration(int nPart, int boxSize, double time, simulation::cell**** cells, simulation::particle** items)
+	{
+		//Iterate across all elements in the system.
+		for (int index = 0; index < nPart; index++)
 		{
-			//Iterate across all elements in the system.
-			for (int index = 0; index < nPart; index++)
+			//Resets the force on the particle.
+			items[index]->clearForce();
+
+			simulation::particle* p = items[index];
+			simulation::cell* itemCell = cells[p->getCX()][p->getCY()][p->getCZ()];
+
+			//Iterates through all forces.
+			for (std::vector<IForce*>::iterator it = flist.begin(); it != flist.end(); it++)
 			{
-				//Resets the force on the particle.
-				items[index]->clearForce();
-				//Iterates through all forces.
-
-				simulation::particle* p = items[index];
-				simulation::cell* itemCell = cells[p->getCX()][p->getCY()][p->getCZ()];
-
-				for (std::vector<IForce*>::iterator it = flist.begin(); it != flist.end(); it++)
-				{
-					(*it)->getAcceleration(index, nPart, boxSize, time, itemCell, items);
-				}
+				(*it)->getAcceleration(index, nPart, boxSize, time, itemCell, items);
 			}
 		}
+	}
 
 }

@@ -35,7 +35,7 @@ namespace integrators
 
 		//Creates the random device.
 		std::random_device rd;
-		gen = new std::mt19937(rd());
+		gen = new std::mt19937(90210);
 		Dist = new std::normal_distribution<double>(0.0,1.0);
 
 		std::cout << "---Brownian integrator successfully added.\n\n";
@@ -82,6 +82,7 @@ namespace integrators
 	int brownianIntegrator::nextSystem(double time, double dt, int nParticles, int boxSize, simulation::cell**** cells, simulation::particle** items, physics::forces* f)
 	{
 
+		//Gets the force on each particle.
 		f->getAcceleration(nParticles, boxSize, time, cells ,items);
 
 		//Checks what method is needed.
@@ -147,23 +148,27 @@ namespace integrators
 
 			double m = 1.0/items[i]->getMass();
 
-			double xNew = ((1.0+coEff0) * items[i]->getX())
-				- (coEff0 * items[i]->getX0())
-				+ (m * dt * dt * coEff1 * items[i]->getFX()) 
-				+ (m * dt * dt * coEff2 * (items[i]->getFX() - items[i]->getFX0()))
-				+ (sig1 * memX[i]) + (coEff0 * memCorrX[i]);
+			double x0 = items[i]->getX0();
+			double y0 = items[i]->getY0();
+			double z0 = items[i]->getZ0();
 
-			double yNew = ((1.0+coEff0) * items[i]->getY()) 
-				- (coEff0 * items[i]->getY0())
-				+ (m * dt * dt * coEff1 * coEff1 * items[i]->getFY())
-				+ (m * dt * dt * coEff2 * (items[i]->getFY() - items[i]->getFY0()))
-				+ (sig1 * memY[i]) + (coEff0 * memCorrY[i]);
+			double xNew = ((1.0+coEff0) * items[i]->getX());
+			xNew -= (coEff0 * x0);
+			xNew += (m * dt * dt * coEff1 * items[i]->getFX());
+			xNew += (m * dt * dt * coEff2 * (items[i]->getFX() - items[i]->getFX0()));
+			xNew += (sig1 * memX[i]) + (coEff0 * memCorrX[i]);
 
-			double zNew = ((1.0+coEff0) * items[i]->getZ())
-				- (coEff0 * items[i]->getZ0())
-				+ (m * dt * dt * coEff1 * coEff1 * items[i]->getFZ())
-				+ (m * dt * dt * coEff2 * (items[i]->getFZ() - items[i]->getFZ0()))
-				+ (sig1 * memZ[i]) + (coEff0 * memCorrZ[i]);
+			double yNew = ((1.0+coEff0) * items[i]->getY()) ;
+			yNew -= (coEff0 * y0);
+			yNew += (m * dt * dt * coEff1 * items[i]->getFY());
+			yNew += (m * dt * dt * coEff2 * (items[i]->getFY() - items[i]->getFY0()));
+			yNew += (sig1 * memY[i]) + (coEff0 * memCorrY[i]);
+
+			double zNew = ((1.0+coEff0) * items[i]->getZ());
+			zNew -= (coEff0 * z0);
+			zNew += (m * dt * dt * coEff1 * items[i]->getFZ());
+			zNew += (m * dt * dt * coEff2 * (items[i]->getFZ() - items[i]->getFZ0()));
+			zNew += (sig1 * memZ[i]) + (coEff0 * memCorrZ[i]);
 
 			items[i]->setPos(xNew, yNew, zNew, boxSize);
 

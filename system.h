@@ -71,13 +71,6 @@ namespace simulation
 			 ***********************************************/
 
 			/**
-			 * @brief Handes moving the particles.
-			 * @param index The index of the particle to be moved.
-			 * @param x,y,z The new coordinates of the particle.
-			 */
-			void moveParticle(int index, double x, double y, double z);
-
-			/**
 			 * @brief Updates the cells that the particles are located in.
 			 * @return 
 			 */
@@ -115,6 +108,12 @@ namespace simulation
 			 */
 			const int getBoxSize() const { return boxSize; }
 
+			/**
+			 * @brief Gets the length of a system cell.
+			 * @return cellSize.
+			 */
+			const int getCellSize() const { return cellSize; }
+
 			/********************************************//**
 			*-----------------SYSTEM HANDLING----------------
 			 ***********************************************/
@@ -129,6 +128,10 @@ namespace simulation
 			*------------------SYSTEM OUTPUT-----------------
 			 ***********************************************/
 
+			/**
+			 * @brief Writes the temperature of the system.
+			 */
+			void writeTemp();
 			/**
 			 * @brief Writes the position of a particle.
 			 * @param index The index of the particle to write.

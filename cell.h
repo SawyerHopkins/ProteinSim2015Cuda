@@ -20,6 +20,7 @@ namespace simulation
 			cell();
 			~cell();
 
+			//Cell neighbors
 			cell* top;
 			cell* bot;
 			cell* left;

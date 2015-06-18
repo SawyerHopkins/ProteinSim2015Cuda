@@ -2,20 +2,26 @@
 
 using namespace std;
 
-/*-----------------------------------------*/
-/*----------FUNCTION DECLARATIONS----------*/
-/*-----------------------------------------*/
-/*----See function for full description----*/
-/*-----------------------------------------*/
+/********************************************//**
+*-------------FUNCTION DECLARATIONS--------------
+*------------------------------------------------
+*------------see function for details------------
+************************************************/
 
 static inline void debug(simulation::system* sys);
 static inline void greeting();
 
 
-/*-----------------------------------------*/
-/*--------------PROGRAM MAIN---------------*/
-/*-----------------------------------------*/
+/********************************************//**
+*------------------MAIN PROGRAM------------------
+************************************************/
 
+/**
+ * @brief The program entry point.
+ * @param argc Not implemented.
+ * @param argv Not implemented.
+ * @return 
+ */
 int main(int argc, char **argv)
 {
 
@@ -26,11 +32,11 @@ int main(int argc, char **argv)
 	//Initialize random number generator.
 	srand (time(NULL));
 	//Set the maximum time.
-	double endTime = 10000;
+	double endTime = 1000;
 	//Set the time step for the integrator.
 	double timeStep = .001;
 	//Set the number of particles.
-	int nParticles = 10000;
+	int nParticles = 1000;
 	//Set drag coefficent.
 	double gamma = 750.0;
 	//Set initial temperature.
@@ -38,7 +44,7 @@ int main(int argc, char **argv)
 	//Set concentration.
 	double conc = 0.10;
 	//Set cell scale.
-	int scale = 6;
+	int scale = 8;
 	//Set rnd seed. 0 for random seed.
 	int rnd = 90210;
 	//Set particle radius.
@@ -48,7 +54,7 @@ int main(int argc, char **argv)
 	//Set the cutoff.
 	double cutOff = 1.1;
 	//Set the kT well depth.
-	double kT = 0.46;
+	double kT = 0.261;
 
 	/*-------------INTEGRATOR-------------*/
 
@@ -61,7 +67,7 @@ int main(int argc, char **argv)
 	//Creates a force manager.
 	cout << "Adding required forces.\n";
 	physics::forces * force = new physics::forces();
-	force->addForce(new physics::AOPotential(kT,cutOff)); //Adds the aggregation force.
+	force->addForce(new physics::AOPotential(kT,cutOff,timeStep)); //Adds the aggregation force.
 
 	/*---------------SYSTEM---------------*/
 
@@ -72,29 +78,40 @@ int main(int argc, char **argv)
 	/*---------------RUNNING--------------*/
 
 	//Output the stats.
-	cout << "Number of Particles: " << sys->getNParticles() << "\n";
-	cout << "Box Size: " << sys->getBoxSize() << "\n\n";
-
+	cout << "---Number of Particles: " << sys->getNParticles() << "\n";
+	cout << "---Box Size: " << sys->getBoxSize() << "\n";
+	cout << "---Cell Size: " << sys->getCellSize() << "\n\n";
+ 
 	//Write the initial system.
 	cout << "Writing initial system to file.\n\n";
 	sys->writeSystem("initSys");
 
 	/*-------------Iterator-------------*/
+
+	cout << "System initialization complete. Press y/n to continue.\n";
+	std::string cont;
+	cin >> cont;
+
+	if (cont != "Y" && cont != "y")
+	{
+		exit(100);
+	}
+
 	cout << "Starting integration.\n\n";
 
 	sys->run(endTime);
 
 	//Write the final system.
-	cout << "\n" << "Integration complete. Writing final system to file.";
+	cout << "\n" << "Integration complete.\n\n Writing final system to file.";
 	sys->writeSystem("finSys");
 
 	//Debug code 0 -> No Error:
 	return 0;
 }
 
-/*-----------------------------------------*/
-/*--------------AUX FUNCTIONS--------------*/
-/*-----------------------------------------*/
+/********************************************//**
+*-----------------AUX FUNCTIONS------------------
+************************************************/
 
 /**
  * @brief Writes the state of the system to the console.

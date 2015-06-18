@@ -7,23 +7,49 @@ namespace utilities
 
 	double util::safeMod(double val, double base)
 	{
-		double output = 0.0;
 		//0 mod n is always zero
 		if (val == 0)
 		{
 			return 0.0;
 		}
-		//if value is negative wrap the value around base.
-		else if (val < 0)
+		//if the particle is on the edge of the system.
+		else if (val == base)
 		{
-			output = fmod(fabs(val),base);
-			return (base-output);
+			return 0.0;
 		}
-		//if value is positive we can use the standard fmod.
+		else if (val>base)
+		{
+			return (val-base);
+		}
+		else if (val<0)
+		{
+			return (val+base);
+		}
 		else
 		{
-			return fmod(val,base);
+			return val;
 		}
+	}
+
+	double util::safeMode0(double val0, double val, double base)
+	{
+		double dx = val - val0;
+		if (fabs(dx) > base/2 )
+		{
+			if (dx < 0)
+			{
+				return val0-base;
+			}
+			else
+			{
+				return val0+base;
+			}
+		}
+		else
+		{
+			return val0;
+		}
+		return 0.0;
 	}
 
 	void util::loadBar(double x0, int n, long counter, int w)
@@ -50,34 +76,99 @@ namespace utilities
 		cout << "] - " << x0 << "\r" << flush;
 	}
 
-	double util::pbcDist(double v1, double v2, double size)
+	double util::pbcDistAlt(double X,double Y, double Z,double X1, double Y1,double Z1,double L)
 	{
-		//If the particles are further than half the box size away from each other
-		//then then they are closer periodically.
-		if (fabs(v1-v2) > size/2)
+
+		double r,dx,dy,dz;
+
+		if(fabs(X-X1) <= L/2 )
 		{
-			//Set the periodic distance and reverse the relative sign.
-			if (v1 < v2)
-			{
-				return (size-fabs(v1-v2));
-			}
-			else
-			{
-				return -(size-fabs(v1-v2));
-			}
-			return (v2-v1);
+			dx=fabs(X-X1);
 		}
-		else 
+		else
 		{
-			return (v1-v2);
+			dx=fabs(X-X1);
+			dx=fabs(dx-L);
 		}
+
+
+		if(fabs(Y-Y1) <= L/2 )
+		{
+			dy=fabs(Y-Y1);
+		}
+		else
+		{
+			dy=fabs(Y-Y1);
+			dy=fabs(dy-L);
+		}
+
+		if(fabs(Z-Z1) <= L/2 )
+		{
+			dz=fabs(Z-Z1);
+		}
+		else
+		{
+			dz=fabs(Z-Z1);
+			dz=fabs(dz-L);
+		}
+
+		r=(dx*dx)+(dy*dy)+(dz*dz);
+
+
+		return r;
+
 	}
 
 	void util::unitVector(double dX, double dY, double dZ, double r, double (&acc)[3])
 	{
-		acc[0]=-dX/r;
-		acc[1]=-dY/r;
-		acc[2]=-dZ/r;
+		acc[0]=dX/r;
+		acc[1]=dY/r;
+		acc[2]=dZ/r;
+	}
+
+	void util::unitVectorAlt(double X,double Y, double Z,double X1, double Y1,double Z1,double (&acc)[3],double r,int L)
+	{
+		double dx,dy,dz;
+
+		dx=X1-X; dy=Y1-Y; dz=Z1-Z;
+		if(fabs(dx) > L/2)
+		{
+			if(dx<0)
+			{
+				dx=dx+L;
+			}
+			else
+			{
+				dx=dx-L;
+			}
+		}
+
+		if(fabs(dy) > L/2)
+		{
+			if(dy<0)
+			{
+				dy=dy+L;
+			}
+			else
+			{
+				dy=dy-L;
+			}
+		}
+
+		if(fabs(dz) > L/2)
+		{
+			if(dz<0)
+			{
+				dz=dz+L;
+			}
+			else
+			{
+				dz=dz-L;
+			}
+		}
+
+		dx=dx/r; dy=dy/r; dz=dz/r;
+		acc[0]=dx; acc[1]=dy; acc[2]=dz;
 	}
 
 }
