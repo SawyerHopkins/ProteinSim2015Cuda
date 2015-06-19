@@ -58,7 +58,7 @@ int main(int argc, char **argv)
 	//Set the time step for the integrator.
 	double timeStep = .001;
 	//Set the number of particles.
-	int nParticles = 1000;
+	int nParticles = 10000;
 	//Set drag coefficent.
 	double gamma = 750.0;
 	//Set initial temperature.
@@ -66,7 +66,7 @@ int main(int argc, char **argv)
 	//Set concentration.
 	double conc = 0.10;
 	//Set cell scale.
-	int scale = 8;
+	int scale = 16;
 	//Set rnd seed. 0 for random seed.
 	int rnd = 90210;
 	//Set particle radius.

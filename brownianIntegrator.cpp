@@ -56,7 +56,7 @@ namespace integrators
 		dev = sqrt(1.0 - (corr*corr));
 
 		//Creates the random device.
-		std::random_device rd;
+		//std::random_device rd;
 		gen = new std::mt19937(90210);
 		Dist = new std::normal_distribution<double>(0.0,1.0);
 
@@ -121,7 +121,7 @@ namespace integrators
 
 	int brownianIntegrator::firstStep(double time, double dt, int nParticles, int boxSize, simulation::particle** items, physics::forces* f)
 	{
-
+		//Add 4 threads to the team.
 		for (int i=0; i < nParticles; i++)
 		{
 
@@ -142,7 +142,6 @@ namespace integrators
 			items[i]->setPos(xNew,yNew,zNew,boxSize);
 
 		}
-
 		return 0;
 	}
 
@@ -155,6 +154,7 @@ namespace integrators
 			//SEE GUNSTEREN AND BERENDSEN 1981 EQ 2.26
 
 			//New random walk.
+			
 			memCorrX[i] = (*Dist)(*gen);
 			memCorrY[i] = (*Dist)(*gen);
 			memCorrZ[i] = (*Dist)(*gen);

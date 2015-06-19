@@ -61,19 +61,24 @@ namespace physics
 
 	void forces::getAcceleration(int nPart, int boxSize, double time, simulation::cell**** cells, simulation::particle** items)
 	{
-		//Iterate across all elements in the system.
-		for (int index = 0; index < nPart; index++)
+		//Add 4 threads to the team.
+		#pragma omp parallel //num_threads(8)
 		{
-			//Resets the force on the particle.
-			items[index]->clearForce();
-
-			simulation::particle* p = items[index];
-			simulation::cell* itemCell = cells[p->getCX()][p->getCY()][p->getCZ()];
-
-			//Iterates through all forces.
-			for (std::vector<IForce*>::iterator it = flist.begin(); it != flist.end(); it++)
+			//Iterate across all elements in the system.
+			#pragma omp for schedule(dynamic,4)
+			for (int index = 0; index < nPart; index++)
 			{
-				(*it)->getAcceleration(index, nPart, boxSize, time, itemCell, items);
+				//Resets the force on the particle.
+				items[index]->clearForce();
+
+				simulation::particle* p = items[index];
+				simulation::cell* itemCell = cells[p->getCX()][p->getCY()][p->getCZ()];
+
+				//Iterates through all forces.
+				for (std::vector<IForce*>::iterator it = flist.begin(); it != flist.end(); ++it)
+				{
+					(*it)->getAcceleration(index, nPart, boxSize, time, itemCell, items);
+				}
 			}
 		}
 	}

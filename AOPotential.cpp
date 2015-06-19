@@ -38,6 +38,7 @@ namespace physics
 		//Set vital variables.
 		gamma = coeff; 
 		cutOff = cut;
+		dt = dTime;
 
 		//Create secondary variables.
 		double a1=-gamma*(cutOff/(cutOff-1.0))*(cutOff/(cutOff-1.0))*(cutOff/(cutOff-1.0));
@@ -52,7 +53,7 @@ namespace physics
 
 	void AOPotential::iterCells(int boxSize, double time, simulation::particle* index, simulation::cell* itemCell)
 	{
-		for(std::map<int,simulation::particle*>::iterator it=itemCell->getBegin(); it != itemCell->getEnd(); it++)
+		for(std::map<int,simulation::particle*>::iterator it=itemCell->getBegin(); it != itemCell->getEnd(); ++it)
 		{
 			if (it->second->getName() != index->getName())
 			{
@@ -65,11 +66,7 @@ namespace physics
 					double r = sqrt(rSquared);
 					if(r<(0.8))
 					{
-						std::cout << "\n" << rSquared;
-						std::cout << "\n" << it->second->getName() << " : " << it->second->getX() << "," << it->second->getY() << "," << it->second->getZ();
-						std::cout << "\n" << index->getName() << " : " << index->getX() << "," << index->getY() << "," << index->getZ();
-						std::cout << "\nSignificant particle overlap. Consider time-step reduction.\n";
-						exit(100);
+						debugging::error::throwParticleOverlapError(index->getName(), it->second->getName(), r);
 					}
 					double rInv=1.0/r; 
 					double r_36=pow(rInv,36);
@@ -90,7 +87,7 @@ namespace physics
 
 					if (isnan(fNet))
 					{
-						std::cout << "\nBad news bears.";
+						debugging::error::throwInfiniteForce();
 					}
 
 					index->updateForce(fx,fy,fz);

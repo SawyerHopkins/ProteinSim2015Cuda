@@ -13,7 +13,7 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=Sawyer Hopkins
-Date                   :=06/18/15
+Date                   :=06/19/15
 CodeLitePath           :="/home/sawyer/.codelite"
 LinkerName             :=/usr/bin/g++-4.9
 SharedObjectLinkerName :=/usr/bin/g++-4.9 -shared -fPIC
@@ -35,7 +35,7 @@ PreprocessOnlySwitch   :=-E
 ObjectsFileList        :="Clustered.txt"
 PCHCompileFlags        :=
 MakeDirCommand         :=mkdir -p
-LinkOptions            :=  
+LinkOptions            :=  -fopenmp
 IncludePath            :=  $(IncludeSwitch). $(IncludeSwitch). 
 IncludePCH             := 
 RcIncludePath          := 
@@ -50,8 +50,8 @@ LibPath                := $(LibraryPathSwitch).
 AR       := /usr/bin/ar rcu
 CXX      := /usr/bin/g++-4.9
 CC       := /usr/bin/gcc-4.9
-CXXFLAGS :=  -g -O3 -Wall -std=c++11 $(Preprocessors)
-CFLAGS   :=  -g -O3 -Wall $(Preprocessors)
+CXXFLAGS :=  -g -O3 -Wall -std=c++11 -fopenmp $(Preprocessors)
+CFLAGS   :=  -g -O3 -Wall -fopenmp $(Preprocessors)
 ASFLAGS  := 
 AS       := /usr/bin/as
 
@@ -60,7 +60,8 @@ AS       := /usr/bin/as
 ## User defined environment variables
 ##
 CodeLiteDir:=/usr/share/codelite
-Objects0=$(IntermediateDirectory)/main.cpp$(ObjectSuffix) $(IntermediateDirectory)/AOPotential.cpp$(ObjectSuffix) $(IntermediateDirectory)/force.cpp$(ObjectSuffix) $(IntermediateDirectory)/brownianIntegrator.cpp$(ObjectSuffix) $(IntermediateDirectory)/particle.cpp$(ObjectSuffix) $(IntermediateDirectory)/system.cpp$(ObjectSuffix) $(IntermediateDirectory)/cell.cpp$(ObjectSuffix) $(IntermediateDirectory)/utilities.cpp$(ObjectSuffix) 
+Objects0=$(IntermediateDirectory)/main.cpp$(ObjectSuffix) $(IntermediateDirectory)/AOPotential.cpp$(ObjectSuffix) $(IntermediateDirectory)/force.cpp$(ObjectSuffix) $(IntermediateDirectory)/brownianIntegrator.cpp$(ObjectSuffix) $(IntermediateDirectory)/particle.cpp$(ObjectSuffix) $(IntermediateDirectory)/system.cpp$(ObjectSuffix) $(IntermediateDirectory)/cell.cpp$(ObjectSuffix) $(IntermediateDirectory)/utilities.cpp$(ObjectSuffix) $(IntermediateDirectory)/error.cpp$(ObjectSuffix) $(IntermediateDirectory)/timer.cpp$(ObjectSuffix) \
+	
 
 
 
@@ -126,6 +127,16 @@ $(IntermediateDirectory)/utilities.cpp$(ObjectSuffix): utilities.cpp
 	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/sawyer/Programming/PhDResearch/Clustered/utilities.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/utilities.cpp$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/utilities.cpp$(PreprocessSuffix): utilities.cpp
 	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/utilities.cpp$(PreprocessSuffix) "utilities.cpp"
+
+$(IntermediateDirectory)/error.cpp$(ObjectSuffix): error.cpp 
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/sawyer/Programming/PhDResearch/Clustered/error.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/error.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/error.cpp$(PreprocessSuffix): error.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/error.cpp$(PreprocessSuffix) "error.cpp"
+
+$(IntermediateDirectory)/timer.cpp$(ObjectSuffix): timer.cpp 
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/sawyer/Programming/PhDResearch/Clustered/timer.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/timer.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/timer.cpp$(PreprocessSuffix): timer.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/timer.cpp$(PreprocessSuffix) "timer.cpp"
 
 ##
 ## Clean

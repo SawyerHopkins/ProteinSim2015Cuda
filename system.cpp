@@ -266,9 +266,7 @@ namespace simulation
 							//Throw warnings if stuck in resolution loop.
 							if (counter > 10*nParticles)
 							{
-								std::cout << "Could create initial system.\n";
-								std::cout << "Try decreasing particle density\n.";
-								exit(100);
+								debugging::error::throwInitializationError();
 							}
 
 							//Assume new system in not resolved.
@@ -380,7 +378,7 @@ namespace simulation
 		{
 			particles[i]->setVZ(ratio*(particles[i]->getVZ()-vsum));
 		}
-		writeTemp();
+		writeInitTemp();
 	}
 
 	/********************************************//**
@@ -408,18 +406,15 @@ namespace simulation
 
 				if (cX > (cellScale-1))
 				{
-					std::cout << "\nGreater than x cell bounds.";
-					std::cout << "\n" << particles[index]->getX(); 
+					debugging::error::throwCellBoundsError(cX,cY,cZ);
 				}
 				if (cY > (cellScale-1))
 				{
-					std::cout << "\nGreater than y cell bounds.";
-					std::cout << "\n" << particles[index]->getY(); 
+					debugging::error::throwCellBoundsError(cX,cY,cZ);
 				}
 				if (cZ > (cellScale-1))
 				{
-					std::cout << "\nGreater than z cell bounds.";
-					std::cout << "\n" << particles[index]->getZ(); 
+					debugging::error::throwCellBoundsError(cX,cY,cZ);
 				}
 
 				cells[cX0][cY0][cZ0]->removeMember(particles[index]);
@@ -434,6 +429,8 @@ namespace simulation
 	void system::run(double endTime)
 	{
 		int counter = 0;
+		debugging::timer* tmr = new debugging::timer();
+		tmr->start();
 		while (currentTime < endTime)
 		{
 			utilities::util::loadBar(currentTime,endTime,counter);
@@ -441,7 +438,12 @@ namespace simulation
 			updateCells();
 			currentTime += dTime;
 			counter++;
-			//std::cout << "time: " << currentTime << "\n";
+			/*if ( (counter % 1000) == 0 )
+			{
+				tmr->stop();
+				std::cout << "\n" << "Elapsed time: " << tmr->getElapsedSeconds() << " seconds.\n";
+				tmr->start();
+			}*/
 		}
 	}
 
@@ -463,7 +465,7 @@ namespace simulation
 		myFile.close();
 	}
 
-	void system::writeTemp()
+	void system::writeInitTemp()
 	{
 		double v2 = 0.0;
 		for (int i = 0; i < nParticles; i++)

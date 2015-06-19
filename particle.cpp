@@ -94,52 +94,34 @@ namespace simulation
 
 	void particle::setX(double val, double boxSize)
 	{
-		double x0Temp = x0;
 		double xTemp = x;
 		x = utilities::util::safeMod(val, boxSize);
 		x0 = utilities::util::safeMode0(xTemp,x,boxSize);
 		if ((x < 0.0) || (x >= boxSize))
 		{
-			std::cout << "\nParticle: " << name << " out of bounds.\n";
-			std::cout << x << "\n";
-			std::cout << xTemp << " - " << x0Temp << "\n";
-			std::cout << val << "\n";
-			std::cout << fx << "\n";
-			exit(100);
+			debugging::error::throwParticleBoundsError(x,y,z);
 		}
 	}
 
 	void particle::setY(double val, double boxSize)
 	{
-		double y0Temp = y0;
 		double yTemp = y;
 		y = utilities::util::safeMod(val, boxSize);
 		y0 = utilities::util::safeMode0(yTemp,y,boxSize);
 		if ((y < 0.0) || (y >= boxSize))
 		{
-			std::cout << "\nParticle: " << name << " out of bounds.\n";
-			std::cout << y << "\n";
-			std::cout << yTemp << " - " << y0Temp << "\n";
-			std::cout << val << "\n";
-			std::cout << fy << "\n";
-			exit(100);
+			debugging::error::throwParticleBoundsError(x,y,z);
 		}
 	}
 
 	void particle::setZ(double val, double boxSize)
 	{
-		double z0Temp = z0;
 		double zTemp = z;
 		z = utilities::util::safeMod(val, boxSize);
 		z0 = utilities::util::safeMode0(zTemp,z,boxSize);
 		if ((z < 0.0) || (z >= boxSize))
 		{
-			std::cout << "\nParticle: " << name << " out of bounds.\n";
-			std::cout << z << "\n";
-			std::cout << zTemp << " - " << z0Temp << "\n";
-			std::cout << val << "\n";
-			std::cout << fz << "\n";
-			exit(100);
+			debugging::error::throwParticleBoundsError(x,y,z);
 		}
 	}
 

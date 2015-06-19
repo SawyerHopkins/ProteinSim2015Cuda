@@ -131,7 +131,7 @@ namespace simulation
 			/**
 			 * @brief Writes the temperature of the system.
 			 */
-			void writeTemp();
+			void writeInitTemp();
 			/**
 			 * @brief Writes the position of a particle.
 			 * @param index The index of the particle to write.

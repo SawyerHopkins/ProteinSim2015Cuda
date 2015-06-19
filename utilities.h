@@ -9,6 +9,8 @@
 #include <string>
 #include <random>
 #include <vector>
+#include "error.h"
+#include "timer.h"
 
 namespace utilities
 {

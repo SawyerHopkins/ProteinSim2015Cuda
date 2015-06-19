@@ -49,6 +49,8 @@ namespace physics
 			//Flagged if flist contains a time dependant force.
 			bool timeDependent;
 
+			void testing();
+
 		public:
 
 			/**
