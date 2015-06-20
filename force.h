@@ -14,6 +14,10 @@ namespace physics
 	class IForce
 	{
 
+		protected:
+
+			std::string name;
+
 		public:
 
 			/**
@@ -32,6 +36,8 @@ namespace physics
 			 * @return True for time dependent. False otherwise. 
 			 */
 			virtual bool isTimeDependent()=0;
+
+			std::string getName() { return name; }
 
 	};
 

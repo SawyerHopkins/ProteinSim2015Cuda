@@ -29,8 +29,11 @@ namespace simulation
 	*-------------CONSTRUCTOR/DESTRUCTOR-------------
 	************************************************/
 
-	system::system(int nPart, double conc, int scale, double m, double r, double sysTemp, double sysDT, int rnd, integrators::I_integrator* sysInt, physics::forces* sysFcs)
+	system::system(std::string tName, int nPart, double conc, int scale, double m, double r, double sysTemp, double sysDT, int rnd, integrators::I_integrator* sysInt, physics::forces* sysFcs)
 	{
+
+		//Sets the trial name
+		trialName = tName;
 
 		//Set time information
 		currentTime = 0;
@@ -72,6 +75,8 @@ namespace simulation
 		//Create cells.
 		initCells(numCells, cellScale);
 		std::cout << "Created: " << numCells << " cells from scale: " <<  cellScale << "\n";
+
+		writeSystemInit();
 
 	}
 
@@ -428,6 +433,8 @@ namespace simulation
 
 	void system::run(double endTime)
 	{
+		std::string snap = trialName + "/snapshots";
+		mkdir(snap.c_str(),0777);
 		int counter = 0;
 		debugging::timer* tmr = new debugging::timer();
 		tmr->start();
@@ -438,12 +445,14 @@ namespace simulation
 			updateCells();
 			currentTime += dTime;
 			counter++;
-			/*if ( (counter % 1000) == 0 )
+			if ( (counter % 1000) == 0 )
 			{
-				tmr->stop();
-				std::cout << "\n" << "Elapsed time: " << tmr->getElapsedSeconds() << " seconds.\n";
-				tmr->start();
-			}*/
+				std::string outName = std::to_string(currentTime);
+				writeSystem("/snapshots/" + outName);
+				//tmr->stop();
+				//std::cout << "\n" << "Elapsed time: " << tmr->getElapsedSeconds() << " seconds.\n";
+				//tmr->start();
+			}
 		}
 	}
 
@@ -455,7 +464,7 @@ namespace simulation
 	{
 		//Create a stream to the desired file.
 		std::ofstream myFile;
-		myFile.open(name + ".txt");
+		myFile.open(trialName + name + ".txt");
 		//Write each point in the system as a line of csv formatted as: X,Y,Z
 		for (int i = 0; i < nParticles; i++)
 		{
@@ -476,6 +485,21 @@ namespace simulation
 		}
 		double temp = v2 / float(nParticles);
 		std::cout << "---Temp: " << temp/3.0 << "\n";
+	}
+
+	void system::writeSystemInit()
+	{
+		std::ofstream myFile;
+		myFile.open(trialName + "/sysConfig.txt");
+
+		//Writes the system configuration.
+		myFile << "Concentration: " << concentration << "\n";
+		myFile << "boxSize: " << boxSize << "\n";
+		myFile << "cellSize: " << cellSize << "\n";
+		myFile << "cellScale: " << cellScale << "\n";
+
+		//Close the stream.
+		myFile.close();
 	}
 
 }

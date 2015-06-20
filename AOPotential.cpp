@@ -35,6 +35,9 @@ namespace physics
 
 	AOPotential::AOPotential(double coeff, double cut, double dTime)
 	{
+		//Sets the name
+		name = "AOPotential";
+
 		//Set vital variables.
 		gamma = coeff; 
 		cutOff = cut;

@@ -13,6 +13,10 @@ namespace integrators
 	class I_integrator
 	{
 
+		protected:
+
+			std::string name;
+
 		public:
 
 			/**
@@ -27,6 +31,8 @@ namespace integrators
 			 * @return Return 0 for no error.
 			 */
 			virtual int nextSystem(double time, double dt, int nParticles, int boxSize, simulation::cell**** cells, simulation::particle** items, physics::forces* f)=0;
+
+			std::string getName() { return name; }
 
 	};
 
@@ -90,7 +96,7 @@ namespace integrators
 			 * @param dragCoeff The drag coefficent of the system.
 			 * @return Nothing
 			 */
-			brownianIntegrator(int nPart, double tempInit, double m, double dragCoeff, double dTime);
+			brownianIntegrator(int nPart, double tempInit, double m, double dragCoeff, double dTime, int seed);
 			/**
 			 * @brief Deconstructs the integrator.
 			 * @return Nothing.

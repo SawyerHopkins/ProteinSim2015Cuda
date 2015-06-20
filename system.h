@@ -15,6 +15,9 @@ namespace simulation
 			*-----------------SYSTEM VARIABLES---------------
 			 ***********************************************/
 
+			//Trial name
+			std::string trialName;
+
 			//Information about the system.
 			int nParticles;
 			double concentration;
@@ -86,7 +89,7 @@ namespace simulation
 			 * @brief Constructs the particle system.
 			 * @return Nothing.
 			 */
-			system(int nPart, double conc, int scale, double m, double r, double sysTemp, double sysDT, int rnd, integrators::I_integrator* sysInt, physics::forces* sysFcs);
+			system(std::string tName, int nPart, double conc, int scale, double m, double r, double sysTemp, double sysDT, int rnd, integrators::I_integrator* sysInt, physics::forces* sysFcs);
 			/**
 			 * @brief Destructs the particle system.
 			 * @return Nothing.
@@ -142,6 +145,8 @@ namespace simulation
 			 * @param name The name of the file to write to.
 			 */
 			void writeSystem(std::string name);
+
+			void writeSystemInit();
 
 	};
 

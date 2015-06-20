@@ -60,7 +60,7 @@ int main(int argc, char **argv)
 	//Set the number of particles.
 	int nParticles = 10000;
 	//Set drag coefficent.
-	double gamma = 750.0;
+	double gamma = 1.0;
 	//Set initial temperature.
 	double temp = 1.0;
 	//Set concentration.
@@ -77,12 +77,39 @@ int main(int argc, char **argv)
 	double cutOff = 1.1;
 	//Set the kT well depth.
 	double kT = 0.261;
+	//Set the output directory.
+	string trialName = "lowGamma4kt";
+
+	/*--------WRITE SYSTEM SETTINGS-------*/
+
+	//Make a directory for the run.
+	mkdir(trialName.c_str(),0777);
+	//Create a stream to the desired file.
+	std::ofstream myFile;
+	myFile.open(trialName + "/settings.txt");
+
+	//Output System Constants.
+	myFile << "trialName: " << trialName << "\n";
+	myFile << "nParticles: " << nParticles << "\n";
+	myFile << "endTime: " << endTime << "\n";
+	myFile << "timeStep: " << timeStep << "\n";
+	myFile << "gamma: " << gamma << "\n";
+	myFile << "temp: " << temp << "\n";
+	myFile << "conc: " << conc << "\n";
+	myFile << "scale: " << scale << "\n";
+	myFile << "rnd: " << rnd << "\n";
+	myFile << "r: " << r << "\n";
+	myFile << "m: " << m << "\n";
+	myFile << "cutOff: " << cutOff << "\n";
+	myFile << "kT: " << kT << "\n";
 
 	/*-------------INTEGRATOR-------------*/
 
 	//Create the integrator.
 	cout << "Creating integrator.\n";
-	integrators::brownianIntegrator * difeq = new integrators::brownianIntegrator(nParticles, temp, m, gamma, timeStep);
+	integrators::brownianIntegrator * difeq = new integrators::brownianIntegrator(nParticles, temp, m, gamma, timeStep,rnd);
+
+	myFile << "Integrator: " << difeq->getName() << "\n";
 
 	/*---------------FORCES---------------*/
 
@@ -91,11 +118,20 @@ int main(int argc, char **argv)
 	physics::forces * force = new physics::forces();
 	force->addForce(new physics::AOPotential(kT,cutOff,timeStep)); //Adds the aggregation force.
 
+	//Iterates through all forces.
+	for (std::vector<physics::IForce*>::iterator it = force->getBegin(); it != force->getEnd(); ++it)
+	{
+		myFile << "Force: " << (*it)->getName() << "\n";
+	}
+
+	//Close the stream.
+	myFile.close();
+
 	/*---------------SYSTEM---------------*/
 
 	cout << "Creating particle system.\n";
 	//Creates the particle system.
-	simulation::system * sys = new simulation::system(nParticles, conc, scale, m, r, temp, timeStep, rnd, difeq, force);
+	simulation::system * sys = new simulation::system(trialName, nParticles, conc, scale, m, r, temp, timeStep, rnd, difeq, force);
 
 	/*---------------RUNNING--------------*/
 
@@ -106,7 +142,7 @@ int main(int argc, char **argv)
  
 	//Write the initial system.
 	cout << "Writing initial system to file.\n\n";
-	sys->writeSystem("initSys");
+	sys->writeSystem("/initSys");
 
 	/*-------------Iterator-------------*/
 
@@ -125,7 +161,7 @@ int main(int argc, char **argv)
 
 	//Write the final system.
 	cout << "\n" << "Integration complete.\n\n Writing final system to file.";
-	sys->writeSystem("finSys");
+	sys->writeSystem("/finSys");
 
 	//Debug code 0 -> No Error:
 	return 0;

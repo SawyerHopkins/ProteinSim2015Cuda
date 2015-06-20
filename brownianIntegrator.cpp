@@ -25,10 +25,13 @@ THE SOFTWARE.*/
 namespace integrators
 {
 
-	brownianIntegrator::brownianIntegrator(int nPart, double tempInit, double m, double dragCoeff, double dTime) :
+	brownianIntegrator::brownianIntegrator(int nPart, double tempInit, double m, double dragCoeff, double dTime, int seed) :
 	memX(new double[nPart]), memY(new double[nPart]), memZ(new double[nPart]),
 	memCorrX(new double[nPart]), memCorrY(new double[nPart]), memCorrZ(new double[nPart])
 	{
+
+		//Sets the name
+		name = "brownianIntegrator";
 
 		//Stores the system information.
 		memSize = nPart;
@@ -57,7 +60,13 @@ namespace integrators
 
 		//Creates the random device.
 		//std::random_device rd;
-		gen = new std::mt19937(90210);
+		int rSeed = seed;
+		if (rSeed==0)
+		{
+			std::random_device rd;
+			rSeed=rd();
+		}
+		gen = new std::mt19937(rSeed);
 		Dist = new std::normal_distribution<double>(0.0,1.0);
 
 		std::cout << "---Brownian integrator successfully added.\n\n";
