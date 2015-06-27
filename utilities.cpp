@@ -17,25 +17,31 @@ namespace utilities
 		{
 			return 0.0;
 		}
+		//if the particle is outside the upper bounds.
 		else if (val>base)
 		{
 			return (val-base);
 		}
+		//if the particle is outside the lower bounds.
 		else if (val<0)
 		{
 			return (val+base);
 		}
+		//No problems return value.
 		else
 		{
 			return val;
 		}
 	}
 
-	double util::safeMode0(double val0, double val, double base)
+	double util::safeMod0(double val0, double val, double base)
 	{
+		//The difference between the two values.
 		double dx = val - val0;
+		//If the values are further apart than half the system, use PBC.
 		if (fabs(dx) > base/2 )
 		{
+			//Check which direction to implement PBC.
 			if (dx < 0)
 			{
 				return val0-base;
@@ -64,6 +70,7 @@ namespace utilities
 
 		int x = (int)x0;
 
+		//Choose when to update console.
 		if ( (x != n) && (counter % 100 != 0) ) return;
 
 		double ratio  =  x/(double)n;
@@ -77,11 +84,12 @@ namespace utilities
 		cout << "] - " << x0 << "\r" << flush;
 	}
 
-	double util::pbcDistAlt(double X,double Y, double Z,double X1, double Y1,double Z1,double L)
+	double util::pbcDist(double X,double Y, double Z,double X1, double Y1,double Z1,double L)
 	{
 
 		double r,dx,dy,dz;
 
+		//Check X direction.
 		if(fabs(X-X1) <= L/2 )
 		{
 			dx=fabs(X-X1);
@@ -92,7 +100,7 @@ namespace utilities
 			dx=fabs(dx-L);
 		}
 
-
+		//Check Y direction.
 		if(fabs(Y-Y1) <= L/2 )
 		{
 			dy=fabs(Y-Y1);
@@ -103,6 +111,7 @@ namespace utilities
 			dy=fabs(dy-L);
 		}
 
+		//Check Z direction.
 		if(fabs(Z-Z1) <= L/2 )
 		{
 			dz=fabs(Z-Z1);
@@ -113,6 +122,7 @@ namespace utilities
 			dz=fabs(dz-L);
 		}
 
+		//Pythag for the distance.
 		r=(dx*dx)+(dy*dy)+(dz*dz);
 
 
@@ -120,18 +130,21 @@ namespace utilities
 
 	}
 
-	void util::unitVector(double dX, double dY, double dZ, double r, double (&acc)[3])
+	void util::unitVectorSimple(double dX, double dY, double dZ, double r, double (&acc)[3])
 	{
+		//Normalize by distance.
 		acc[0]=dX/r;
 		acc[1]=dY/r;
 		acc[2]=dZ/r;
 	}
 
-	void util::unitVectorAlt(double X,double Y, double Z,double X1, double Y1,double Z1,double (&acc)[3],double r,int L)
+	void util::unitVectorAdv(double X,double Y, double Z,double X1, double Y1,double Z1,double (&acc)[3],double r,int L)
 	{
 		double dx,dy,dz;
 
 		dx=X1-X; dy=Y1-Y; dz=Z1-Z;
+
+		//Check X PBC.
 		if(fabs(dx) > L/2)
 		{
 			if(dx<0)
@@ -144,6 +157,7 @@ namespace utilities
 			}
 		}
 
+		//Check Y PBC.
 		if(fabs(dy) > L/2)
 		{
 			if(dy<0)
@@ -156,6 +170,7 @@ namespace utilities
 			}
 		}
 
+		//Check Z PBC.
 		if(fabs(dz) > L/2)
 		{
 			if(dz<0)
@@ -168,6 +183,7 @@ namespace utilities
 			}
 		}
 
+		//Normalize by distance.
 		dx=dx/r; dy=dy/r; dz=dz/r;
 		acc[0]=dx; acc[1]=dy; acc[2]=dz;
 	}

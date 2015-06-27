@@ -6,6 +6,13 @@
 namespace debugging
 {
 
+	/**
+	 * @class error
+	 * @author Sawyer Hopkins
+	 * @date 06/27/15
+	 * @file error.h
+	 * @brief Contains information for common runtime errors.
+	 */
 	class error : public std::exception
 	{
 
@@ -36,6 +43,10 @@ namespace debugging
 			 * @brief Throw when force is given value NaN.
 			 */
 			static void throwInfiniteForce();
+			/**
+			 * @brief Throw when input arguments are invalid.
+			 */
+			static void throwInputError();
 
 	};
 

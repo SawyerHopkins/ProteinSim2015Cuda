@@ -61,10 +61,8 @@ namespace physics
 
 	void forces::getAcceleration(int nPart, int boxSize, double time, simulation::cell**** cells, simulation::particle** items)
 	{
-		//Add 4 threads to the team.
-		#pragma omp parallel //num_threads(8)
+		#pragma omp parallel
 		{
-			//Iterate across all elements in the system.
 			#pragma omp for schedule(dynamic,4)
 			for (int index = 0; index < nPart; index++)
 			{

@@ -17,7 +17,13 @@
 namespace utilities
 {
 
-	//Contains some useful math wrappers.
+	/**
+	 * @class util
+	 * @author Sawyer Hopkins
+	 * @date 06/27/15
+	 * @file utilities.h
+	 * @brief Contains some useful math wrappers.
+	 */
 	class util
 	{
 		public:
@@ -36,7 +42,7 @@ namespace utilities
 			 * @param base The size of the system.
 			 * @return The new old position.
 			 */
-			static double safeMode0(double val0, double val, double base);
+			static double safeMod0(double val0, double val, double base);
 
 			/**
 			 * @brief Method for getting distance between two points.
@@ -45,7 +51,7 @@ namespace utilities
 			 * @param L The size of the system.
 			 * @return The distance between the two particles.
 			 */
-			static double pbcDistAlt(double X,double Y, double Z,double X1, double Y1,double Z1,double L);
+			static double pbcDist(double X,double Y, double Z,double X1, double Y1,double Z1,double L);
 
 			//
 			/**
@@ -64,7 +70,7 @@ namespace utilities
 			 * @param dZ The distance in the Z direction.
 			 * @param r The magnitude of the distance.
 			 */
-			static void unitVector(double dX, double dY, double dZ, double r, double (&acc)[3]);
+			static void unitVectorSimple(double dX, double dY, double dZ, double r, double (&acc)[3]);
 
 			/**
 			 * @brief Alternative method for getting the normalized distance between two particles.
@@ -73,7 +79,7 @@ namespace utilities
 			 * @param uv The array to hold teh unit vectors
 			 * @param r The distance between the particles.
 			 */
-			static void unitVectorAlt(double X,double Y, double Z,double X1, double Y1,double Z1,double (&acc)[3],double r,int L);
+			static void unitVectorAdv(double X,double Y, double Z,double X1, double Y1,double Z1,double (&acc)[3],double r,int L);
 
 	};
 

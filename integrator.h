@@ -9,7 +9,13 @@ namespace integrators
 	*--------------INTEGRATOR INTERFACE--------------
 	************************************************/
 
-	//Creates an abstract parent class (interface) for a generic integrator.
+	/**
+	 * @class I_integrator
+	 * @author Sawyer Hopkins
+	 * @date 06/27/15
+	 * @file integrator.h
+	 * @brief Creates an abstract parent class (interface) for a generic integrator.
+	 */
 	class I_integrator
 	{
 
@@ -32,6 +38,10 @@ namespace integrators
 			 */
 			virtual int nextSystem(double time, double dt, int nParticles, int boxSize, simulation::cell**** cells, simulation::particle** items, physics::forces* f)=0;
 
+			/**
+			 * @brief Get the name of the integrator for logging purposes.
+			 * @return 
+			 */
 			std::string getName() { return name; }
 
 	};
@@ -40,6 +50,13 @@ namespace integrators
 	*-----------BROWNIAN MOTION INTEGRATOR-----------
 	************************************************/
 
+	/**
+	 * @class brownianIntegrator
+	 * @author Sawyer Hopkins
+	 * @date 06/27/15
+	 * @file integrator.h
+	 * @brief Integrator for brownian dynamics.
+	 */
 	class brownianIntegrator : public I_integrator
 	{
 

@@ -10,7 +10,13 @@ namespace physics
 	*-----------------FORCE INTERFACE----------------
 	 ***********************************************/
 
-	//A generic force container.
+	/**
+	 * @class IForce
+	 * @author Sawyer Hopkins
+	 * @date 06/27/15
+	 * @file force.h
+	 * @brief A generic force container.
+	 */
 	class IForce
 	{
 
@@ -37,6 +43,10 @@ namespace physics
 			 */
 			virtual bool isTimeDependent()=0;
 
+			/**
+			 * @brief Get the name of the force for logging purposes.
+			 * @return 
+			 */
 			std::string getName() { return name; }
 
 	};
@@ -45,7 +55,13 @@ namespace physics
 	*----------------FORCE MANAGEMENT----------------
 	 ***********************************************/
 
-	//Management system for a collection of forces.
+	/**
+	 * @class forces
+	 * @author Sawyer Hopkins
+	 * @date 06/27/15
+	 * @file force.h
+	 * @brief Management system for a collection of forces.
+	 */
 	class forces
 	{
 		private:
@@ -54,8 +70,6 @@ namespace physics
 			std::vector<IForce*> flist;
 			//Flagged if flist contains a time dependant force.
 			bool timeDependent;
-
-			void testing();
 
 		public:
 
@@ -109,7 +123,13 @@ namespace physics
 	*------------------AO POTENTIAL------------------
 	 ***********************************************/
 
-	//Drag force.
+	/**
+	 * @class AOPotential
+	 * @author Sawyer Hopkins
+	 * @date 06/27/15
+	 * @file force.h
+	 * @brief Drag force.
+	 */
 	class AOPotential : public IForce
 	{
 
@@ -152,7 +172,6 @@ namespace physics
 			 * @return True for time dependent. False otherwise. 
 			 */
 			bool isTimeDependent() { return false; }
-
 			/**
 			 * @brief Checks for particle interation between the index particle and all particles in the provided cell.
 			 * @param boxSize The size of the system.

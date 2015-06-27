@@ -20,7 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.*/
 
-#include "system.h"
+#include "findClusters.h"
 
 using namespace std;
 
@@ -32,6 +32,8 @@ using namespace std;
 
 static inline void debug(simulation::system* sys);
 static inline void greeting();
+static void runScript();
+static void runAnalysis(string fileName);
 
 
 /********************************************//**
@@ -47,8 +49,61 @@ static inline void greeting();
 int main(int argc, char **argv)
 {
 
+	//Program welcome.
 	greeting();
 
+	//Program flags.
+	bool a = false;
+	string aName = "";
+
+	int i = 0;
+	//Iterate across input arguments.
+	while (i < argc)
+	{
+		//Flag for analysis mode.
+		string str(argv[i]);
+		if (str.compare("-a")==0)
+		{
+			a = true;
+			//Make sure the next argument exists.
+			if ((i+1) < argc)
+			{
+				//Name of file to analyze.
+				i++;
+				string file(argv[i]);
+				aName = file;
+			}
+			else
+			{
+				debugging::error::throwInputError();
+			}
+		}
+		i++;
+	}
+
+	//Choose which mode to run.
+	if (a)
+	{
+		runAnalysis(aName);
+	}
+	else
+	{
+		runScript();
+	}
+
+	//Debug code 0 -> No Error:
+	return 0;
+}
+
+/********************************************//**
+*-----------------MAIN FUNCTIONS-----------------
+************************************************/
+
+/**
+ * @brief Run a new simulation.
+ */
+void runScript()
+{
 	/*-------------Variables-------------*/
 
 	//Initialize random number generator.
@@ -58,15 +113,15 @@ int main(int argc, char **argv)
 	//Set the time step for the integrator.
 	double timeStep = .001;
 	//Set the number of particles.
-	int nParticles = 10000;
+	int nParticles = 400;
 	//Set drag coefficent.
-	double gamma = 1.0;
+	double gamma = 0.5;
 	//Set initial temperature.
 	double temp = 1.0;
 	//Set concentration.
-	double conc = 0.10;
+	double conc = 0.01;
 	//Set cell scale.
-	int scale = 16;
+	int scale = 12;
 	//Set rnd seed. 0 for random seed.
 	int rnd = 90210;
 	//Set particle radius.
@@ -78,7 +133,7 @@ int main(int argc, char **argv)
 	//Set the kT well depth.
 	double kT = 0.261;
 	//Set the output directory.
-	string trialName = "lowGamma4kt";
+	string trialName = "highGamma4kt";
 
 	/*--------WRITE SYSTEM SETTINGS-------*/
 
@@ -146,6 +201,8 @@ int main(int argc, char **argv)
 
 	/*-------------Iterator-------------*/
 
+	//Allow user to check system settings before running.
+	//Comment this section out if running without terminal access.
 	cout << "System initialization complete. Press y/n to continue.\n";
 	std::string cont;
 	cin >> cont;
@@ -162,9 +219,14 @@ int main(int argc, char **argv)
 	//Write the final system.
 	cout << "\n" << "Integration complete.\n\n Writing final system to file.";
 	sys->writeSystem("/finSys");
+}
 
-	//Debug code 0 -> No Error:
-	return 0;
+/**
+ * @brief Analyze simulation data.
+ */
+void runAnalysis(string fileName)
+{
+	analysis::findClusters::runAnalysis(fileName);
 }
 
 /********************************************//**

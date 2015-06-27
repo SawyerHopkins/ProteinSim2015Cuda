@@ -165,6 +165,8 @@ namespace simulation
 						back = 0;
 					}
 
+					//Set the 6 principle cells next the current cell.
+					//Access diagonals through combinations of these six.
 					cells[x][y][z]->left = cells[left][y][z];
 					cells[x][y][z]->right = cells[right][y][z];
 					cells[x][y][z]->top = cells[x][top][z];
@@ -183,8 +185,8 @@ namespace simulation
 			int cy = particles[i]->getY() / cellSize;
 			int cz = particles[i]->getZ() / cellSize;
 
+			//Tell the particle what cell its in, then add to cell.
 			particles[i]->setCell(cx,cy,cz);
-
 			cells[cx][cy][cz]->addMember(particles[i]);
 
 		}
@@ -255,7 +257,7 @@ namespace simulation
 					{
 						//Gets the distance between the two particles.
 
-						double radius = utilities::util::pbcDistAlt(particles[i]->getX(), particles[i]->getY(), particles[i]->getZ(),
+						double radius = utilities::util::pbcDist(particles[i]->getX(), particles[i]->getY(), particles[i]->getZ(),
 																			particles[j]->getX(), particles[j]->getY(), particles[j]->getZ(),
 																			boxSize);
 
@@ -295,7 +297,8 @@ namespace simulation
 		double vsum,vsum2;
 		double sigold,vsig,ratio;
 		int i;
-		
+
+		//Set the initial velocities.
 		for(i=0; i<nParticles; i++)
 		{
 			r1=(*distribution)(*gen);
@@ -318,7 +321,7 @@ namespace simulation
 			particles[i]->setVZ(sqrt(-2.0 * log(r1) ) * cos(8.0*atan(1)*r2));
 		}
 		
-		//maxwell for vx//
+		//Normalize the initial velocities according to the system temperature.
 		vsum=0;
 		vsum2=0;
 		
@@ -383,6 +386,8 @@ namespace simulation
 		{
 			particles[i]->setVZ(ratio*(particles[i]->getVZ()-vsum));
 		}
+
+		//Write the system temp to verify.
 		writeInitTemp();
 	}
 
@@ -422,6 +427,7 @@ namespace simulation
 					debugging::error::throwCellBoundsError(cX,cY,cZ);
 				}
 
+				//Remove from old. Add to new. Update particle address.
 				cells[cX0][cY0][cZ0]->removeMember(particles[index]);
 				cells[cX][cY][cZ]->addMember(particles[index]);
 				particles[index]->setCell(cX,cY,cZ);
@@ -433,26 +439,43 @@ namespace simulation
 
 	void system::run(double endTime)
 	{
+		//Create the snapshot name.
 		std::string snap = trialName + "/snapshots";
 		mkdir(snap.c_str(),0777);
+
+		//Debugging counter.
 		int counter = 0;
+
+		//Diagnostics timer.
 		debugging::timer* tmr = new debugging::timer();
 		tmr->start();
+
+		//Run system until end time.
 		while (currentTime < endTime)
 		{
-			utilities::util::loadBar(currentTime,endTime,counter);
+			//Get the next system.
 			integrator->nextSystem(currentTime, dTime, nParticles, boxSize, cells, particles, sysForces);
+			//Call cell manager.
 			updateCells();
+
+			//Output a snapshot every one second.
+			int oneSec = 1.0/dTime;
+			if ( (counter % oneSec) == 0 )
+			{
+				std::string outName = std::to_string(int(currentTime));
+				std::cout << "\n" << "Writing: " << outName << ".txt";
+				writeSystem("/snapshots/" + outName);
+				tmr->stop();
+				std::cout << "\n" << "Elapsed time: " << tmr->getElapsedSeconds() << " seconds.\n";
+				tmr->start();
+			}
+
+			//Update loading bar.
+			utilities::util::loadBar(currentTime,endTime,counter);
+
+			//Increment counters.
 			currentTime += dTime;
 			counter++;
-			if ( (counter % 1000) == 0 )
-			{
-				std::string outName = std::to_string(currentTime);
-				writeSystem("/snapshots/" + outName);
-				//tmr->stop();
-				//std::cout << "\n" << "Elapsed time: " << tmr->getElapsedSeconds() << " seconds.\n";
-				//tmr->start();
-			}
 		}
 	}
 
@@ -468,7 +491,14 @@ namespace simulation
 		//Write each point in the system as a line of csv formatted as: X,Y,Z
 		for (int i = 0; i < nParticles; i++)
 		{
-			myFile << particles[i]->getX() << "," << particles[i]->getY() << "," << particles[i]->getZ() << "\n";
+			myFile << particles[i]->getX() << "," << particles[i]->getY() << "," << particles[i]->getZ() << ",";
+			myFile << particles[i]->getX0() << "," << particles[i]->getY0() << "," << particles[i]->getZ0() << ",";
+			myFile << particles[i]->getFX() << "," << particles[i]->getFY() << "," << particles[i]->getFZ() << ",";
+			myFile << particles[i]->getFX0() << "," << particles[i]->getFY0() << "," << particles[i]->getFZ0();
+			if (i < (nParticles-1))
+			{
+				myFile << "\n";
+			}
 		}
 		//Close the stream.
 		myFile.close();
@@ -477,14 +507,18 @@ namespace simulation
 	void system::writeInitTemp()
 	{
 		double v2 = 0.0;
+		//Get V^2 for each particle.
 		for (int i = 0; i < nParticles; i++)
 		{
 			v2 += particles[i]->getVX()*particles[i]->getVX();
 			v2 += particles[i]->getVY()*particles[i]->getVY();
 			v2 += particles[i]->getVZ()*particles[i]->getVZ();
 		}
-		double temp = v2 / float(nParticles);
-		std::cout << "---Temp: " << temp/3.0 << "\n";
+		//Average v2.
+		double vAvg = v2 / float(nParticles);
+		double temp = (vAvg / 3.0);
+		//
+		std::cout << "---Temp: m/k" << temp << "\n";
 	}
 
 	void system::writeSystemInit()
@@ -493,13 +527,26 @@ namespace simulation
 		myFile.open(trialName + "/sysConfig.txt");
 
 		//Writes the system configuration.
+		myFile << "trialName: " << trialName << "\n";
+		myFile << "nParticles: " << nParticles << "\n";
 		myFile << "Concentration: " << concentration << "\n";
 		myFile << "boxSize: " << boxSize << "\n";
 		myFile << "cellSize: " << cellSize << "\n";
 		myFile << "cellScale: " << cellScale << "\n";
+		myFile << "temp: " << temp << "\n";
+		myFile << "dTime: " << dTime;
 
 		//Close the stream.
 		myFile.close();
+	}
+
+	/********************************************//**
+	*-----------------SYSTEM RECOVERY----------------
+	 ***********************************************/
+
+	void system::loadFromFile(std::string settings, std::string sysState)
+	{
+		
 	}
 
 }

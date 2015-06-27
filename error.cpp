@@ -60,5 +60,11 @@ namespace debugging
 		exit(7705);
 	}
 
+	void error::throwInputError()
+	{
+		std::cout << "\n" << "Invalid input file." << "\n";
+		exit(7706);
+	}
+
 }
 

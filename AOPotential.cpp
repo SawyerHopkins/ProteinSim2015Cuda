@@ -60,26 +60,33 @@ namespace physics
 		{
 			if (it->second->getName() != index->getName())
 			{
-				double rSquared = utilities::util::pbcDistAlt(index->getX(), index->getY(), index->getZ(), 
+				//Distance between the two particles.
+				double rSquared = utilities::util::pbcDist(index->getX(), index->getY(), index->getZ(), 
 																	it->second->getX(), it->second->getY(), it->second->getZ(),
 																	boxSize);
 
+				//If the particles are in the potential well.
 				if (rSquared <= cutOff)
 				{
 					double r = sqrt(rSquared);
-					if(r<(0.8))
+
+					//If the particles overlap there are problems.
+					double size = (index.getRadius() + it->second->getRadius())
+					if(r< (0.8*size) )
 					{
 						debugging::error::throwParticleOverlapError(index->getName(), it->second->getName(), r);
 					}
+
+					//Math
 					double rInv=1.0/r; 
 					double r_36=pow(rInv,36);
 					double r_38=r_36/rSquared;
-
 					double fNet=36.0*r_38+coEff1*rInv+coEff2*r; 
 					fNet=-fNet;
 
+					//Normalize the force.
 					double unitVec[3] {0.0,0.0,0.0};
-					utilities::util::unitVectorAlt(index->getX(), index->getY(), index->getZ(), 
+					utilities::util::unitVectorAdv(index->getX(), index->getY(), index->getZ(), 
 														it->second->getX(), it->second->getY(), it->second->getZ(),
 														unitVec, r, boxSize);
 
@@ -88,11 +95,13 @@ namespace physics
 					double fy = fNet*unitVec[1];
 					double fz = fNet*unitVec[2];
 
+					//If the force is infinite then there are worse problems.
 					if (isnan(fNet))
 					{
 						debugging::error::throwInfiniteForce();
 					}
 
+					//Add to the net force on the particle.
 					index->updateForce(fx,fy,fz);
 				}
 			}

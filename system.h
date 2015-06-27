@@ -6,6 +6,13 @@
 namespace simulation
 {
 
+	/**
+	 * @class system
+	 * @author Sawyer Hopkins
+	 * @date 06/27/15
+	 * @file system.h
+	 * @brief Frontend wrapper for running simulations.
+	 */
 	class system
 	{
 
@@ -146,7 +153,16 @@ namespace simulation
 			 */
 			void writeSystem(std::string name);
 
+			/**
+			 * @brief Write the initial system parameters.
+			 */
 			void writeSystemInit();
+
+			/********************************************//**
+			*-----------------SYSTEM RECOVERY----------------
+			 ***********************************************/
+
+			void loadFromFile(std::string settings, std::string sysState);
 
 	};
 

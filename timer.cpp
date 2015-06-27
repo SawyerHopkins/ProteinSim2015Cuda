@@ -27,6 +27,7 @@ namespace debugging
 
 timer::timer()
 {
+	//Set the initial time.
 	start_time = std::chrono::_V2::system_clock::now();
 	stop_time = start_time;
 }

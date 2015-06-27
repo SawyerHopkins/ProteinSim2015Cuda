@@ -6,16 +6,27 @@
 namespace debugging
 {
 
+	/**
+	 * @class timer
+	 * @author Sawyer Hopkins
+	 * @date 06/27/15
+	 * @file timer.h
+	 * @brief Timer for diagnostics.
+	 */
 	class timer
 	{
 
 		private:
 
+			//System time objects.
 			std::chrono::system_clock::time_point start_time;
 			std::chrono::system_clock::time_point stop_time;
 
 		public:
 
+			/**
+			 * @brief Create a new timer.
+			 */
 			timer();
 			~timer();
 
@@ -28,6 +39,10 @@ namespace debugging
 			 */
 			void stop() { stop_time = std::chrono::system_clock::now(); }
 
+			/**
+			 * @brief The number of seconds elapsed between start() and stop()
+			 * @return The difference between stop_time and start_time. 
+			 */
 			double getElapsedSeconds() 
 			{
 				std::chrono::system_clock::duration diff = stop_time-start_time;

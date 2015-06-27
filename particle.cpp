@@ -31,6 +31,7 @@ namespace simulation
 
 	particle::particle(int pid)
 	{
+		//Set the initial parameters.
 		name = pid;
 
 		x = 0.0;
@@ -95,8 +96,10 @@ namespace simulation
 	void particle::setX(double val, double boxSize)
 	{
 		double xTemp = x;
+		//Update current position.
 		x = utilities::util::safeMod(val, boxSize);
-		x0 = utilities::util::safeMode0(xTemp,x,boxSize);
+		//Set lat position.
+		x0 = utilities::util::safeMod0(xTemp,x,boxSize);
 		if ((x < 0.0) || (x >= boxSize))
 		{
 			debugging::error::throwParticleBoundsError(x,y,z);
@@ -106,8 +109,10 @@ namespace simulation
 	void particle::setY(double val, double boxSize)
 	{
 		double yTemp = y;
+		//Update current position.
 		y = utilities::util::safeMod(val, boxSize);
-		y0 = utilities::util::safeMode0(yTemp,y,boxSize);
+		//Set lat position.
+		y0 = utilities::util::safeMod0(yTemp,y,boxSize);
 		if ((y < 0.0) || (y >= boxSize))
 		{
 			debugging::error::throwParticleBoundsError(x,y,z);
@@ -117,8 +122,10 @@ namespace simulation
 	void particle::setZ(double val, double boxSize)
 	{
 		double zTemp = z;
+		//Update current position.
 		z = utilities::util::safeMod(val, boxSize);
-		z0 = utilities::util::safeMode0(zTemp,z,boxSize);
+		//Set lat position.
+		z0 = utilities::util::safeMod0(zTemp,z,boxSize);
 		if ((z < 0.0) || (z >= boxSize))
 		{
 			debugging::error::throwParticleBoundsError(x,y,z);
@@ -127,6 +134,7 @@ namespace simulation
 
 	void particle::setPos(double xVal, double yVal, double zVal, double boxSize)
 	{
+		//Update all the positions.
 		setX(xVal,boxSize);
 		setY(yVal,boxSize);
 		setZ(zVal,boxSize);
@@ -134,6 +142,7 @@ namespace simulation
 
 	void particle::updateForce(double xVal, double yVal, double zVal)
 	{
+		//Increment the existing value of force.
 		fx += xVal;
 		fy += yVal;
 		fz += zVal;
@@ -141,6 +150,7 @@ namespace simulation
 
 	void particle::clearForce()
 	{
+		//Set the old force before clearing the current force.
 		fx0 = fx;
 		fy0 = fy;
 		fz0 = fz;

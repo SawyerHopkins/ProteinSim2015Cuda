@@ -13,10 +13,10 @@ CurrentFileName        :=
 CurrentFilePath        :=
 CurrentFileFullPath    :=
 User                   :=Sawyer Hopkins
-Date                   :=06/20/15
+Date                   :=06/26/15
 CodeLitePath           :="/home/sawyer/.codelite"
-LinkerName             :=/usr/bin/g++-4.9
-SharedObjectLinkerName :=/usr/bin/g++-4.9 -shared -fPIC
+LinkerName             :=/usr/bin/g++-4.8
+SharedObjectLinkerName :=/usr/bin/g++-4.8 -shared -fPIC
 ObjectSuffix           :=.o
 DependSuffix           :=.o.d
 PreprocessSuffix       :=.i
@@ -48,9 +48,9 @@ LibPath                := $(LibraryPathSwitch).
 ## AR, CXX, CC, AS, CXXFLAGS and CFLAGS can be overriden using an environment variables
 ##
 AR       := /usr/bin/ar rcu
-CXX      := /usr/bin/g++-4.9
-CC       := /usr/bin/gcc-4.9
-CXXFLAGS :=  -g -O3 -Wall -std=c++11 -fopenmp $(Preprocessors)
+CXX      := /usr/bin/g++-4.8
+CC       := /usr/bin/gcc-4.8
+CXXFLAGS :=  -g -O3 -fopenmp -std=c++11 -Wall $(Preprocessors)
 CFLAGS   :=  -g -O3 -Wall -fopenmp $(Preprocessors)
 ASFLAGS  := 
 AS       := /usr/bin/as
@@ -61,7 +61,7 @@ AS       := /usr/bin/as
 ##
 CodeLiteDir:=/usr/share/codelite
 Objects0=$(IntermediateDirectory)/main.cpp$(ObjectSuffix) $(IntermediateDirectory)/AOPotential.cpp$(ObjectSuffix) $(IntermediateDirectory)/force.cpp$(ObjectSuffix) $(IntermediateDirectory)/brownianIntegrator.cpp$(ObjectSuffix) $(IntermediateDirectory)/particle.cpp$(ObjectSuffix) $(IntermediateDirectory)/system.cpp$(ObjectSuffix) $(IntermediateDirectory)/cell.cpp$(ObjectSuffix) $(IntermediateDirectory)/utilities.cpp$(ObjectSuffix) $(IntermediateDirectory)/error.cpp$(ObjectSuffix) $(IntermediateDirectory)/timer.cpp$(ObjectSuffix) \
-	
+	$(IntermediateDirectory)/findClusters.cpp$(ObjectSuffix) 
 
 
 
@@ -78,6 +78,11 @@ $(OutputFile): $(IntermediateDirectory)/.d $(Objects)
 	@echo "" > $(IntermediateDirectory)/.d
 	@echo $(Objects0)  > $(ObjectsFileList)
 	$(LinkerName) $(OutputSwitch)$(OutputFile) @$(ObjectsFileList) $(LibPath) $(Libs) $(LinkOptions)
+
+PostBuild:
+	@echo Executing Post Build commands ...
+	rm ./Debug/*.o
+	@echo Done
 
 $(IntermediateDirectory)/.d:
 	@test -d ./Debug || $(MakeDirCommand) ./Debug
@@ -137,6 +142,11 @@ $(IntermediateDirectory)/timer.cpp$(ObjectSuffix): timer.cpp
 	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/sawyer/Programming/PhDResearch/Clustered/timer.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/timer.cpp$(ObjectSuffix) $(IncludePath)
 $(IntermediateDirectory)/timer.cpp$(PreprocessSuffix): timer.cpp
 	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/timer.cpp$(PreprocessSuffix) "timer.cpp"
+
+$(IntermediateDirectory)/findClusters.cpp$(ObjectSuffix): findClusters.cpp 
+	$(CXX) $(IncludePCH) $(SourceSwitch) "/home/sawyer/Programming/PhDResearch/Clustered/findClusters.cpp" $(CXXFLAGS) $(ObjectSwitch)$(IntermediateDirectory)/findClusters.cpp$(ObjectSuffix) $(IncludePath)
+$(IntermediateDirectory)/findClusters.cpp$(PreprocessSuffix): findClusters.cpp
+	@$(CXX) $(CXXFLAGS) $(IncludePCH) $(IncludePath) $(PreprocessOnlySwitch) $(OutputSwitch) $(IntermediateDirectory)/findClusters.cpp$(PreprocessSuffix) "findClusters.cpp"
 
 ##
 ## Clean

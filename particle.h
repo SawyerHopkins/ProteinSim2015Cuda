@@ -5,6 +5,13 @@
 namespace simulation
 {
 
+	/**
+	 * @class particle
+	 * @author Sawyer Hopkins
+	 * @date 06/27/15
+	 * @file particle.h
+	 * @brief 
+	 */
 	class particle
 	{
 
