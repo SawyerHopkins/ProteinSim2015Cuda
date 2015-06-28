@@ -71,7 +71,7 @@ namespace physics
 					double r = sqrt(rSquared);
 
 					//If the particles overlap there are problems.
-					double size = (index.getRadius() + it->second->getRadius())
+					double size = (index->getRadius() + it->second->getRadius());
 					if(r< (0.8*size) )
 					{
 						debugging::error::throwParticleOverlapError(index->getName(), it->second->getName(), r);

@@ -88,15 +88,15 @@
       <PostBuild>
         <Command Enabled="yes">rm ./Debug/*.o</Command>
       </PostBuild>
-      <CustomBuild Enabled="no">
+      <CustomBuild Enabled="yes">
         <RebuildCommand/>
         <CleanCommand/>
-        <BuildCommand/>
+        <BuildCommand>make .PHONY</BuildCommand>
         <PreprocessFileCommand/>
         <SingleFileCommand/>
         <MakefileGenerationCommand/>
         <ThirdPartyToolName>None</ThirdPartyToolName>
-        <WorkingDirectory/>
+        <WorkingDirectory>/home/sawyer/Programming/PhDResearch/Clustered</WorkingDirectory>
       </CustomBuild>
       <AdditionalRules>
         <CustomPostBuild/>
