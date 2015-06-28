@@ -68,8 +68,10 @@ namespace physics
 																	it->second->getX(), it->second->getY(), it->second->getZ(),
 																	boxSize);
 
+				double rCutSquared = cutOff*cutOff;
+
 				//If the particles are in the potential well.
-				if (rSquared <= cutOff)
+				if (rSquared <= rCutSquared)
 				{
 					index->incCoorNumber();
 					double r = sqrt(rSquared);
