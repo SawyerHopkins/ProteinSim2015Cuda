@@ -34,7 +34,7 @@ static inline void debug(simulation::system* sys);
 static inline void greeting();
 static void runScript();
 static void runAnalysis(string fileName);
-
+static string runSetup();
 
 /********************************************//**
 *------------------MAIN PROGRAM------------------
@@ -132,8 +132,10 @@ void runScript()
 	double cutOff = 1.1;
 	//Set the kT well depth.
 	double kT = 0.261;
-	//Set the output directory.
-	string trialName = "highGamma4kt";
+
+	/*------------GET TRIAL NAME----------*/
+
+	string trialName = runSetup();
 
 	/*--------WRITE SYSTEM SETTINGS-------*/
 
@@ -203,7 +205,7 @@ void runScript()
 
 	//Allow user to check system settings before running.
 	//Comment this section out if running without terminal access.
-	cout << "System initialization complete. Press y/n to continue.\n";
+	cout << "System initialization complete. Press y/n to continue: ";
 	std::string cont;
 	cin >> cont;
 
@@ -212,13 +214,100 @@ void runScript()
 		exit(100);
 	}
 
-	cout << "Starting integration.\n\n";
+	cout << "Starting integration.\n";
 
 	sys->run(endTime);
 
 	//Write the final system.
 	cout << "\n" << "Integration complete.\n\n Writing final system to file.";
 	sys->writeSystem("/finSys");
+}
+
+string runSetup()
+{
+	//Set the output directory.
+	string outDir = "";
+	bool validDir = 0;
+
+	//Check that we get a real directory.
+	while (!validDir)
+	{
+		cout << "Working directory: ";
+		cin >> outDir;
+
+		//Check that the directory exists.
+		struct stat fileCheck;
+		if (stat(outDir.c_str(), &fileCheck) != -1)
+		{
+			if (S_ISDIR(fileCheck.st_mode))
+			{
+				validDir = 1;
+			}
+		}
+
+		if (validDir == 0)
+		{
+			cout << "\n" << "Invalid Directory" << "\n\n";
+		}
+
+	}
+
+	//Set the name of the trial.
+	string trialName = "";
+	bool acceptName = 0;
+
+	//Check that no trials get overwritten by accident.
+	while (!acceptName)
+	{
+		validDir = 0;
+
+		cout << "\n" << "Trial Name: ";
+		cin >> trialName;
+
+		//Check input format.
+		if (outDir.back() == '/')
+		{
+			trialName = outDir + trialName;
+		}
+		else
+		{
+			trialName = outDir + "/" + trialName;
+		}
+
+		//Check that the directory exists.
+		struct stat fileCheck;
+		if (stat(trialName.c_str(), &fileCheck) != -1)
+		{
+			if (S_ISDIR(fileCheck.st_mode))
+			{
+				validDir = 1;
+			}
+		}
+
+		if (validDir == 1)
+		{
+			cout << "\n" << "Trial name already exists. Overwrite (y,n): ";
+
+			//Check user input
+			std::string cont;
+			cin >> cont;
+
+			if (cont == "Y" || cont == "y")
+			{
+				acceptName = 1;
+			}
+		}
+		else
+		{
+			acceptName = 1;
+		}
+
+	}
+
+	//Output the directory.
+	cout << "\n" << "Data will be saved in: " << trialName << "\n\n";
+
+	return trialName;
 }
 
 /**
