@@ -113,7 +113,7 @@ void runScript()
 	//Set the time step for the integrator.
 	double timeStep = .001;
 	//Set the number of particles.
-	int nParticles = 400;
+	int nParticles = 10000;
 	//Set drag coefficent.
 	double gamma = 0.5;
 	//Set initial temperature.
@@ -121,7 +121,7 @@ void runScript()
 	//Set concentration.
 	double conc = 0.01;
 	//Set cell scale.
-	int scale = 12;
+	int scale = 20;
 	//Set rnd seed. 0 for random seed.
 	int rnd = 90210;
 	//Set particle radius.

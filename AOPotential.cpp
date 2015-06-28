@@ -44,9 +44,10 @@ namespace physics
 		dt = dTime;
 
 		//Create secondary variables.
-		double a1=-gamma*(cutOff/(cutOff-1.0))*(cutOff/(cutOff-1.0))*(cutOff/(cutOff-1.0));
-		double a2=-3.0/(2.0*cutOff);
-		double	a3=1.0/(2.0*cutOff*cutOff*cutOff);
+		a1=-gamma*(cutOff/(cutOff-1.0))*(cutOff/(cutOff-1.0))*(cutOff/(cutOff-1.0));
+		a2=-3.0/(2.0*cutOff);
+		a3=1.0/(2.0*cutOff*cutOff*cutOff);
+
 		coEff1 = -a1*a2;
 		coEff2 = -3.0*a1*a3;
 
@@ -54,8 +55,10 @@ namespace physics
 
 	}
 
-	void AOPotential::iterCells(int boxSize, double time, simulation::particle* index, simulation::cell* itemCell)
+	double AOPotential::iterCells(int boxSize, double time, simulation::particle* index, simulation::cell* itemCell)
 	{
+		double eao = 0;
+
 		for(std::map<int,simulation::particle*>::iterator it=itemCell->getBegin(); it != itemCell->getEnd(); ++it)
 		{
 			if (it->second->getName() != index->getName())
@@ -68,6 +71,7 @@ namespace physics
 				//If the particles are in the potential well.
 				if (rSquared <= cutOff)
 				{
+					index->incCoorNumber();
 					double r = sqrt(rSquared);
 
 					//If the particles overlap there are problems.
@@ -83,6 +87,9 @@ namespace physics
 					double r_38=r_36/rSquared;
 					double fNet=36.0*r_38+coEff1*rInv+coEff2*r; 
 					fNet=-fNet;
+
+					//Update net potential.
+					eao += r_36+a1*(1.0+a2*r+a3*r*rSquared);
 
 					//Normalize the force.
 					double unitVec[3] {0.0,0.0,0.0};
@@ -106,45 +113,53 @@ namespace physics
 				}
 			}
 		}
+		return eao;
 	}
 
-	void AOPotential::getAcceleration(int index, int nPart, int boxSize, double time, simulation::cell* itemCell ,simulation::particle** items)
+	double AOPotential::getAcceleration(int index, int nPart, int boxSize, double time, simulation::cell* itemCell ,simulation::particle** items)
 	{
 
+		double eao = 0;
+		itemCell->getMember(index)->resetCoorNumber();
+
 		//The cell itself.
-		iterCells(boxSize,time,items[index],itemCell);
+		eao += iterCells(boxSize,time,items[index],itemCell);
 
 		//Cross section at cell.
-		iterCells(boxSize,time,items[index],itemCell->left);
-		iterCells(boxSize,time,items[index],itemCell->right);
-		iterCells(boxSize,time,items[index],itemCell->top);
-		iterCells(boxSize,time,items[index],itemCell->bot);
-		iterCells(boxSize,time,items[index],itemCell->top->left);
-		iterCells(boxSize,time,items[index],itemCell->top->right);
-		iterCells(boxSize,time,items[index],itemCell->bot->left);
-		iterCells(boxSize,time,items[index],itemCell->bot->right);
+		eao += iterCells(boxSize,time,items[index],itemCell->left);
+		eao += iterCells(boxSize,time,items[index],itemCell->right);
+		eao += iterCells(boxSize,time,items[index],itemCell->top);
+		eao += iterCells(boxSize,time,items[index],itemCell->bot);
+		eao += iterCells(boxSize,time,items[index],itemCell->top->left);
+		eao += iterCells(boxSize,time,items[index],itemCell->top->right);
+		eao += iterCells(boxSize,time,items[index],itemCell->bot->left);
+		eao += iterCells(boxSize,time,items[index],itemCell->bot->right);
 
 		//Cross section in front of the cell.
-		iterCells(boxSize,time,items[index],itemCell->front);
-		iterCells(boxSize,time,items[index],itemCell->front->left);
-		iterCells(boxSize,time,items[index],itemCell->front->right);
-		iterCells(boxSize,time,items[index],itemCell->front->top);
-		iterCells(boxSize,time,items[index],itemCell->front->bot);
-		iterCells(boxSize,time,items[index],itemCell->front->top->left);
-		iterCells(boxSize,time,items[index],itemCell->front->top->right);
-		iterCells(boxSize,time,items[index],itemCell->front->bot->left);
-		iterCells(boxSize,time,items[index],itemCell->front->bot->right);
+		eao += iterCells(boxSize,time,items[index],itemCell->front);
+		eao += iterCells(boxSize,time,items[index],itemCell->front->left);
+		eao += iterCells(boxSize,time,items[index],itemCell->front->right);
+		eao += iterCells(boxSize,time,items[index],itemCell->front->top);
+		eao += iterCells(boxSize,time,items[index],itemCell->front->bot);
+		eao += iterCells(boxSize,time,items[index],itemCell->front->top->left);
+		eao += iterCells(boxSize,time,items[index],itemCell->front->top->right);
+		eao += iterCells(boxSize,time,items[index],itemCell->front->bot->left);
+		eao += iterCells(boxSize,time,items[index],itemCell->front->bot->right);
 
 		//Cross section behind the cell.
-		iterCells(boxSize,time,items[index],itemCell->back);
-		iterCells(boxSize,time,items[index],itemCell->back->left);
-		iterCells(boxSize,time,items[index],itemCell->back->right);
-		iterCells(boxSize,time,items[index],itemCell->back->top);
-		iterCells(boxSize,time,items[index],itemCell->back->bot);
-		iterCells(boxSize,time,items[index],itemCell->back->top->left);
-		iterCells(boxSize,time,items[index],itemCell->back->top->right);
-		iterCells(boxSize,time,items[index],itemCell->back->bot->left);
-		iterCells(boxSize,time,items[index],itemCell->back->bot->right);
+		eao += iterCells(boxSize,time,items[index],itemCell->back);
+		eao += iterCells(boxSize,time,items[index],itemCell->back->left);
+		eao += iterCells(boxSize,time,items[index],itemCell->back->right);
+		eao += iterCells(boxSize,time,items[index],itemCell->back->top);
+		eao += iterCells(boxSize,time,items[index],itemCell->back->bot);
+		eao += iterCells(boxSize,time,items[index],itemCell->back->top->left);
+		eao += iterCells(boxSize,time,items[index],itemCell->back->top->right);
+		eao += iterCells(boxSize,time,items[index],itemCell->back->bot->left);
+		eao += iterCells(boxSize,time,items[index],itemCell->back->bot->right);
+
+		itemCell->getMember(index)->setEAP(eao);
+
+		return eao;
 
 	}
 

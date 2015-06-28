@@ -95,6 +95,11 @@ namespace integrators
 			double corr;
 			double dev;
 
+			//Tempature vars;
+			double goy2;
+			double goy3;
+			double hn;
+
 			//Random gaussian generator for the random kicks.
 			std::mt19937* gen;
 			std::normal_distribution<double>* Dist;

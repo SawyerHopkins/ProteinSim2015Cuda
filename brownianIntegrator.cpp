@@ -69,7 +69,24 @@ namespace integrators
 		gen = new std::mt19937(rSeed);
 		Dist = new std::normal_distribution<double>(0.0,1.0);
 
-		std::cout << "---Brownian integrator successfully added.\n\n";
+		goy2 = gn / (y*y);
+		goy3 = gn / (y*y*y);
+		hn  = y/(exp(y)-exp(-y));
+
+		std::cout.precision(7);
+
+		std::cout << "\n---y: " << y;
+		std::cout << "\n---sig1: " << sig1;
+		std::cout << "\n---sig2: " << sig2;
+		std::cout << "\n---coor: " << corr;
+		std::cout << "\n---dev: " << dev;
+		std::cout << "\n---c0: " << coEff0;
+		std::cout << "\n---c1: " << coEff1;
+		std::cout << "\n---c2: " << coEff2;
+		std::cout << "\n---c3: " << coEff3;
+		std::cout << "\n---goy2: " << goy2;
+		std::cout << "\n---goy3: " << goy3;
+		std::cout << "\n---Brownian integrator successfully added.\n\n";
 
 	}
 
@@ -105,9 +122,9 @@ namespace integrators
 		delete Dist;
 	}
 
-	double brownianIntegrator::getWidth(double gdt)
+	double brownianIntegrator::getWidth(double y)
 	{
-		return (2*gdt) - 3.0 + (4.0*exp(-gdt)) - exp(-2.0*gdt);
+		return (2*y) - 3.0 + (4.0*exp(-y)) - exp(-2.0*y);
 	}
 
 	int brownianIntegrator::nextSystem(double time, double dt, int nParticles, int boxSize, simulation::cell**** cells, simulation::particle** items, physics::forces* f)
@@ -206,6 +223,6 @@ namespace integrators
 		}
 
 		return 0;
-	}
 
+	}
 }

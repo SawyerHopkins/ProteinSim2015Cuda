@@ -60,6 +60,11 @@ namespace simulation
 			int cy;
 			int cz;
 
+			//Testing information
+			int coorNumber;
+			//Effective average potenital.
+			double eap;
+
 		public:
 
 			/********************************************//**
@@ -208,7 +213,16 @@ namespace simulation
 			 * @return  exposes private variable name.
 			 */
 			const double getName() const { return name; }
- 
+			/**
+			 * @brief Returns the coordination number.
+			 * @return
+			 */
+			const int getCoorNumber() const { return coorNumber; }
+			/**
+			 * @brief Gets average potential.
+			 * @return 
+			 */
+			const int getEAP() const { return eap; }
  			/********************************************//**
 			*-----------------SYSTEM SETTERS-----------------
 			************************************************/
@@ -293,6 +307,21 @@ namespace simulation
 			 * @param val Mass value.
 			 */
 			void setMass(double val) { m = val; }
+
+			/**
+			 * @brief Increase coordination number.
+			 */
+			void incCoorNumber() { coorNumber++; }
+			/**
+			 * @brief Research coordination number.
+			 */
+			void resetCoorNumber() { coorNumber = 0; }
+			/**
+			 * @brief Add to the average potential.
+			 * @param val
+			 */
+			void setEAP(double val) { eap = val; }
+
 
 			/********************************************//**
 			*------------------SYSTEM OUTPUT-----------------

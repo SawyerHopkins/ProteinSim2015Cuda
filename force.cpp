@@ -59,11 +59,11 @@ namespace physics
 		}
 	}
 
-	void forces::getAcceleration(int nPart, int boxSize, double time, simulation::cell**** cells, simulation::particle** items)
+	double forces::getAcceleration(int nPart, int boxSize, double time, simulation::cell**** cells, simulation::particle** items)
 	{
 		#pragma omp parallel
 		{
-			#pragma omp for schedule(dynamic,4)
+			#pragma omp for schedule(dynamic)
 			for (int index = 0; index < nPart; index++)
 			{
 				//Resets the force on the particle.
@@ -79,6 +79,7 @@ namespace physics
 				}
 			}
 		}
+		return 0.0;
 	}
 
 }

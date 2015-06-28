@@ -468,6 +468,20 @@ namespace simulation
 				tmr->stop();
 				std::cout << "\n" << "Elapsed time: " << tmr->getElapsedSeconds() << " seconds.\n";
 				tmr->start();
+
+				int totCoor = 0;
+				int totEAP = 0;
+				for (int i=0; i<nParticles; i++)
+				{
+					totCoor+=particles[i]->getCoorNumber();
+					totEAP+=particles[i]->getEAP();
+				}
+
+				double eap = (totEAP / double(nParticles));
+
+				std::cout <<"<Rg>: " << int(totCoor/nParticles) << " - <Rt>: " << totCoor << "\n";
+				std::cout <<"<EAP>: " << eap << "\n\n";
+
 			}
 
 			//Update loading bar.

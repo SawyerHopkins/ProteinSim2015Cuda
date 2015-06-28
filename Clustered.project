@@ -34,7 +34,6 @@
       </VirtualDirectory>
     </VirtualDirectory>
     <VirtualDirectory Name="system">
-      <File Name="particle.cpp"/>
       <File Name="system.cpp"/>
       <VirtualDirectory Name="headers">
         <File Name="particle.h"/>
@@ -42,6 +41,7 @@
         <File Name="cell.h"/>
       </VirtualDirectory>
       <File Name="cell.cpp"/>
+      <File Name="particle.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="utilities">
       <File Name="utilities.cpp"/>
