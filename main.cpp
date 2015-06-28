@@ -121,7 +121,7 @@ void runScript()
 	//Set concentration.
 	double conc = 0.01;
 	//Set cell scale.
-	int scale = 20;
+	int scale = 40;
 	//Set rnd seed. 0 for random seed.
 	int rnd = 90210;
 	//Set particle radius.

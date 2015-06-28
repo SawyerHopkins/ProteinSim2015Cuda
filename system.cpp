@@ -142,7 +142,7 @@ namespace simulation
 					{
 						left = (scale-1);
 					}
-					if (x == (scale-1))
+					else if (x == (scale-1))
 					{
 						right = 0;
 					}
@@ -151,7 +151,7 @@ namespace simulation
 					{
 						top = (scale-1);
 					}
-					if (y == (scale-1))
+					else if (y == (scale-1))
 					{
 						bot = 0;
 					}
@@ -160,7 +160,7 @@ namespace simulation
 					{
 						front = (scale-1);
 					}
-					if (z == (scale-1))
+					else if (z == (scale-1))
 					{
 						back = 0;
 					}
