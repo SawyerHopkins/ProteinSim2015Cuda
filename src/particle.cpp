@@ -89,6 +89,8 @@ namespace simulation
 		delete &cy;
 		delete &cz;
 		delete &name;
+		delete &coorNumber;
+		delete &eap;
 	}
 
 	/********************************************//**

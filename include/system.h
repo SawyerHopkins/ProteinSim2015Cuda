@@ -1,6 +1,5 @@
 #ifndef SYSTEM_H
 #define SYSTEM_H
-#include "cell.h"
 #include "integrator.h"
 
 namespace simulation
@@ -163,6 +162,12 @@ namespace simulation
 			 ***********************************************/
 
 			void loadFromFile(std::string settings, std::string sysState);
+
+			/********************************************//**
+			*-----------------SYSTEM ANALYSIS----------------
+			 ***********************************************/
+
+			int numClusters();
 
 	};
 

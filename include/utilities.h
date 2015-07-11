@@ -1,11 +1,9 @@
 #ifndef UTILITIES_H
 #define UTILITIES_H
 
-#include <iostream>
 #include <fstream>
 #include <sstream>
 #include <iomanip>
-#include <math.h>
 #include <string>
 #include <random>
 #include <vector>

@@ -17,47 +17,43 @@
  }]]]>
     </Plugin>
   </Plugins>
+  <Reconciliation>
+    <Regexes/>
+    <Excludepaths/>
+    <Ignorefiles/>
+    <Extensions>
+      <![CDATA[cpp;c;h;hpp;xrc;wxcp;fbp]]>
+    </Extensions>
+    <Topleveldir>../Clustered</Topleveldir>
+  </Reconciliation>
   <Description/>
   <Dependencies/>
   <VirtualDirectory Name="src">
-    <VirtualDirectory Name="forces">
-      <File Name="AOPotential.cpp"/>
-      <VirtualDirectory Name="headers">
-        <File Name="force.h"/>
-      </VirtualDirectory>
-      <File Name="force.cpp"/>
-    </VirtualDirectory>
-    <VirtualDirectory Name="Integrators">
-      <File Name="brownianIntegrator.cpp"/>
-      <VirtualDirectory Name="headers">
-        <File Name="integrator.h"/>
-      </VirtualDirectory>
-    </VirtualDirectory>
-    <VirtualDirectory Name="system">
-      <File Name="system.cpp"/>
-      <VirtualDirectory Name="headers">
-        <File Name="particle.h"/>
-        <File Name="system.h"/>
-        <File Name="cell.h"/>
-      </VirtualDirectory>
-      <File Name="cell.cpp"/>
-      <File Name="particle.cpp"/>
-    </VirtualDirectory>
-    <VirtualDirectory Name="utilities">
-      <File Name="utilities.cpp"/>
-      <VirtualDirectory Name="headers">
-        <File Name="utilities.h"/>
-        <File Name="error.h"/>
-        <File Name="timer.h"/>
-      </VirtualDirectory>
-      <File Name="error.cpp"/>
-      <File Name="timer.cpp"/>
-    </VirtualDirectory>
-    <File Name="main.cpp"/>
-    <VirtualDirectory Name="analysis">
-      <File Name="findClusters.cpp"/>
-      <File Name="findClusters.h"/>
-    </VirtualDirectory>
+    <File Name="src/AOPotential.cpp"/>
+    <File Name="src/brownianIntegrator.cpp"/>
+    <File Name="src/cell.cpp"/>
+    <File Name="src/error.cpp"/>
+    <File Name="src/force.cpp"/>
+    <File Name="src/main.cpp"/>
+    <File Name="src/particle.cpp"/>
+    <File Name="src/system.cpp"/>
+    <File Name="src/systemAnalysis.cpp"/>
+    <File Name="src/systemHandling.cpp"/>
+    <File Name="src/systemInit.cpp"/>
+    <File Name="src/systemOutput.cpp"/>
+    <File Name="src/systemRecovery.cpp"/>
+    <File Name="src/timer.cpp"/>
+    <File Name="src/utilities.cpp"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="include">
+    <File Name="include/cell.h"/>
+    <File Name="include/error.h"/>
+    <File Name="include/force.h"/>
+    <File Name="include/integrator.h"/>
+    <File Name="include/particle.h"/>
+    <File Name="include/system.h"/>
+    <File Name="include/timer.h"/>
+    <File Name="include/utilities.h"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>
@@ -86,12 +82,12 @@
       </Debugger>
       <PreBuild/>
       <PostBuild>
-        <Command Enabled="yes">rm ./Debug/*.o</Command>
+        <Command Enabled="yes">doxygen</Command>
       </PostBuild>
       <CustomBuild Enabled="yes">
         <RebuildCommand/>
         <CleanCommand/>
-        <BuildCommand>make .PHONY</BuildCommand>
+        <BuildCommand>make</BuildCommand>
         <PreprocessFileCommand/>
         <SingleFileCommand/>
         <MakefileGenerationCommand/>

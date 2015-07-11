@@ -1,5 +1,5 @@
 
-make .PHONY
+make
 echo Executing Post Build commands ...
-rm ./Debug/*.o
+doxygen
 echo Done

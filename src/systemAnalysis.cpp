@@ -19,3 +19,33 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.*/
+
+#include <stack>
+#include "system.h"
+
+namespace simulation
+{
+
+	int system::numClusters()
+	{
+		int count = 0;
+
+		std::map<int,particle*> pList;
+		std::stack<int> nameList;
+
+		for (int i=0; i<nParticles; i++)
+		{
+			pList[particles[i]->getName()] = particles[i];
+			nameList.push(particles[i]->getName());
+		}
+
+		while(!pList.empty())
+		{
+			
+		}
+
+		return count;
+	}
+
+}
+
