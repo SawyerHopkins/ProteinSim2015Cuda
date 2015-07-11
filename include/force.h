@@ -155,6 +155,7 @@ namespace physics
 			 * @brief Creates an new AO Potential.
 			 * @param coeff The drag coefficent of the system.
 			 * @param cut The force cutoff distance.
+			 * @param dTime The time step for integration.
 			 */
 			AOPotential(double coeff, double cut, double dTime);
 			/**

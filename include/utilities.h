@@ -68,6 +68,7 @@ namespace utilities
 			 * @param dY The distance in the Y direction.
 			 * @param dZ The distance in the Z direction.
 			 * @param r The magnitude of the distance.
+			 * @param acc The array hold the unit vectors.
 			 */
 			static void unitVectorSimple(double dX, double dY, double dZ, double r, double (&acc)[3]);
 
@@ -75,8 +76,9 @@ namespace utilities
 			 * @brief Alternative method for getting the normalized distance between two particles.
 			 * @param X,Y,Z The position of the first particle
 			 * @param X1,Y1,Z1 The position of the second particle.
-			 * @param uv The array to hold teh unit vectors
+			 * @param acc The array to hold the unit vectors
 			 * @param r The distance between the particles.
+			 * @param L The size of the box.
 			 */
 			static void unitVectorAdv(double X,double Y, double Z,double X1, double Y1,double Z1,double (&acc)[3],double r,int L);
 
