@@ -86,7 +86,7 @@
       </PostBuild>
       <CustomBuild Enabled="yes">
         <RebuildCommand/>
-        <CleanCommand/>
+        <CleanCommand>make clean</CleanCommand>
         <BuildCommand>make</BuildCommand>
         <PreprocessFileCommand/>
         <SingleFileCommand/>
