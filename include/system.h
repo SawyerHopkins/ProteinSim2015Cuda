@@ -161,12 +161,21 @@ namespace simulation
 			*-----------------SYSTEM RECOVERY----------------
 			 ***********************************************/
 
+			/**
+			 * @brief Recover a system state from output files.
+			 * @param settings The location of the settings file.
+			 * @param sysState The location of the system file.
+			 */
 			void loadFromFile(std::string settings, std::string sysState);
 
 			/********************************************//**
 			*-----------------SYSTEM ANALYSIS----------------
 			 ***********************************************/
 
+			/**
+			 * @brief Get the number of clusters in the system.
+			 * @return Return the number of clusters
+			 */
 			int numClusters();
 
 	};

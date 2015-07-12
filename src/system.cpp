@@ -139,13 +139,15 @@ namespace simulation
 				for (int i=0; i<nParticles; i++)
 				{
 					totCoor+=particles[i]->getCoorNumber();
-					totEAP+=particles[i]->getEAP();
+					totEAP+=particles[i]->getPotential();
 				}
 
 				double eap = (totEAP / double(nParticles));
+				double nClust = numClusters();
 
 				std::cout <<"<Rg>: " << int(totCoor/nParticles) << " - <Rt>: " << totCoor << "\n";
-				std::cout <<"<EAP>: " << eap << "\n\n";
+				std::cout <<"<EAP>: " << eap << "\n";
+				std::cout <<"Clusters: " << nClust << "\n\n";
 
 			}
 

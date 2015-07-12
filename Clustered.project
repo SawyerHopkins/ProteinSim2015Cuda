@@ -32,18 +32,22 @@
     <File Name="src/AOPotential.cpp"/>
     <File Name="src/brownianIntegrator.cpp"/>
     <File Name="src/cell.cpp"/>
-    <File Name="src/error.cpp"/>
     <File Name="src/force.cpp"/>
     <File Name="src/main.cpp"/>
     <File Name="src/particle.cpp"/>
-    <File Name="src/system.cpp"/>
-    <File Name="src/systemAnalysis.cpp"/>
-    <File Name="src/systemHandling.cpp"/>
-    <File Name="src/systemInit.cpp"/>
-    <File Name="src/systemOutput.cpp"/>
-    <File Name="src/systemRecovery.cpp"/>
-    <File Name="src/timer.cpp"/>
-    <File Name="src/utilities.cpp"/>
+    <VirtualDirectory Name="system">
+      <File Name="src/system.cpp"/>
+      <File Name="src/systemAnalysis.cpp"/>
+      <File Name="src/systemHandling.cpp"/>
+      <File Name="src/systemInit.cpp"/>
+      <File Name="src/systemOutput.cpp"/>
+      <File Name="src/systemRecovery.cpp"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="utility">
+      <File Name="src/error.cpp"/>
+      <File Name="src/timer.cpp"/>
+      <File Name="src/utilities.cpp"/>
+    </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="include/cell.h"/>

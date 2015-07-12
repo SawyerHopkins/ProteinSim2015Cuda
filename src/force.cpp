@@ -67,7 +67,7 @@ namespace physics
 			for (int index = 0; index < nPart; index++)
 			{
 				//Resets the force on the particle.
-				items[index]->clearForce();
+				items[index]->nextIter();
 
 				simulation::particle* p = items[index];
 				simulation::cell* itemCell = cells[p->getCX()][p->getCY()][p->getCZ()];

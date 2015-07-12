@@ -35,7 +35,7 @@ namespace physics
 			 * @param itemCell The cell containing the index particle. 
 			 * @param items All particles in the system.
 			 */
-			virtual double getAcceleration(int index, int nPart, int boxSize, double time, simulation::cell* itemCell, simulation::particle** items)=0;
+			virtual void getAcceleration(int index, int nPart, int boxSize, double time, simulation::cell* itemCell, simulation::particle** items)=0;
 
 			/**
 			 * @brief Flag for a force dependent time.
@@ -96,7 +96,7 @@ namespace physics
 			 * @param cells The system cell manager.
 			 * @param items The particles in the system.
 			 */
-			double getAcceleration(int nPart, int boxSize, double time, simulation::cell**** cells, simulation::particle** items);
+			void getAcceleration(int nPart, int boxSize, double time, simulation::cell**** cells, simulation::particle** items);
 
 			/**
 			 * @brief Checks if the system contains a time dependent force.
@@ -172,7 +172,7 @@ namespace physics
 			 * @param itemCell The cell containing the index particle.
 			 * @param items All particles in the system.
 			 */
-			double getAcceleration(int index, int nPart, int boxSize, double time, simulation::cell* itemCell, simulation::particle** items);
+			void getAcceleration(int index, int nPart, int boxSize, double time, simulation::cell* itemCell, simulation::particle** items);
 			/**
 			 * @brief Flag for a force dependent time.
 			 * @return True for time dependent. False otherwise. 
@@ -185,7 +185,7 @@ namespace physics
 			 * @param index The particle to find the force on.
 			 * @param itemCell The cell to check for interactions in.
 			 */
-			double iterCells(int boxSize, double time, simulation::particle* index, simulation::cell* itemCell);
+			void iterCells(int boxSize, double time, simulation::particle* index, simulation::cell* itemCell);
 
 	};
 

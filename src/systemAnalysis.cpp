@@ -28,23 +28,66 @@ namespace simulation
 
 	int system::numClusters()
 	{
-		int count = 0;
+		//A map of all the particles in the system by name.
+		std::map<int,particle*> selectionPool;
 
-		std::map<int,particle*> pList;
-		std::stack<int> nameList;
-
+		//Add all the particles to the map.
 		for (int i=0; i<nParticles; i++)
 		{
-			pList[particles[i]->getName()] = particles[i];
-			nameList.push(particles[i]->getName());
+			selectionPool[particles[i]->getName()] = particles[i];
 		}
 
-		while(!pList.empty())
+		//Create a vector of clusters.
+		std::vector<std::vector<particle*>> clusterPool;
+
+		//While we still have particles in pList look for clusters.
+		while(!selectionPool.empty())
 		{
-			
+			//The cluster candidate.
+			std::vector<particle*> candidate;
+
+			//Get the base particle.
+			particle* p = selectionPool.begin()->second;
+
+			//Recreate a searching pool
+			std::vector<particle*> recursionPool;
+			//Add the base particle to the recursive search.
+			recursionPool.push_back(p);
+
+			//Recurse.
+			while(!recursionPool.empty())
+			{
+				//Grab a particle to recurse through.
+				particle* r = recursionPool.back();
+				//Remove the particle from the recurse pool.
+				recursionPool.pop_back();
+
+				//If the particle is still in the selection pool.
+				if (selectionPool.count(r->getName()))
+				{
+
+					//Remove the particle from the selection pool.
+					selectionPool.erase(r->getName());
+					//Add the particle to the cluster candidate
+					candidate.push_back(r);
+
+					//If the particle has interacting particles, add those to the recurse pool.
+					if (!(r->getInteractions().empty()))
+					{
+						recursionPool.insert(recursionPool.end(), r->getInteractionsBegin(), r->getInteractionsEnd());
+					}
+				}
+			}
+
+			//If the candidate is larger than 4 elements, add it to the cluster pool.
+			if(candidate.size() > 4)
+			{
+				clusterPool.push_back(candidate);
+			}
+
 		}
 
-		return count;
+		return clusterPool.size();
 	}
 
 }

@@ -63,7 +63,13 @@ namespace simulation
 
 		r = 0.0;
 		m = 0.0;
-		
+
+		coorNumber = 0;
+		potential = 0;
+
+		//Make sure interactions is clear.
+		//std::vector<particle*>().swap(interactions);
+
 	}
 
 	particle::~particle()
@@ -90,7 +96,7 @@ namespace simulation
 		delete &cz;
 		delete &name;
 		delete &coorNumber;
-		delete &eap;
+		delete &potential;
 	}
 
 	/********************************************//**
@@ -144,16 +150,37 @@ namespace simulation
 		setZ(zVal,boxSize);
 	}
 
-	void particle::updateForce(double xVal, double yVal, double zVal)
+	void particle::updateForce(double xVal, double yVal, double zVal, double pot, particle* p)
 	{
+		//Add to coordination number.
+		coorNumber++;
+
+		//Add to potential.
+		potential+=pot;
+
+		interactions.push_back(p);
+
 		//Increment the existing value of force.
 		fx += xVal;
 		fy += yVal;
 		fz += zVal;
 	}
 
-	void particle::clearForce()
+	void particle::nextIter()
 	{
+
+		//Reset interacting particles.
+		interactions.clear();
+		interactions.shrink_to_fit();
+		//Minimize memory allocations by making a guess at how many slots we need.
+		interactions.reserve(coorNumber);
+
+		//Reset coordination number;
+		coorNumber = 0;
+
+		//Reset potential;
+		potential = 0;
+
 		//Set the old force before clearing the current force.
 		fx0 = fx;
 		fy0 = fy;

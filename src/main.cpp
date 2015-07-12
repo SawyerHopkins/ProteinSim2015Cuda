@@ -119,9 +119,9 @@ void runScript()
 	//Set initial temperature.
 	double temp = 1.0;
 	//Set concentration.
-	double conc = 0.01;
+	double conc = 0.1;
 	//Set cell scale.
-	int scale = 40;
+	int scale = 16;
 	//Set rnd seed. 0 for random seed.
 	int rnd = 90210;
 	//Set particle radius.

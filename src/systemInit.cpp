@@ -135,6 +135,7 @@ namespace simulation
 		for(int i = 0; i < nParticles; i++)
 		{
 			particles[i] = new particle(i);
+
 			particles[i]->setX( distribution(gen) * boxSize , boxSize);
 			particles[i]->setY( distribution(gen) * boxSize , boxSize);
 			particles[i]->setZ( distribution(gen) * boxSize , boxSize);

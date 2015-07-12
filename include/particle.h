@@ -60,10 +60,12 @@ namespace simulation
 			int cy;
 			int cz;
 
-			//Testing information
+			//Coordination number.
 			int coorNumber;
 			//Effective average potenital.
-			double eap;
+			double potential;
+			//The particles the base particle interacts with.
+			std::vector<particle*> interactions;
 
 		public:
 
@@ -222,12 +224,18 @@ namespace simulation
 			 * @brief Gets average potential.
 			 * @return 
 			 */
-			const int getEAP() const { return eap; }
+			const int getPotential() const { return potential; }
+			/**
+			 * @brief Get the interacting particles.
+			 * @return 
+			 */
+			const std::vector<particle*> getInteractions() const { return interactions; }
+			const std::vector<particle*>::iterator getInteractionsBegin() { return interactions.begin(); }
+			const std::vector<particle*>::iterator getInteractionsEnd() { return interactions.end(); }
+
  			/********************************************//**
 			*-----------------SYSTEM SETTERS-----------------
 			************************************************/
-
-			//Setters for current position.
 
 			/**
 			 * @brief Set the x position of the particle. Handles PBC and updates x0.
@@ -253,9 +261,6 @@ namespace simulation
 			 * @param boxSize The size of the system box.
 			 */
 			void setPos(double xVal, double yVal, double zVal, double boxSize);
-
-			//Setters for velocity
-
 			/**
 			 * @brief Set the x velocity.
 			 * @param val The velocity to set.
@@ -271,56 +276,33 @@ namespace simulation
 			 * @param val The velocity to set.
 			 */
 			void setVZ(double val) { vz = val; }
-
-			//Setters for current force.
-
 			/**
 			 * @brief Adds the the current value of force.
 			 * @param xVal,yVal,zVal The values of force to add.
+			 * @param pot The potential of the force interaction.
+			 * @param p The particle providing the force.
 			 */
-			void updateForce(double xVal, double yVal, double zVal);
+			void updateForce(double xVal, double yVal, double zVal, double pot, particle* p);
 
 			/**
-			 * @brief Clears the current force and updates previous force.
+			 * @brief Clears the current force and updates previous force. Resets potential, neighbors, and coordination number.
 			 */
-			void clearForce();
-
-
-			//Setter for containing cell.
-
+			void nextIter();
 			/**
 			 * @brief Set the location of the containing cell.
 			 * @param x,y,z The position variables of the containing cell.
 			 */
 			void setCell(int x, int y, int z) { cx = x; cy = y; cz = z; }
-
-			//Setters for particle properties
-
 			/**
 			 * @brief Sets the radius of the particle.
 			 * @param val Radius value.
 			 */
 			void setRadius(double val) { r = val; }
-
 			/**
 			 * @brief Sets the mass of the particle.
 			 * @param val Mass value.
 			 */
 			void setMass(double val) { m = val; }
-
-			/**
-			 * @brief Increase coordination number.
-			 */
-			void incCoorNumber() { coorNumber++; }
-			/**
-			 * @brief Research coordination number.
-			 */
-			void resetCoorNumber() { coorNumber = 0; }
-			/**
-			 * @brief Add to the average potential.
-			 * @param val
-			 */
-			void setEAP(double val) { eap = val; }
 
 
 			/********************************************//**
