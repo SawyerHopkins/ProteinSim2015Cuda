@@ -59,7 +59,7 @@ namespace physics
 		}
 	}
 
-	double forces::getAcceleration(int nPart, int boxSize, double time, simulation::cell**** cells, simulation::particle** items)
+	void forces::getAcceleration(int nPart, int boxSize, double time, simulation::cell**** cells, simulation::particle** items)
 	{
 		#pragma omp parallel
 		{
@@ -79,7 +79,6 @@ namespace physics
 				}
 			}
 		}
-		return 0.0;
 	}
 
 }

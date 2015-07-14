@@ -25,6 +25,9 @@ namespace integrators
 
 		public:
 
+			//Header Version.
+			const int version = 1;
+
 			/**
 			 * @brief Integrates to the next system state.
 			 * @param time The current system time.

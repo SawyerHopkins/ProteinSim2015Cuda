@@ -24,6 +24,9 @@ namespace debugging
 
 		public:
 
+			//Header Version.
+			const int version = 1;
+
 			/**
 			 * @brief Create a new timer.
 			 */

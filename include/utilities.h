@@ -26,6 +26,10 @@ namespace utilities
 	class util
 	{
 		public:
+
+			//Header Version.
+			const int version = 1;
+
 			/**
 			 * @brief fmod can't do negative numbers so use this.
 			 * @param val The value of the perform the division on.

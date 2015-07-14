@@ -111,6 +111,9 @@ namespace simulation
 		//Debugging counter.
 		int counter = 0;
 
+		//Define one second of run time.
+		int oneSec = 1.0/dTime;
+
 		//Diagnostics timer.
 		debugging::timer* tmr = new debugging::timer();
 		tmr->start();
@@ -123,11 +126,42 @@ namespace simulation
 			//Call cell manager.
 			updateCells();
 
-			//Output a snapshot every one second.
-			int oneSec = 1.0/dTime;
+
+			//Output the cluster size data every tenth of a second
+			if ( ((counter * 10) % oneSec) == 0)
+			{
+				//Output the number of clusters with time.
+				std::ofstream myFileClust(trialName + "/clustGraph.txt", std::ios_base::app | std::ios_base::out);
+				myFileClust << currentTime << " " << numClusters() << "\n";
+				myFileClust.close();
+
+
+				int totCoor = 0;
+				int totEAP = 0;
+				for (int i=0; i<nParticles; i++)
+				{
+					totCoor+=particles[i]->getCoorNumber();
+					totEAP+=particles[i]->getPotential();
+				}
+				double eap = (totEAP / double(nParticles));
+				double avgCoor = double(totCoor) / double(nParticles);
+
+				//Output the average potential with time.
+				std::ofstream myFilePot(trialName + "/potGraph.txt", std::ios_base::app | std::ios_base::out);
+				myFilePot << currentTime << " " << eap << "\n";
+				myFilePot.close();
+
+				//Output the coordination number with time
+				std::ofstream myFileCoor(trialName + "/coorGraph.txt", std::ios_base::app | std::ios_base::out);
+				myFileCoor << currentTime << " " << avgCoor << "\n";
+				myFileCoor.clear();
+
+			}
+
+			//Output a snapshot every second.
 			if ( (counter % oneSec) == 0 )
 			{
-				std::string outName = std::to_string(int(currentTime));
+				std::string outName = std::to_string(int(std::round(currentTime)));
 				std::cout << "\n" << "Writing: " << outName << ".txt";
 				writeSystem("/snapshots/" + outName);
 				tmr->stop();

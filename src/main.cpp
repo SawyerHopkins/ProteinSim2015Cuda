@@ -115,7 +115,7 @@ void runScript()
 	//Set the number of particles.
 	int nParticles = 10000;
 	//Set drag coefficent.
-	double gamma = 0.5;
+	double gamma = 750;
 	//Set initial temperature.
 	double temp = 1.0;
 	//Set concentration.

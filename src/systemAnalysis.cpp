@@ -37,7 +37,7 @@ namespace simulation
 			selectionPool[particles[i]->getName()] = particles[i];
 		}
 
-		//Create a vector of clusters.
+		//Create a vector of clusters./home/sawyer/Programming/PhDResearch/Clustered/bin/Clustered
 		std::vector<std::vector<particle*>> clusterPool;
 
 		//While we still have particles in pList look for clusters.

@@ -69,6 +69,9 @@ namespace simulation
 
 		public:
 
+			//Header Version.
+			const int version = 1;
+
 			/********************************************//**
 			*--------------SYSTEM CONSTRUCTION---------------
 			************************************************/

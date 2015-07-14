@@ -23,6 +23,9 @@ namespace simulation
 
 		public:
 
+			//Header Version.
+			const int version = 1;
+
 			//Constructor and Destructor
 			cell();
 			~cell();

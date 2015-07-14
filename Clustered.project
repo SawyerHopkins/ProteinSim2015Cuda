@@ -75,7 +75,7 @@
       </Compiler>
       <Linker Options="-fopenmp" Required="yes"/>
       <ResourceCompiler Options="" Required="no"/>
-      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Debug" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Debug" Command="/home/sawyer/Programming/PhDResearch/Clustered/bin/Clustered" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="/home/sawyer/Programming/PhDResearch/Clustered/bin" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
         <![CDATA[]]>
       </Environment>
@@ -89,7 +89,7 @@
         <Command Enabled="yes">doxygen</Command>
       </PostBuild>
       <CustomBuild Enabled="yes">
-        <RebuildCommand/>
+        <RebuildCommand>make</RebuildCommand>
         <CleanCommand>make clean</CleanCommand>
         <BuildCommand>make</BuildCommand>
         <PreprocessFileCommand/>

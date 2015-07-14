@@ -18,6 +18,9 @@ namespace debugging
 
 		public:
 
+			//Header Version.
+			const int version = 1;
+
 			/**
 			 * @brief Throw when system initial conditions cannot be resolved.
 			 */

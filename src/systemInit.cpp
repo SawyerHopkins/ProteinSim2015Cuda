@@ -118,7 +118,6 @@ namespace simulation
 
 	void system::initParticles(double r, double m)
 	{
-
 		particles = new particle*[nParticles];
 
 		//If there is no inital seed create one.

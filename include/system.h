@@ -61,7 +61,6 @@ namespace simulation
 			 * @param m The mass of the particles.
 			 */
 			void initParticles(double r, double m);
-
 			/**
 			 * @brief Creates a maxwell distribution of velocities for the system temperature.
 			 * @param gen The random generator the initalize particles.
@@ -86,6 +85,9 @@ namespace simulation
 			void updateCells();
 
 		public:
+
+			//Header Version.
+			const int version = 1;
 
 			/********************************************//**
 			*---------------SYSTEM CONSTRUCTION--------------
@@ -116,7 +118,6 @@ namespace simulation
 			 * @return length of the system box.
 			 */
 			const int getBoxSize() const { return boxSize; }
-
 			/**
 			 * @brief Gets the length of a system cell.
 			 * @return cellSize.
@@ -151,7 +152,6 @@ namespace simulation
 			 * @param name The name of the file to write to.
 			 */
 			void writeSystem(std::string name);
-
 			/**
 			 * @brief Write the initial system parameters.
 			 */

@@ -26,6 +26,9 @@ namespace physics
 
 		public:
 
+			//Header Version.
+			const int version = 1;
+
 			/**
 			 * @brief Virtual methods for forces of various parameters.
 			 * @param index The index particle to find the force on.
