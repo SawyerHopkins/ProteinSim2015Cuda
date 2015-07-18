@@ -1,7 +1,9 @@
 #ifndef FORCE_H
 #define FORCE_H
 #include <ctime>
+#include <omp.h>
 #include "cell.h"
+#include "config.h"
 
 namespace physics
 {
@@ -107,6 +109,10 @@ namespace physics
 			 */
 			bool isTimeDependent() { return timeDependent; }
 
+			void setNumThreads(int num) { if (num > 0) {omp_set_num_threads(num);} }
+			void setDynamic(int num) { omp_set_dynamic(num); }
+			void setDevice(int num) { omp_set_default_device(num); }
+
 			//Iterators
 
 			/**
@@ -156,11 +162,9 @@ namespace physics
 
 			/**
 			 * @brief Creates an new AO Potential.
-			 * @param coeff The drag coefficent of the system.
-			 * @param cut The force cutoff distance.
-			 * @param dTime The time step for integration.
+			 * @param cfg The address of the configuration file reader.
 			 */
-			AOPotential(double coeff, double cut, double dTime);
+			AOPotential(configReader::config* cfg);
 			/**
 			 * @brief Releases the force from memory.
 			 */

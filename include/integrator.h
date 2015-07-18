@@ -118,15 +118,10 @@ namespace integrators
 
 			/**
 			 * @brief Constructs the brownian motion integrator.
-			 * @param nPart The number of particles in the system.
-			 * @param tempInit The initial temperature of the system.
-			 * @param m the mass of the particles in the system.
-			 * @param dragCoeff The drag coefficent of the system.
-			 * @param dTime The time step for integration.
-			 * @param seed The random number seed.
+			 * @param cfg The address of the configuration file reader.
 			 * @return Nothing
 			 */
-			brownianIntegrator(int nPart, double tempInit, double m, double dragCoeff, double dTime, int seed);
+			brownianIntegrator(configReader::config* cfg);
 			/**
 			 * @brief Deconstructs the integrator.
 			 * @return Nothing.

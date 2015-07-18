@@ -32,6 +32,8 @@ namespace physics
 	forces::forces()
 	{
 		timeDependent=false;
+		omp_set_dynamic(0);
+		omp_set_num_threads(1);
 	}
 
 	forces::~forces()
@@ -63,7 +65,7 @@ namespace physics
 	{
 		#pragma omp parallel
 		{
-			#pragma omp for schedule(dynamic)
+			#pragma omp for
 			for (int index = 0; index < nPart; index++)
 			{
 				//Resets the force on the particle.

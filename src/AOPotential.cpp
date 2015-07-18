@@ -33,15 +33,52 @@ namespace physics
 		delete &coEff2;
 	}
 
-	AOPotential::AOPotential(double coeff, double cut, double dTime)
+	AOPotential::AOPotential(configReader::config* cfg)
 	{
 		//Sets the name
 		name = "AOPotential";
 
 		//Set vital variables.
-		gamma = coeff; 
-		cutOff = cut;
-		dt = dTime;
+
+		//Sets the system drag.
+		std::string keyName = "gamma";
+		if (cfg->containsKey(keyName))
+		{
+			gamma = cfg->getParam<double>(keyName);
+		}
+		else
+		{
+			std::cout << "-Option: '" << keyName << "' missing\n";
+			std::cout << "-Using default.\n\n";
+			gamma = 0.5;
+		}
+		std::cout << "---" << "temp: " << gamma << "\n";
+
+		keyName = "timeStep";
+		if (cfg->containsKey(keyName))
+		{
+			dt = cfg->getParam<double>(keyName);
+		}
+		else
+		{
+			std::cout << "-Option: '" << keyName << "' missing\n";
+			std::cout << "-Using default.\n\n";
+			dt = 0.001;
+		}
+		std::cout << "---" << keyName << ": " << dt << "\n";
+
+		keyName = "cutOff";
+		if (cfg->containsKey(keyName))
+		{
+			cutOff = cfg->getParam<double>(keyName);
+		}
+		else
+		{
+			std::cout << "-Option: '" << keyName << "' missing\n";
+			std::cout << "-Using default.\n\n";
+			cutOff = 1.1;
+		}
+		std::cout << "---" << keyName << ": " << cutOff << "\n";
 
 		//Create secondary variables.
 		a1=-gamma*(cutOff/(cutOff-1.0))*(cutOff/(cutOff-1.0))*(cutOff/(cutOff-1.0));

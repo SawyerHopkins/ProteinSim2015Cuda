@@ -1,7 +1,6 @@
 #ifndef SYSTEM_H
 #define SYSTEM_H
 #include "integrator.h"
-#include "config.h"
 
 namespace simulation
 {

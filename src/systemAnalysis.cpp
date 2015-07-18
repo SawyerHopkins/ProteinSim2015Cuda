@@ -96,6 +96,8 @@ namespace simulation
 			avgSize = totalSize / clusterPool.size();
 		}
 
+		std::cout << "\n" << "Clusters: " << clusterPool.size() << "\n";
+
 		return avgSize;
 
 		//return clusterPool.size();

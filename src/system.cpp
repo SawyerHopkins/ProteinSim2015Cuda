@@ -238,38 +238,6 @@ namespace simulation
 			//Call cell manager.
 			updateCells();
 
-
-			//Output the cluster size data every tenth of a second
-			if ( ((counter * 10) % oneSec) == 0)
-			{
-				//Output the number of clusters with time.
-				std::ofstream myFileClust(trialName + "/clustGraph.txt", std::ios_base::app | std::ios_base::out);
-				myFileClust << currentTime << " " << numClusters() << "\n";
-				myFileClust.close();
-
-
-				int totCoor = 0;
-				int totEAP = 0;
-				for (int i=0; i<nParticles; i++)
-				{
-					totCoor+=particles[i]->getCoorNumber();
-					totEAP+=particles[i]->getPotential();
-				}
-				double eap = (totEAP / double(nParticles));
-				double avgCoor = double(totCoor) / double(nParticles);
-
-				//Output the average potential with time.
-				std::ofstream myFilePot(trialName + "/potGraph.txt", std::ios_base::app | std::ios_base::out);
-				myFilePot << currentTime << " " << eap << "\n";
-				myFilePot.close();
-
-				//Output the coordination number with time
-				std::ofstream myFileCoor(trialName + "/coorGraph.txt", std::ios_base::app | std::ios_base::out);
-				myFileCoor << currentTime << " " << avgCoor << "\n";
-				myFileCoor.clear();
-
-			}
-
 			//Output a snapshot every second.
 			if ( (counter % oneSec) == 0 )
 			{
@@ -290,10 +258,27 @@ namespace simulation
 
 				double eap = (totEAP / double(nParticles));
 				double nClust = numClusters();
+				double avgCoor = double(totCoor) / double(nParticles);
 
-				std::cout <<"<Rg>: " << int(totCoor/nParticles) << " - <Rt>: " << totCoor << "\n";
+				std::cout <<"<Rg>: " << avgCoor << " - <Rt>: " << totCoor << "\n";
 				std::cout <<"<EAP>: " << eap << "\n";
 				std::cout <<"Clusters: " << nClust << "\n\n";
+
+				//Output the number of clusters with time.
+				std::ofstream myFileClust(trialName + "/clustGraph.txt", std::ios_base::app | std::ios_base::out);
+				myFileClust << currentTime << " " << nClust << "\n";
+				myFileClust.close();
+
+
+				//Output the average potential with time.
+				std::ofstream myFilePot(trialName + "/potGraph.txt", std::ios_base::app | std::ios_base::out);
+				myFilePot << currentTime << " " << eap << "\n";
+				myFilePot.close();
+
+				//Output the coordination number with time
+				std::ofstream myFileCoor(trialName + "/coorGraph.txt", std::ios_base::app | std::ios_base::out);
+				myFileCoor << currentTime << " " << avgCoor << "\n";
+				myFileCoor.clear();
 
 			}
 

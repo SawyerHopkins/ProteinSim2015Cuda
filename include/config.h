@@ -5,6 +5,7 @@
 #include <sstream>
 #include <map>
 #include <regex>
+#include "config.h"
 
 namespace configReader
 {

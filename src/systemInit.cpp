@@ -399,6 +399,7 @@ namespace simulation
 
 		//Output the directory.
 		cout << "\n" << "Data will be saved in: " << trialName << "\n\n";
+		mkdir(trialName.c_str(),0777);
 
 		return trialName;
 	}
