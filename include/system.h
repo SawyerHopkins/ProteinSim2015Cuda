@@ -1,6 +1,7 @@
 #ifndef SYSTEM_H
 #define SYSTEM_H
 #include "integrator.h"
+#include "config.h"
 
 namespace simulation
 {
@@ -74,6 +75,12 @@ namespace simulation
 			 */
 			void initCheck(std::mt19937* gen, std::uniform_real_distribution<double>* distribution);
 
+			/**
+			 * @brief Get input for working directory. Create if needed.
+			 * @return The working directory 
+			 */
+			std::string runSetup();
+
 			/********************************************//**
 			*-----------------SYSTEM HANDLING----------------
 			 ***********************************************/
@@ -97,7 +104,7 @@ namespace simulation
 			 * @brief Constructs the particle system.
 			 * @return Nothing.
 			 */
-			system(std::string tName, int nPart, double conc, int scale, double m, double r, double sysTemp, double sysDT, int rnd, integrators::I_integrator* sysInt, physics::forces* sysFcs);
+			system(configReader::config* cfg, integrators::I_integrator* sysInt, physics::forces* sysFcs);
 			/**
 			 * @brief Destructs the particle system.
 			 * @return Nothing.

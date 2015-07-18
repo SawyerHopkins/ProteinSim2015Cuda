@@ -37,7 +37,8 @@ namespace simulation
 			selectionPool[particles[i]->getName()] = particles[i];
 		}
 
-		//Create a vector of clusters./home/sawyer/Programming/PhDResearch/Clustered/bin/Clustered
+		//Create a vector of clusters.
+		int totalSize = 0;
 		std::vector<std::vector<particle*>> clusterPool;
 
 		//While we still have particles in pList look for clusters.
@@ -82,12 +83,22 @@ namespace simulation
 			//If the candidate is larger than 4 elements, add it to the cluster pool.
 			if(candidate.size() > 4)
 			{
+				totalSize += candidate.size();
 				clusterPool.push_back(candidate);
 			}
 
 		}
 
-		return clusterPool.size();
+		int avgSize = 0;
+
+		if (clusterPool.size() > 0)
+		{
+			avgSize = totalSize / clusterPool.size();
+		}
+
+		return avgSize;
+
+		//return clusterPool.size();
 	}
 
 }

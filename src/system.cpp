@@ -29,24 +29,80 @@ namespace simulation
 	*-------------CONSTRUCTOR/DESTRUCTOR-------------
 	************************************************/
 
-	system::system(std::string tName, int nPart, double conc, int scale, double m, double r, double sysTemp, double sysDT, int rnd, integrators::I_integrator* sysInt, physics::forces* sysFcs)
+	system::system(configReader::config* cfg, integrators::I_integrator* sysInt, physics::forces* sysFcs)
 	{
 
 		//Sets the trial name
-		trialName = tName;
+		std::string keyName = "trialName";
+		if (cfg->containsKey(keyName))
+		{
+			trialName = cfg->getParam<std::string>(keyName);
+		}
+		else
+		{
+			std::cout << "-Option: '" << keyName << "' missing\n\n";
+			runSetup();
+		}
+		std::cout << "\n---" << keyName << ": " << trialName << "\n";
 
 		//Set time information
 		currentTime = 0;
-		dTime = sysDT;
+
+		keyName = "timeStep";
+		if (cfg->containsKey(keyName))
+		{
+			dTime = cfg->getParam<double>(keyName);
+		}
+		else
+		{
+			std::cout << "-Option: '" << keyName << "' missing\n";
+			std::cout << "-Using default.\n\n";
+			dTime = 0.001;
+		}
+		std::cout << "---" << keyName << ": " << dTime << "\n";
 
 		//Set the random number generator seed.
-		seed = rnd;
+		keyName = "seed";
+		if (cfg->containsKey(keyName))
+		{
+			seed = cfg->getParam<int>(keyName);
+		}
+		else
+		{
+			std::cout << "-Option: '" << keyName << "' missing\n";
+			std::cout << "-Using default.\n\n";
+			seed = 90210;
+		}
+		std::cout << "---" << keyName << ": " << seed << "\n";
+
 
 		//Sets the system temperature.
-		temp = sysTemp;
+		keyName = "temp";
+		if (cfg->containsKey(keyName))
+		{
+			temp = cfg->getParam<double>(keyName);
+		}
+		else
+		{
+			std::cout << "-Option: '" << keyName << "' missing\n";
+			std::cout << "-Using default.\n\n";
+			temp = 1.0;
+		}
+		std::cout << "---" << "temp: " << temp << "\n";
 
 		//Set the number of particles.
-		nParticles = nPart;
+		keyName = "nParticles";
+		if (cfg->containsKey(keyName))
+		{
+			nParticles = cfg->getParam<int>(keyName);
+		}
+		else
+		{
+			std::cout << "-Option: '" << keyName << "' missing\n";
+			std::cout << "-Using default.\n\n";
+			nParticles = 1000;
+		}
+		std::cout << "---" << keyName << ": " << nParticles << "\n";
 
 		//Set the integration method.
 		integrator = sysInt;
@@ -54,8 +110,64 @@ namespace simulation
 		//Set the internal forces.
 		sysForces = sysFcs;
 
+		//Set the concentration.
+		keyName = "conc";
+		double conc = 0.1;
+		if(cfg->containsKey(keyName))
+		{
+			conc = cfg->getParam<double>(keyName);
+		}
+		else
+		{
+			std::cout << "-Option: '" << keyName << "' missing\n";
+			std::cout << "-Using default.\n\n";
+		}
+		std::cout << "---" << keyName << ": " << conc << "\n";
+
+		//Set the radius.
+		keyName = "radius";
+		double r = 0.5;
+		if (cfg->containsKey(keyName))
+		{
+			r = cfg->getParam<double>(keyName);
+		}
+		else
+		{
+			std::cout << "-Option: '" << keyName << "' missing\n";
+			std::cout << "-Using default.\n\n";
+		}
+		std::cout << "---" << keyName << ": " << r << "\n";
+
+		//Set the mass.
+		keyName = "mass";
+		double m = 1.0;
+		if(cfg->containsKey(keyName))
+		{
+			m = cfg->getParam<double>(keyName);
+		}
+		else
+		{
+			std::cout << "-Option: '" << keyName << "' missing\n";
+			std::cout << "-Using default.\n\n";
+		}
+		std::cout << "---" << keyName << ": " << m << "\n";
+
+		//Set the scale.
+		keyName = "scale";
+		int scale = 4;
+		if(cfg->containsKey(keyName))
+		{
+			scale = cfg->getParam<int>(keyName);
+		}
+		else
+		{
+			std::cout << "-Option: '" << keyName << "' missing\n";
+			std::cout << "-Using default.\n\n";
+		}
+		std::cout << "---" << keyName << ": " << scale << "\n\n";
+
 		//Create a box based on desired concentration.
-		double vP = nPart*(4.0/3.0)*atan(1)*4*r*r*r;
+		double vP = nParticles*(4.0/3.0)*atan(1)*4*r*r*r;
 		boxSize = (int) cbrt(vP / conc);
 
 		//Calculates the number of cells needed.

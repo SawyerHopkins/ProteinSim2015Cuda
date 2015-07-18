@@ -144,12 +144,12 @@ namespace simulation
 
 		}
 
-		std::cout << "---Added " << nParticles << " particles. Checking for overlap.\n";
+		std::cout << "---Added " << nParticles << " particles. Checking for overlap.\n\n";
 
 		//Checks the system for overlap.
 		initCheck(&gen, &distribution);
 
-		std::cout << "---Overlap resolved. Creating Maxwell distribution.\n";
+		std::cout << "\n\n---Overlap resolved. Creating Maxwell distribution.\n";
 
 		//Set initial velocity.
 		maxwellVelocityInit(&gen, &distribution);
@@ -166,6 +166,7 @@ namespace simulation
 		//Search each particle for overlap.
 		for(int i = 0; i < nParticles; i++)
 		{
+			utilities::util::loadBar(i,nParticles,i);
 			//Is the problem resolved?
 			bool resolution = false;
 			//If not loop.
@@ -312,6 +313,94 @@ namespace simulation
 
 		//Write the system temp to verify.
 		writeInitTemp();
+	}
+
+	std::string system::runSetup()
+	{
+		using namespace std;
+		//Set the output directory.
+		string outDir = "";
+		bool validDir = 0;
+
+		//Check that we get a real directory.
+		while (!validDir)
+		{
+			cout << "Working directory: ";
+			cin >> outDir;
+
+			//Check that the directory exists.
+			struct stat fileCheck;
+			if (stat(outDir.c_str(), &fileCheck) != -1)
+			{
+				if (S_ISDIR(fileCheck.st_mode))
+				{
+					validDir = 1;
+				}
+			}
+
+			if (validDir == 0)
+			{
+				cout << "\n" << "Invalid Directory" << "\n\n";
+			}
+
+		}
+
+		//Set the name of the trial.
+		string trialName = "";
+		bool acceptName = 0;
+
+		//Check that no trials get overwritten by accident.
+		while (!acceptName)
+		{
+			validDir = 0;
+
+			cout << "\n" << "Trial Name: ";
+			cin >> trialName;
+
+			//Check input format.
+			if (outDir.back() == '/')
+			{
+				trialName = outDir + trialName;
+			}
+			else
+			{
+				trialName = outDir + "/" + trialName;
+			}
+
+			//Check that the directory exists.
+			struct stat fileCheck;
+			if (stat(trialName.c_str(), &fileCheck) != -1)
+			{
+				if (S_ISDIR(fileCheck.st_mode))
+				{
+					validDir = 1;
+				}
+			}
+
+			if (validDir == 1)
+			{
+				cout << "\n" << "Trial name already exists. Overwrite (y,n): ";
+
+				//Check user input
+				std::string cont;
+				cin >> cont;
+
+				if (cont == "Y" || cont == "y")
+				{
+					acceptName = 1;
+				}
+			}
+			else
+			{
+				acceptName = 1;
+			}
+
+		}
+
+		//Output the directory.
+		cout << "\n" << "Data will be saved in: " << trialName << "\n\n";
+
+		return trialName;
 	}
 
 }

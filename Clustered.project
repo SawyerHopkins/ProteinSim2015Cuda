@@ -29,12 +29,6 @@
   <Description/>
   <Dependencies/>
   <VirtualDirectory Name="src">
-    <File Name="src/AOPotential.cpp"/>
-    <File Name="src/brownianIntegrator.cpp"/>
-    <File Name="src/cell.cpp"/>
-    <File Name="src/force.cpp"/>
-    <File Name="src/main.cpp"/>
-    <File Name="src/particle.cpp"/>
     <VirtualDirectory Name="system">
       <File Name="src/system.cpp"/>
       <File Name="src/systemAnalysis.cpp"/>
@@ -48,6 +42,21 @@
       <File Name="src/timer.cpp"/>
       <File Name="src/utilities.cpp"/>
     </VirtualDirectory>
+    <VirtualDirectory Name="interface">
+      <File Name="src/main.cpp"/>
+      <File Name="src/runSim.cpp"/>
+      <File Name="src/analysis.cpp"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="physics">
+      <File Name="src/particle.cpp"/>
+      <File Name="src/force.cpp"/>
+      <File Name="src/cell.cpp"/>
+      <File Name="src/brownianIntegrator.cpp"/>
+      <File Name="src/AOPotential.cpp"/>
+    </VirtualDirectory>
+    <VirtualDirectory Name="config">
+      <File Name="src/config.cpp"/>
+    </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="include/cell.h"/>
@@ -58,6 +67,7 @@
     <File Name="include/system.h"/>
     <File Name="include/timer.h"/>
     <File Name="include/utilities.h"/>
+    <File Name="include/config.h"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>
