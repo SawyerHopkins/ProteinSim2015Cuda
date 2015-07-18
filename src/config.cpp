@@ -21,15 +21,33 @@ config::config(string fileName)
 			string key = line.substr(0, pos);
 
 			//Remove any leading or trailing white space.
-			key = regex_replace(key, std::regex(R"(^\s+)"), "");
-			key = regex_replace(key, std::regex(R"(\s+$)"), "");
+
+			//No Regex in g++ 4.8 :'(
+			while (std::isspace( *key.begin() ))
+			{
+				key.erase(key.begin());
+			}
+			while (std::isspace( *key.rbegin() ))
+			{
+				key.erase(key.length()-1);
+			}
+			//key = regex_replace(key, std::regex("(^\\s+)"), "");
+			//key = regex_replace(key, std::regex("(\\s+$)"), "");
 
 			//Add the right of the equal sign to the value.
 			line.erase(0,pos+1);
 			string val = line;
 
-			val = regex_replace(val, std::regex(R"(^\s+)"), "");
-			val = regex_replace(val, std::regex(R"(\s+$)"), "");
+			while (std::isspace( *val.begin() ))
+			{
+				val.erase(val.begin());
+			}
+			while (std::isspace( *val.rbegin() ))
+			{
+				val.erase(val.length()-1);
+			}
+			//val = regex_replace(val, std::regex("(^\\s+)"), "");
+			//val = regex_replace(val, std::regex("(\\s+$)"), "");
 
 			options[key] = val;
 		}
