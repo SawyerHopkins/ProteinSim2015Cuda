@@ -27,7 +27,7 @@ namespace physics
 
 	AOPotential::~AOPotential()
 	{
-		delete &gamma;
+		delete &kT;
 		delete &cutOff;
 		delete &coEff1;
 		delete &coEff2;
@@ -41,18 +41,18 @@ namespace physics
 		//Set vital variables.
 
 		//Sets the system drag.
-		std::string keyName = "gamma";
+		std::string keyName = "kT";
 		if (cfg->containsKey(keyName))
 		{
-			gamma = cfg->getParam<double>(keyName);
+			kT = cfg->getParam<double>(keyName);
 		}
 		else
 		{
 			std::cout << "-Option: '" << keyName << "' missing\n";
 			std::cout << "-Using default.\n\n";
-			gamma = 0.5;
+			kT = 0.261;
 		}
-		std::cout << "---" << "temp: " << gamma << "\n";
+		std::cout << "---" << keyName << ": " << kT << "\n";
 
 		keyName = "timeStep";
 		if (cfg->containsKey(keyName))
@@ -81,7 +81,7 @@ namespace physics
 		std::cout << "---" << keyName << ": " << cutOff << "\n";
 
 		//Create secondary variables.
-		a1=-gamma*(cutOff/(cutOff-1.0))*(cutOff/(cutOff-1.0))*(cutOff/(cutOff-1.0));
+		a1=-kT*(cutOff/(cutOff-1.0))*(cutOff/(cutOff-1.0))*(cutOff/(cutOff-1.0));
 		a2=-3.0/(2.0*cutOff);
 		a3=1.0/(2.0*cutOff*cutOff*cutOff);
 

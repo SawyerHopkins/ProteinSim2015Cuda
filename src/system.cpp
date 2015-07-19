@@ -88,7 +88,7 @@ namespace simulation
 			std::cout << "-Using default.\n\n";
 			temp = 1.0;
 		}
-		std::cout << "---" << "temp: " << temp << "\n";
+		std::cout << "---" << keyName << ": " << temp << "\n";
 
 		//Set the number of particles.
 		keyName = "nParticles";

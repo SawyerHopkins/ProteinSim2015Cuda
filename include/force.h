@@ -145,7 +145,7 @@ namespace physics
 	private:
 
 			//Variables vital to the force.
-			double gamma;
+			double kT;
 			double cutOff;
 			double dt;
 
