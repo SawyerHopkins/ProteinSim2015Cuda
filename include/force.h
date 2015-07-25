@@ -1,6 +1,5 @@
 #ifndef FORCE_H
 #define FORCE_H
-#include <ctime>
 #include <omp.h>
 #include "cell.h"
 #include "config.h"
@@ -109,8 +108,20 @@ namespace physics
 			 */
 			bool isTimeDependent() { return timeDependent; }
 
+			/**
+			 * @brief Set the number of threads for OMP to use
+			 * @param num Number of threads.
+			 */
 			void setNumThreads(int num) { if (num > 0) {omp_set_num_threads(num);} }
+			/**
+			 * @brief Set the dynamic/static mode of operation.
+			 * @param num 0 for static. num > 0 for dynamics.
+			 */
 			void setDynamic(int num) { omp_set_dynamic(num); }
+			/**
+			 * @brief Set the default OMP target device.
+			 * @param num Device number.
+			 */
 			void setDevice(int num) { omp_set_default_device(num); }
 
 			//Iterators

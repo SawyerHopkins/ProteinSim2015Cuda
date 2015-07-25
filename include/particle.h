@@ -233,7 +233,15 @@ namespace simulation
 			 * @return 
 			 */
 			const std::vector<particle*> getInteractions() const { return interactions; }
+			/**
+			 * @brief The the beginning iterator of the interating particles.
+			 * @return iterator::begin
+			 */
 			const std::vector<particle*>::iterator getInteractionsBegin() { return interactions.begin(); }
+			/**
+			 * @brief Gets the end off the vector of interacting particles.
+			 * @return iterator::end
+			 */
 			const std::vector<particle*>::iterator getInteractionsEnd() { return interactions.end(); }
 
  			/********************************************//**

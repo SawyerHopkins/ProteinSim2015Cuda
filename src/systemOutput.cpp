@@ -64,7 +64,7 @@ namespace simulation
 		double vAvg = v2 / float(nParticles);
 		double temp = (vAvg / 3.0);
 		//
-		std::cout << "---Temp: m/k" << temp << "\n";
+		std::cout << "---Temp: " << temp << " m/k" << "\n";
 	}
 
 	void system::writeSystemInit()

@@ -2,7 +2,7 @@
 <CodeLite_Project Name="Clustered" InternalType="Console">
   <Plugins>
     <Plugin Name="qmake">
-      <![CDATA[00010001N0005Debug000000000000]]>
+      <![CDATA[00020001N0005Debug0000000000000001N0007Release000000000000]]>
     </Plugin>
     <Plugin Name="CMakePlugin">
       <![CDATA[[{
@@ -12,6 +12,15 @@
   "sourceDirectory": "$(ProjectPath)",
   "generator": "Unix Makefiles",
   "buildType": "Debug",
+  "arguments": [],
+  "parentProject": ""
+ }, {
+  "name": "Release",
+  "enabled": false,
+  "buildDirectory": "build",
+  "sourceDirectory": "$(ProjectPath)",
+  "generator": "",
+  "buildType": "",
   "arguments": [],
   "parentProject": ""
  }]]]>
@@ -59,15 +68,15 @@
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
-    <File Name="include/cell.h"/>
     <File Name="include/error.h"/>
     <File Name="include/force.h"/>
     <File Name="include/integrator.h"/>
     <File Name="include/particle.h"/>
-    <File Name="include/system.h"/>
     <File Name="include/timer.h"/>
     <File Name="include/utilities.h"/>
     <File Name="include/config.h"/>
+    <File Name="include/cell.h"/>
+    <File Name="include/system.h"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>
@@ -126,7 +135,7 @@
       </Compiler>
       <Linker Options="" Required="yes"/>
       <ResourceCompiler Options="" Required="no"/>
-      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Release" Command="./$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
+      <General OutputFile="$(IntermediateDirectory)/$(ProjectName)" IntermediateDirectory="./Release" Command="./bin/$(ProjectName)" CommandArguments="" UseSeparateDebugArgs="no" DebugArguments="" WorkingDirectory="$(IntermediateDirectory)" PauseExecWhenProcTerminates="yes" IsGUIProgram="no" IsEnabled="yes"/>
       <Environment EnvVarSetName="&lt;Use Defaults&gt;" DbgSetName="&lt;Use Defaults&gt;">
         <![CDATA[]]>
       </Environment>
@@ -137,10 +146,10 @@
       </Debugger>
       <PreBuild/>
       <PostBuild/>
-      <CustomBuild Enabled="no">
+      <CustomBuild Enabled="yes">
         <RebuildCommand/>
-        <CleanCommand/>
-        <BuildCommand/>
+        <CleanCommand>make clean</CleanCommand>
+        <BuildCommand>make; doxygen</BuildCommand>
         <PreprocessFileCommand/>
         <SingleFileCommand/>
         <MakefileGenerationCommand/>

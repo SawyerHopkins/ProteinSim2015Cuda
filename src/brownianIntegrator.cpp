@@ -32,18 +32,7 @@ namespace integrators
 		name = "brownianIntegrator";
 
 		//Set the number of particles.
-		std::string keyName = "nParticles";
-		if (cfg->containsKey(keyName))
-		{
-			memSize = cfg->getParam<int>(keyName);
-		}
-		else
-		{
-			std::cout << "-Option: '" << keyName << "' missing\n";
-			std::cout << "-Using default.\n\n";
-			memSize = 1000;
-		}
-		std::cout << "---" << keyName << ": " << memSize << "\n";
+		memSize = cfg->getParam<int>("nParticles",1000);
 
 		//Create he memory blocks for mem and memCoor
 		memX = new double[memSize];
@@ -54,59 +43,16 @@ namespace integrators
 		memCorrZ = new double[memSize];
 
 		//Sets the system temperature.
-		keyName = "temp";
-		if (cfg->containsKey(keyName))
-		{
-			temp = cfg->getParam<double>(keyName);
-		}
-		else
-		{
-			std::cout << "-Option: '" << keyName << "' missing\n";
-			std::cout << "-Using default.\n\n";
-			temp = 1.0;
-		}
-		std::cout << "---" << keyName << ": " << temp << "\n";
+		temp = cfg->getParam<double>("temp",1.0);
 
 		//Set the mass.
-		keyName = "mass";
-		if(cfg->containsKey(keyName))
-		{
-			mass = cfg->getParam<double>(keyName);
-		}
-		else
-		{
-			std::cout << "-Option: '" << keyName << "' missing\n";
-			std::cout << "-Using default.\n\n";
-			mass = 1.0;
-		}
-		std::cout << "---" << keyName << ": " << mass << "\n";
+		mass = cfg->getParam<double>("mass",1.0);
 
 		//Sets the system drag.
-		keyName = "gamma";
-		if (cfg->containsKey(keyName))
-		{
-			gamma = cfg->getParam<double>(keyName);
-		}
-		else
-		{
-			std::cout << "-Option: '" << keyName << "' missing\n";
-			std::cout << "-Using default.\n\n";
-			gamma = 0.5;
-		}
-		std::cout << "---" << keyName << ": " << gamma << "\n";
+		gamma = cfg->getParam<double>("gamma",0.5);
 
-		keyName = "timeStep";
-		if (cfg->containsKey(keyName))
-		{
-			dt = cfg->getParam<double>(keyName);
-		}
-		else
-		{
-			std::cout << "-Option: '" << keyName << "' missing\n";
-			std::cout << "-Using default.\n\n";
-			dt = 0.001;
-		}
-		std::cout << "---" << keyName << ": " << dt << "\n";
+		//Sets the integration time step.
+		dt = cfg->getParam<double>("timeStep",0.001);
 
 		//Create vital variables
 		y = gamma*dt;
@@ -127,18 +73,8 @@ namespace integrators
 		dev = sqrt(1.0 - (corr*corr));
 
 		//Set the random number generator seed.
-		keyName = "seed";
-		int rSeed = 90210;
-		if (cfg->containsKey(keyName))
-		{
-			rSeed = cfg->getParam<int>(keyName);
-		}
-		else
-		{
-			std::cout << "-Option: '" << keyName << "' missing\n";
-			std::cout << "-Using default.\n\n";
-		}
-		std::cout << "---" << keyName << ": " << rSeed << "\n";
+		int rSeed = 0;
+		rSeed = cfg->getParam<int>("seed",90210);
 
 		//Creates the random device.
 		gen = new std::mt19937(rSeed);

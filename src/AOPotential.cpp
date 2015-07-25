@@ -41,44 +41,13 @@ namespace physics
 		//Set vital variables.
 
 		//Sets the system drag.
-		std::string keyName = "kT";
-		if (cfg->containsKey(keyName))
-		{
-			kT = cfg->getParam<double>(keyName);
-		}
-		else
-		{
-			std::cout << "-Option: '" << keyName << "' missing\n";
-			std::cout << "-Using default.\n\n";
-			kT = 0.261;
-		}
-		std::cout << "---" << keyName << ": " << kT << "\n";
+		kT = cfg->getParam<double>("kT",0.261);
 
-		keyName = "timeStep";
-		if (cfg->containsKey(keyName))
-		{
-			dt = cfg->getParam<double>(keyName);
-		}
-		else
-		{
-			std::cout << "-Option: '" << keyName << "' missing\n";
-			std::cout << "-Using default.\n\n";
-			dt = 0.001;
-		}
-		std::cout << "---" << keyName << ": " << dt << "\n";
+		//Sets the integration time step.
+		dt = cfg->getParam<double>("timeStep",0.001);
 
-		keyName = "cutOff";
-		if (cfg->containsKey(keyName))
-		{
-			cutOff = cfg->getParam<double>(keyName);
-		}
-		else
-		{
-			std::cout << "-Option: '" << keyName << "' missing\n";
-			std::cout << "-Using default.\n\n";
-			cutOff = 1.1;
-		}
-		std::cout << "---" << keyName << ": " << cutOff << "\n";
+		//Get force range cutoff.
+		cutOff = cfg->getParam<double>("cutOff",1.1);
 
 		//Create secondary variables.
 		a1=-kT*(cutOff/(cutOff-1.0))*(cutOff/(cutOff-1.0))*(cutOff/(cutOff-1.0));

@@ -33,6 +33,7 @@ void runScript()
 
 	cout << "Looking for configuration file.\n\n";
 	configReader::config * cfg =new configReader::config("settings.cfg");
+	cfg->showOutput();
 
 	/*-------------INTEGRATOR-------------*/
 
@@ -47,29 +48,15 @@ void runScript()
 	physics::forces * force = new physics::forces();
 	force->addForce(new physics::AOPotential(cfg)); //Adds the aggregation force.
 
-	std::string keyName = "threads";
-	if (cfg->containsKey(keyName))
-	{
-		int num = cfg->getParam<double>(keyName);
-		force->setNumThreads(num);
-		std::cout << "---" << keyName << ": " << num << "\n";
-	}
+	int num_threads = cfg->getParam<double>("threads",1);
+	force->setNumThreads(num_threads);
 
-	keyName = "omp_dynamic";
-	if (cfg->containsKey(keyName))
-	{
-		int num = cfg->getParam<double>(keyName);
-		force->setDynamic(num);
-		std::cout << "---" << keyName << ": " << num << "\n";
-	}
+	int num_dyn = cfg->getParam<double>("omp_dynamic",0);
+	force->setDynamic(num_dyn);
 
-	keyName = "omp_device";
-	if (cfg->containsKey(keyName))
-	{
-		int num = cfg->getParam<double>(keyName);
-		force->setDevice(num);
-		std::cout << "---" << keyName << ": " << num << "\n";
-	}
+
+	int num_dev = cfg->getParam<double>("omp_device",0);
+	force->setDevice(num_dev);
 
 	/*---------------SYSTEM---------------*/
 
@@ -103,18 +90,7 @@ void runScript()
 
 	cout << "Starting integration.\n";
 
-	keyName = "endTime";
-	double endTime = 1000;
-	if (cfg->containsKey(keyName))
-	{
-		endTime = cfg->getParam<double>(keyName);
-	}
-	else
-	{
-		std::cout << "-Option: '" << keyName << "' missing\n";
-		std::cout << "-Using default.\n\n";
-	}
-	std::cout << "---" << keyName << ": " << endTime << "\n";
+	int endTime = cfg->getParam<double>("endTime",1000);
 
 	sys->run(endTime);
 

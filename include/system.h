@@ -33,6 +33,7 @@ namespace simulation
 			double temp;
 			double currentTime;
 			double dTime;
+			int outputFreq;
 
 			//Random number seed.
 			int seed;
@@ -79,6 +80,13 @@ namespace simulation
 			 * @return The working directory 
 			 */
 			std::string runSetup();
+
+			/**
+			 * @brief Check that the provided path is a valid directory.
+			 * @param path Directory path
+			 * @return True is the path is valid.
+			 */
+			bool checkDir(std::string path);
 
 			/********************************************//**
 			*-----------------SYSTEM HANDLING----------------

@@ -404,4 +404,18 @@ namespace simulation
 		return trialName;
 	}
 
+	bool system::checkDir(std::string path)
+	{
+		bool validDir = 0;
+		struct stat fileCheck;
+		if (stat(path.c_str(), &fileCheck) != -1)
+		{
+			if (S_ISDIR(fileCheck.st_mode))
+			{
+				validDir = 1;
+			}
+		}
+		return validDir;
+	}
+
 }
