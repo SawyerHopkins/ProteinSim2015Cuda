@@ -3,5 +3,6 @@ build
 
 # Ignore any executables
 bin/*
+.codelite/*
 *.workspace
 **/*.project
