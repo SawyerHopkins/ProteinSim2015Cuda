@@ -36,7 +36,7 @@ private:
 		 * @brief Creates an new AO Potential.
 		 * @param cfg The address of the configuration file reader.
 		 */
-		AOPotential();
+		AOPotential(configReader::config* cfg);
 		/**
 		 * @brief Releases the force from memory.
 		 */
@@ -69,7 +69,7 @@ private:
 };
 
 //Class factories.
-extern "C" physics::IForce* getForce()
+extern "C" physics::IForce* getForce(configReader::config* cfg)
 {
-	return new AOPotential;
+	return new AOPotential(cfg);
 }

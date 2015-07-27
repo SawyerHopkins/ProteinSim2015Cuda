@@ -1,18 +1,23 @@
 CC := g++ # This is the main compiler
-# CC := clang --analyze # and comment out the linker last line for sanity
+ARC := ar
+
 SRCDIR := src
 BUILDDIR := build
-TARGET := bin/AOPot.frc
+TARGET := bin/AOPot.so
  
 SRCEXT := cpp
 SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 CFLAGS := -g -O3 -fopenmp -std=c++11 -Wall -fPIC
-LIB := -fopenmp -shared
+LIB := -fopenmp -shared -fPIC -L./linked -lcore
 INC := -I include
 
 $(TARGET): $(OBJECTS)
+	@echo
+	@tput setaf 3
 	@echo " Linking..."
+	@tput setaf 7
+	@echo
 	@echo " $(CC) $^ -o $(TARGET) $(LIB)"; $(CC) $^ -o $(TARGET) $(LIB)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
@@ -20,7 +25,9 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 	@echo " $(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
 
 clean:
-	@echo " Cleaning..."; 
-	@echo " $(RM) -r $(BUILDDIR) $(TARGET)"; $(RM) -r $(BUILDDIR) $(TARGET)
+	@tput setaf 3
+	@echo " Cleaning...";
+	@tput setaf 7 
+	@echo " $(RM) -r $(BUILDDIR) $(TARGET) linked/libcore.a"; $(RM) -r $(BUILDDIR) $(TARGET) linked/libcore.a
 
 .PHONY: clean

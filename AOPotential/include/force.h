@@ -48,42 +48,6 @@ namespace physics
 			virtual bool isTimeDependent()=0;
 
 			/**
-			 * @brief Gets the flagged version of cell.h for debugging.
-			 * @return 
-			 */
-			int getCellVersion() { return simulation::cell::version; }
-			/**
-			 * @brief Gets the flagged version of config.h for debugging.
-			 * @return 
-			 */
-			int getConfigVersion() { return configReader::config::version; }
-			/**
-			 * @brief Gets the flagged version of error.h for debugging.
-			 * @return 
-			 */
-			int getErrorVersion() { return debugging::error::version; }
-			/**
-			 * @brief Gets the flagged version of force.h before debugging.
-			 * @return 
-			 */
-			int getForceVersion() { return version; }
-			/**
-			 * @brief Gets the flagged version of particle.h for debugging.
-			 * @return 
-			 */
-			int getParticleVersion() { return simulation::particle::version; }
-			/**
-			 * @brief Gets the flagged version of timer.h for debugging.
-			 * @return 
-			 */
-			int getTimerVersion() { return debugging::timer::version; }
-			/**
-			 * @brief Gets the flagged version of utilities.h for debugging.
-			 * @return 
-			 */
-			int getUtilitiesVersion() { return utilities::util::version; }
-
-			/**
 			 * @brief Get the name of the force for logging purposes.
 			 * @return 
 			 */
@@ -91,7 +55,7 @@ namespace physics
 
 	};
 
-	typedef IForce* create_Force();
+	typedef IForce* create_Force(configReader::config*);
 
 	/********************************************//**
 	*----------------FORCE MANAGEMENT----------------
@@ -176,8 +140,6 @@ namespace physics
 			std::vector<IForce*>::iterator getEnd() { return flist.end(); }
 
 	};
-
-
 
 	/********************************************//**
 	*----------------YUKAWA POTENTIAL----------------

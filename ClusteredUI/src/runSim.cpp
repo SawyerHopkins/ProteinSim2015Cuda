@@ -47,9 +47,31 @@ void runScript()
 	//Creates a force manager.
 	cout << "Adding required forces.\n";
 
+	void* forceLib = dlopen("./AOPot.so", RTLD_LAZY);
+
+	if (!forceLib)
+	{
+		cout << "\n\n" << "Error loading in force library.\n\n";
+		return;
+	}
+
+	dlerror();
+
+	physics::create_Force* factory = (physics::create_Force*) dlsym(forceLib,"getForce");
+	const char* err = dlerror();
+
+	if (err)
+	{
+		cout << "\n\n" << "Could not find symbol: getForce\n\n";
+		return;
+	}
+
+	physics::IForce* loadForce = factory(cfg);
+
 	physics::forces * force = new physics::forces();
 	//force->addForce(new physics::AOPotential(cfg)); //Adds the aggregation force.
-	force->addForce(new physics::Yukawa(cfg));
+	//force->addForce(new physics::Yukawa(cfg));
+	force->addForce(loadForce);
 
 	int num_threads = cfg->getParam<double>("threads",1);
 	force->setNumThreads(num_threads);
