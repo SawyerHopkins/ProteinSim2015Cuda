@@ -26,7 +26,7 @@ THE SOFTWARE.*/
 namespace simulation
 {
 
-	int system::numClusters()
+	int system::numClusters(int xyz)
 	{
 		//A map of all the particles in the system by name.
 		std::map<int,particle*> selectionPool;
@@ -94,6 +94,40 @@ namespace simulation
 		if (clusterPool.size() > 0)
 		{
 			avgSize = totalSize / clusterPool.size();
+		}
+
+		if (xyz > 0)
+		{
+			//Create the file name.
+			std::string outName = std::to_string(int(std::round(currentTime)));
+			utilities::util::setTerminalColour(utilities::Colour::Cyan);
+			std::cout << "\n" << "Writing: " << outName << ".xyz";
+			utilities::util::setTerminalColour(utilities::Colour::Normal);
+
+			std::string dirName = trialName + "/snapshots/clusters-" + outName; 
+			mkdir(dirName.c_str(),0777);
+
+			int clustName = 0;
+			for(auto clustIT = clusterPool.begin(); clustIT != clusterPool.end(); ++clustIT)
+			{
+				//Open the file steam.
+				std::ofstream myFile;
+				std::string fileName = trialName + "/snapshots/clusters-" + outName + "//clust" + std::to_string(clustName) + ".xyz";
+				myFile.open(fileName);
+
+				//Number line.
+				myFile << clustIT->size() << "\n";
+				//Comment line.
+				myFile << "Cluster: " << clustName << "\n";
+				//Position lines.
+				for (auto partIT = clustIT->begin(); partIT != clustIT->end(); ++partIT)
+				{
+					myFile << "H " << (*partIT)->getX() << " " << (*partIT)->getY() << " " << (*partIT)->getZ() << "\n";
+				}
+				myFile.close();
+				clustName++;
+			}
+
 		}
 
 		std::cout << "\n" << "#Clusters: " << clusterPool.size() << "\n";

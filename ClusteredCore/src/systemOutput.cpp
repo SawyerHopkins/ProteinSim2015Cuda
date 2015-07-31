@@ -90,7 +90,7 @@ namespace simulation
 	{
 		std::string outName = std::to_string(int(std::round(currentTime)));
 		utilities::util::setTerminalColour(utilities::Colour::Cyan);
-		std::cout << "\n" << "Writing: " << outName << ".txt";
+		std::cout << "\n\n" << "Writing: " << outName << ".txt";
 		utilities::util::setTerminalColour(utilities::Colour::Normal);
 
 		writeSystem("/snapshots/" + outName);
@@ -107,10 +107,10 @@ namespace simulation
 		}
 
 		double eap = (totEAP / double(nParticles));
-		double nClust = numClusters();
+		double nClust = numClusters(outXYZ);
 		double avgCoor = double(totCoor) / double(nParticles);
 
-		std::cout <<"<R>: " << avgCoor << " - Rt: " << totCoor << "\n";
+		std::cout <<"\n<R>: " << avgCoor << " - Rt: " << totCoor << "\n";
 		std::cout <<"<EAP>: " << eap << "\n";
 		std::cout <<"<N>/Nc: " << nClust << "\n\n";
 

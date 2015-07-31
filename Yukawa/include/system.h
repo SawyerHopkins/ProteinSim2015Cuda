@@ -34,6 +34,7 @@ namespace simulation
 			double currentTime;
 			double dTime;
 			int outputFreq;
+			int outXYZ;
 
 			//Random number seed.
 			int seed;
@@ -195,7 +196,7 @@ namespace simulation
 			 * @brief Get the number of clusters in the system.
 			 * @return Return the number of clusters
 			 */
-			int numClusters();
+			int numClusters(int xyz);
 
 			/********************************************//**
 			 *---------------VERSION CONTROL-----------------

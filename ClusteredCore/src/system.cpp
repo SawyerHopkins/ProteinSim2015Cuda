@@ -87,6 +87,9 @@ namespace simulation
 		//How often to output snapshots.
 		outputFreq = cfg->getParam<int>("outputFreq",int(1.0/dTime));
 
+		//Option to output XYZ format for clusters
+		outXYZ = cfg->getParam<int>("XYZ",0);
+
 		//Set the integration method.
 		integrator = sysInt;
 
