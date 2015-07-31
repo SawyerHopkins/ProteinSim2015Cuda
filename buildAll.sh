@@ -30,6 +30,20 @@ cd ../
 
 echo
 tput setaf 2
+echo Making Yukawa Potential
+tput setaf 7
+echo
+
+cd Yukawa
+make clean
+echo
+./Yukawa.sh
+cd ../
+
+#----------
+
+echo
+tput setaf 2
 echo Making user interface
 tput setaf 7
 echo 
@@ -49,3 +63,4 @@ tput setaf 7
 echo
 
 cp AOPotential/bin/AOPot.so ClusteredUI/bin/AOPot.so
+cp Yukawa/bin/Yukawa.so ClusteredUI/bin/Yukawa.so

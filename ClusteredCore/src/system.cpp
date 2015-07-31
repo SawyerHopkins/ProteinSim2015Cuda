@@ -45,7 +45,7 @@ namespace simulation
 			bool validDir = checkDir(trialName);
 			if (validDir == true)
 			{
-				std::cout << "\n" << "Trial name already exists. Overwrite (y,n): ";
+				utilities::util::writeTerminal("\nTrial name already exists. Overwrite (y,n): ", utilities::Colour::Magenta);
 
 				//Check user input
 				std::string cont;

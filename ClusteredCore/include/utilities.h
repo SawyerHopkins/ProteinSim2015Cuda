@@ -17,6 +17,18 @@
 namespace utilities
 {
 
+	#define __BLACK "\033[0;30m"
+	#define __RED "\033[0;31m"
+	#define __GREEN "\033[0;32m"
+	#define __BROWN "\033[0;33m"
+	#define __BLUE "\033[0;34m"
+	#define __MAGENTA "\033[0;35m"
+	#define __CYAN "\033[0;36m"
+	#define __GREY "\033[0;37m"
+	#define __NORMAL "\033[0m"
+
+	enum Colour { Black, Red, Green, Brown, Blue, Magenta, Cyan, Grey, Normal };
+
 	/**
 	 * @class util
 	 * @author Sawyer Hopkins
@@ -86,6 +98,10 @@ namespace utilities
 			 * @param L The size of the box.
 			 */
 			static void unitVectorAdv(double X,double Y, double Z,double X1, double Y1,double Z1,double (&acc)[3],double r,int L);
+
+			static void setTerminalColour(utilities::Colour c);
+
+			static void writeTerminal(std::string text, utilities::Colour c);
 
 	};
 

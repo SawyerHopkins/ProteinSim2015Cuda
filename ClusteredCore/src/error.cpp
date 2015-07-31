@@ -40,9 +40,9 @@ namespace debugging
 
 	void error::throwParticleBoundsError(int x, int y, int z)
 	{
-			std::cout << "\nParticle out of bounds.\n";
-			std::cout << x << "," << y << "," << z << "\n";
-			exit(7703);
+		std::cout << "\nParticle out of bounds.\n";
+		std::cout << x << "," << y << "," << z << "\n";
+		exit(7703);
 	}
 
 	void error::throwParticleOverlapError(int nameI, int nameJ, double r)
@@ -56,7 +56,8 @@ namespace debugging
 
 	void error::throwInfiniteForce()
 	{
-		std::cout << "\nBad news bears.";
+		std::cout << "\nBad news bears; Numerically unstable system.";
+		std::cout << "\nAttempt reduction of concentration or decreased time step.";
 		exit(7705);
 	}
 

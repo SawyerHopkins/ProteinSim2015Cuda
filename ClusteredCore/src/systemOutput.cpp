@@ -89,7 +89,10 @@ namespace simulation
 	void system::writeSystemState(debugging::timer* tmr)
 	{
 		std::string outName = std::to_string(int(std::round(currentTime)));
+		utilities::util::setTerminalColour(utilities::Colour::Cyan);
 		std::cout << "\n" << "Writing: " << outName << ".txt";
+		utilities::util::setTerminalColour(utilities::Colour::Normal);
+
 		writeSystem("/snapshots/" + outName);
 		tmr->stop();
 		std::cout << "\n" << "Elapsed time: " << tmr->getElapsedSeconds() << " seconds.\n";

@@ -24,6 +24,7 @@ THE SOFTWARE.*/
 #include <dlfcn.h>
 
 using namespace std;
+using namespace utilities;
 
 /**
  * @brief Run a new simulation.
@@ -32,26 +33,29 @@ void runScript()
 {
 	/*----------------CFG-----------------*/
 
-	cout << "Looking for configuration file.\n\n";
+	util::writeTerminal("Looking for configuration file.\n\n", Colour::Green);
 	configReader::config * cfg =new configReader::config("settings.cfg");
 	cfg->showOutput();
 
 	/*-------------INTEGRATOR-------------*/
 
 	//Create the integrator.
-	cout << "Creating integrator.\n";
+	util::writeTerminal("Creating integrator.\n", Colour::Green);
 	integrators::brownianIntegrator * difeq = new integrators::brownianIntegrator(cfg);
 
 	/*---------------FORCES---------------*/
 
 	//Creates a force manager.
-	cout << "Adding required forces.\n";
+	util::writeTerminal("Adding required forces.\n", Colour::Green);
 
-	void* forceLib = dlopen("./AOPot.so", RTLD_LAZY);
+	std::string forceName = cfg->getParam<std::string>("force","");
+	std::string fileName = "./" + forceName + ".so";
+
+	void* forceLib = dlopen(fileName.c_str(), RTLD_LAZY);
 
 	if (!forceLib)
 	{
-		cout << "\n\n" << "Error loading in force library.\n\n";
+		util::writeTerminal("\n\nError loading in force library.\n\n", Colour::Red);
 		return;
 	}
 
@@ -62,7 +66,7 @@ void runScript()
 
 	if (err)
 	{
-		cout << "\n\n" << "Could not find symbol: getForce\n\n";
+		util::writeTerminal("\n\nCould not find symbol: getForce\n\n", Colour::Red);
 		return;
 	}
 
@@ -73,6 +77,7 @@ void runScript()
 	//force->addForce(new physics::Yukawa(cfg));
 	force->addForce(loadForce);
 
+	util::writeTerminal("Creating force manager.\n", Colour::Green);
 	int num_threads = cfg->getParam<double>("threads",1);
 	force->setNumThreads(num_threads);
 
@@ -85,7 +90,7 @@ void runScript()
 
 	/*---------------SYSTEM---------------*/
 
-	cout << "Creating particle system.\n";
+	util::writeTerminal("\nCreating particle system.\n", Colour::Green);
 	//Creates the particle system.
 	simulation::system * sys = new simulation::system(cfg, difeq, force);
 
@@ -104,7 +109,7 @@ void runScript()
 
 	//Allow user to check system settings before running.
 	//Comment this section out if running without terminal access.
-	cout << "System initialization complete. Press y/n to continue: ";
+	util::writeTerminal("System initialization complete. Press y/n to continue: ", Colour::Blue);
 	std::string cont;
 	cin >> cont;
 
@@ -113,13 +118,13 @@ void runScript()
 		exit(100);
 	}
 
-	cout << "Starting integration.\n";
+	util::writeTerminal("Starting integration.\n", Colour::Green);
 
 	int endTime = cfg->getParam<double>("endTime",1000);
 
 	sys->run(endTime);
 
 	//Write the final system.
-	cout << "\n" << "Integration complete.\n\n Writing final system to file.";
+	util::writeTerminal("\nIntegration complete.\n\n Writing final system to file.", Colour::Green);
 	sys->writeSystem("/finSys");
 }

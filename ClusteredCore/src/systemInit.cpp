@@ -351,7 +351,7 @@ namespace simulation
 
 			if (validDir == 0)
 			{
-				cout << "\n" << "Invalid Directory" << "\n\n";
+				utilities::util::writeTerminal("\nInvalid Directory\n\n", utilities::Colour::Red);
 			}
 
 		}
@@ -390,7 +390,7 @@ namespace simulation
 
 			if (validDir == 1)
 			{
-				cout << "\n" << "Trial name already exists. Overwrite (y,n): ";
+				utilities::util::writeTerminal("\nTrial name already exists. Overwrite (y,n): ", utilities::Colour::Magenta);
 
 				//Check user input
 				std::string cont;

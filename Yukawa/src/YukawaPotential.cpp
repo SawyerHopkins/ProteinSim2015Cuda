@@ -20,46 +20,54 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.*/
 
-#include "AOPotential.h"
+#include "YukawaPotential.h"
 using namespace simulation;
 
-AOPotential::~AOPotential()
+Yukawa::~Yukawa()
 {
-	delete &kT;
-	delete &cutOff;
-	delete &coEff1;
-	delete &coEff2;
+	delete[] &cutOff;
+	delete[] &dampening;
+	delete[] &mass;
+	delete[] &wellDepth;
 }
 
-AOPotential::AOPotential(configReader::config* cfg)
+Yukawa::Yukawa(configReader::config* cfg)
 {
 	//Sets the name
-	name = "AOPotential";
+	name = "Yukawa";
 
-	//Set vital variables.
+	//Get the radius
+	radius = cfg->getParam<double>("radius",0.5);
 
-	//Sets the system drag.
-	kT = cfg->getParam<double>("kT",0.261);
+	//Get the mass
+	mass = cfg->getParam<double>("mass",1.0);
 
-	//Sets the integration time step.
-	dt = cfg->getParam<double>("timeStep",0.001);
+	//Get the well depth
+	wellDepth = cfg->getParam<double>("yukawaDepth",100.0);
 
-	//Get force range cutoff.
+	//Get the cutoff range
 	cutOff = cfg->getParam<double>("cutOff",1.1);
 
-	//Create secondary variables.
-	a1=-kT*(cutOff/(cutOff-1.0))*(cutOff/(cutOff-1.0))*(cutOff/(cutOff-1.0));
-	a2=-3.0/(2.0*cutOff);
-	a3=1.0/(2.0*cutOff*cutOff*cutOff);
+	//Find dampening so that the potential is 2 orders of magnitude smaller at cutoff than at two radii.
+	double rm = 2.0*radius;
+	double s = 100;
+	double diff = cutOff - rm;
+	dampening = (std::log(s*rm/cutOff))/(diff*mass);
 
-	coEff1 = -a1*a2;
-	coEff2 = -3.0*a1*a3;
+	//Find gamma such that the force is the correct well depth at rm.
+	double rmSquared = rm*rm;
+	double exp_scale = std::exp(dampening*mass*rm);
+	double line_scale = (-dampening*mass*rm)-1;
+	gamma = wellDepth*exp_scale*rmSquared/line_scale;
 
-	utilities::util::writeTerminal("---AO Potential successfully added.\n\n", utilities::Colour::Cyan);
+	std::cout << "---gamma: " << gamma << "\n";
+	std::cout << "---dampening: " << dampening << "\n";
+
+	utilities::util::writeTerminal("---Yukawa Potential successfully added.\n\n", utilities::Colour::Cyan);
 
 }
 
-void AOPotential::iterCells(int boxSize, double time, particle* index, cell* itemCell)
+void Yukawa::iterCells(int boxSize, double time, particle* index, cell* itemCell)
 {
 	double pot = 0;
 
@@ -87,17 +95,48 @@ void AOPotential::iterCells(int boxSize, double time, particle* index, cell* ite
 				}
 
 				//Math
-				double rInv=1.0/r; 
-				double r_36=pow(rInv,36);
-				double r_38=r_36/rSquared;
-				double fNet=36.0*r_38+coEff1*rInv+coEff2*r; 
+				double fNet = 0;
+				double rInv=-dampening/r; 
+				double rSquaredInv=-1.0/(r*r);
+				double rExp=std::exp(-dampening*mass*r);
 
-				//We need to switch the sign of the force.
-				//Positive for attractive; negative for repulsive.
-				fNet=-fNet;
+				if (r >= size)
+				{
+					//Negative for attractive.
+					fNet = -gamma*rExp*(rInv + rSquaredInv);
+				}
+				else
+				{
+					/*
+					---Slight offset
+					---Discontinuous.
+					---Seems to make aggregates.
+					*/
+					double overR = 1.0/r;
+					double hardShell = std::pow(overR,36);
+					//fNet=(hardShell-wellDepth);
+
+					/*
+					---Jump to relative infinity.
+					---Discontinuous.
+					---Needs to be retested.
+					*/
+					//fNet = 10*wellDepth;
+
+					/*
+					---Smooth to hard shell.
+					---Continuous.
+					---To be tested.
+					*/
+					double rOffset = 1.0/size;
+					fNet=(hardShell-rOffset-wellDepth);
+				}
+				//Need to switch the sign of the force.
+				//Positive is attractive; Negative repulsive.
+				fNet = -fNet;
 
 				//Update net potential.
-				pot += r_36+a1*(1.0+a2*r+a3*r*rSquared);
+				pot += gamma*rExp/r;
 
 				//Normalize the force.
 				double unitVec[3] {0.0,0.0,0.0};
@@ -124,10 +163,11 @@ void AOPotential::iterCells(int boxSize, double time, particle* index, cell* ite
 	}
 }
 
-void AOPotential::getAcceleration(int index, int nPart, int boxSize, double time, cell* itemCell, particle** items)
+void Yukawa::getAcceleration(int index, int nPart, int boxSize, double time, simulation::cell* itemCell, simulation::particle** items)
 {
 	for(auto it = itemCell->getFirstNeighbor(); it != itemCell->getLastNeighbor(); ++it)
 	{
 		iterCells(boxSize,time,items[index],*it);
 	}
 }
+
