@@ -98,7 +98,7 @@ namespace utilities
 		double ratio  =  x/(double)n;
 		int   c      =  ratio * w;
 
-		cout.precision(3);
+		cout.precision(4);
 
 		cout << setw(3) << (int)(ratio*100) << "% [";
 		for (int x=0; x<c; x++) cout << "=";
@@ -249,6 +249,25 @@ namespace utilities
 		setTerminalColour(c);
 		std::cout << text;
 		setTerminalColour(Normal);
+	}
+
+	void util::clearLines(int numLines)
+	{
+		if (numLines > 0)
+		{
+			for (int i = 0; i < (numLines); i++)
+			{
+				//beginning of line.
+				std::cout << "\r";
+				//clear line.
+				std::cout << "\033[K";
+				//up one line
+				if (i < (numLines - 1))
+				{
+					std::cout << "\033[A";
+				}
+			}
+		}
 	}
 
 }

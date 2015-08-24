@@ -103,6 +103,8 @@ namespace utilities
 
 			static void writeTerminal(std::string text, utilities::Colour c);
 
+			static void clearLines(int numLines);
+
 	};
 
 }

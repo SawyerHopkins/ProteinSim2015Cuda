@@ -186,6 +186,7 @@ namespace simulation
 			//Output a snapshot every second.
 			if ( (counter % outputFreq) == 0 )
 			{
+				utilities::util::clearLines(13);
 				writeSystemState(tmr);
 			}
 

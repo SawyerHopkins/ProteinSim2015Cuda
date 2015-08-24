@@ -95,7 +95,9 @@ namespace simulation
 
 		writeSystem("/snapshots/" + outName);
 		tmr->stop();
-		std::cout << "\n" << "Elapsed time: " << tmr->getElapsedSeconds() << " seconds.\n";
+		double timePerCycle = tmr->getElapsedSeconds() / double(outputFreq);
+		std::setprecision(4);
+		std::cout << "\n" << "Average Cycle Time: " << timePerCycle << " seconds.\n";
 		tmr->start();
 
 		int totCoor = 0;

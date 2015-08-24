@@ -30,14 +30,14 @@ cd ../
 
 echo
 tput setaf 2
-echo Making Yukawa Potential
+echo Making Lennard Jones Potential
 tput setaf 7
 echo
 
-cd Yukawa
+cd LennardJones
 make clean
 echo
-./Yukawa.sh
+./LennardJones.sh
 cd ../
 
 #----------
@@ -63,4 +63,4 @@ tput setaf 7
 echo
 
 cp AOPotential/bin/AOPot.so ClusteredUI/bin/AOPot.so
-cp Yukawa/bin/Yukawa.so ClusteredUI/bin/Yukawa.so
+cp LennardJones/bin/LJ.so ClusteredUI/bin/LJ.so
