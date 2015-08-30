@@ -26,15 +26,20 @@ using namespace simulation;
 LennardJones::~LennardJones()
 {
 	delete[] &cutOff;
-	delete[] &dampening;
+	delete[] &debyeLength;
+	delete[] &kT;
+	delete[] &radius;
+	delete[] &yukStr;
 	delete[] &mass;
-	delete[] &wellDepth;
+	delete[] &ljNum;
 }
 
 LennardJones::LennardJones(configReader::config* cfg)
 {
 	//Sets the name
 	name = "Lennard Jones";
+
+	kT = cfg->getParam<double>("kT", 10.0);
 
 	//Get the radius
 	radius = cfg->getParam<double>("radius",0.5);
@@ -43,28 +48,20 @@ LennardJones::LennardJones(configReader::config* cfg)
 	mass = cfg->getParam<double>("mass",1.0);
 
 	//Get the well depth
-	wellDepth = cfg->getParam<double>("LJDepth",100.0);
+	yukStr = cfg->getParam<double>("yukawaStrength",8.0);
+
+	//Get the well depth
+	ljNum = cfg->getParam<double>("ljNum",18.0);
 
 	//Get the cutoff range
-	cutOff = cfg->getParam<double>("cutOff",1.1);
+	cutOff = cfg->getParam<double>("cutOff",2.5);
 
-	//Find dampening so that the potential is 2 orders of magnitude smaller at cutoff than at two radii.
-	double rm = 2.0*radius;
-	double s = 100;
-	double diff = cutOff - rm;
-	dampening = (std::log(s*rm/cutOff))/(diff*mass);
+	//Get the debye length for the system.
+	debyeLength = cfg->getParam<double>("debyeLength",0.5);
 
-	//Find gamma such that the force is the correct well depth at rm.
-	double rmSquared = rm*rm;
-	double exp_scale = std::exp(dampening*mass*rm);
-	double line_scale = (-dampening*mass*rm)-1;
-	gamma = wellDepth*exp_scale*rmSquared/line_scale;
-
-	std::cout << "---gamma: " << gamma << "\n";
-	std::cout << "---dampening: " << dampening << "\n";
+	output = true;
 
 	utilities::util::writeTerminal("---Lennard Jones Potential successfully added.\n\n", utilities::Colour::Cyan);
-
 }
 
 void LennardJones::iterCells(int boxSize, double time, particle* index, cell* itemCell)
@@ -94,51 +91,90 @@ void LennardJones::iterCells(int boxSize, double time, particle* index, cell* it
 					debugging::error::throwParticleOverlapError(index->getName(), it->second->getName(), r);
 				}
 
-				//Math
+				//-------------------------------------
+				//-----------FORCE CALCULATION---------
+				//-------------------------------------
 
-				//Attractive LJ.
+				double r0 = r;
+				if (output == true)
+				{
+					std::ofstream myFile;
+					myFile.open("/home/sawyer/ForcePlot.txt");
+					
+					for (r = 1.0; r < 1.2; r+=0.001)
+					{
+						double fNet = 0;
+						//Predefinitions.
+						double RadiusOverR = (size / r);
+						double rOverDebye = (r / debyeLength);
+						double rInv = (1.0  / r);
+						double DebyeShift = (debyeLength + r);
+						double yukExp = std::exp(-rOverDebye);
+
+						//Attractive LJ.
+						double attract = 0;
+
+						double LJ = std::pow(RadiusOverR,ljNum);
+						attract += ((2.0*LJ) - 1.0);
+						attract *= (4.0*ljNum*rInv*LJ);
+
+						//Repulsive Yukawa.
+						double repel = 0;
+						repel += yukExp;
+						repel *= (rInv*rInv*DebyeShift*yukStr);
+
+						fNet = kT*(attract+repel);
+
+						//Positive is attractive; Negative repulsive.
+						fNet = -fNet;
+						myFile << r << " " << attract << " " << repel << " " << fNet << "\n";
+					}
+					output = false;
+				}
+				r = r0;
 
 				double fNet = 0;
-				double rMin = 1.0;
-				double rInv = rMin/r;
-				double n = 18.0;
-				double n2 = 2.0*n;
-				double v = 21.0;
 
-				double fn = n+1.0;
-				double f2n = n2+1.0;
+				//Predefinitions.
+				double RadiusOverR = (size / r);
+				double rOverDebye = (r / debyeLength);
+				double rInv = (1.0  / r);
+				double DebyeShift = (debyeLength + r);
+				double yukExp = std::exp(-rOverDebye);
 
-				double att = (n2*std::pow(rInv,f2n));
-				att -= (n*std::pow(rInv,fn));
-				att = (att*v*4.0);
+				//Attractive LJ.
+				double attract = 0;
 
-				//Repulsive Yukawa
+				double LJ = std::pow(RadiusOverR,ljNum);
+				attract += ((2.0*LJ) - 1.0);
+				attract *= (4.0*ljNum*rInv*LJ);
 
-				double k = 0.5;
-				double kInv = 1.0/k;
-				double oneOver = 1.0/r;
-				double oneOver2 = std::pow(oneOver,2.0);
-				double rexp = std::exp(-kInv*r);
+				//Repulsive Yukawa.
+				double repel = 0;
+				repel += yukExp;
+				repel *= (rInv*rInv*DebyeShift*yukStr);
 
-				double repel = (oneOver2*rexp);
-				repel += (kInv*oneOver*rexp);
-				repel = (repel * 8 * v * k);
-
-				fNet = (att + repel);
+				fNet = kT*(attract+repel);
 
 				//Positive is attractive; Negative repulsive.
 				fNet = -fNet;
 
-				//Update net potential.
-				double ljPot = std::pow(rInv,n2);
-				ljPot -= std::pow(rInv,n);
-				ljPot = (ljPot * 4 * v);
+				//-------------------------------------
+				//---------POTENTIAL CALCULATION-------
+				//-------------------------------------
 
-				double yukPot = (rexp*oneOver);
-				yukPot = (yukPot * 8 * v * k);
+				double ljPot = (LJ - 1.0);
+				ljPot *= (4.0*LJ);
 
-				pot += yukPot;
-				pot += ljPot;
+				double yukPot = yukExp;
+				yukPot *= (debyeLength*yukStr*rInv);
+
+				pot += (kT*yukPot);
+				pot += (kT*ljPot);
+
+				//-------------------------------------
+				//------NORMALIZATION AND SETTING------
+				//-------------------------------------
 
 				//Normalize the force.
 				double unitVec[3] {0.0,0.0,0.0};

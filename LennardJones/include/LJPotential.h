@@ -14,14 +14,15 @@ class LennardJones : public physics::IForce
 private:
 
 		//Variables vital to the force.
-		double wellDepth;
+		double kT;
+		double yukStr;
+		double ljNum;
 		double cutOff;
-
-		//Secondary variables.
-		double dampening; //k
+		double debyeLength; //k
 		double mass; // m
 		double gamma; // g^2
 		double radius; // r
+		bool output;
 
 	public:
 
