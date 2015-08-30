@@ -33,6 +33,8 @@ namespace integrators
 
 		//Set the number of particles.
 		memSize = cfg->getParam<int>("nParticles",1000);
+		velFreq = cfg->getParam<int>("velFreq", 1000);
+		velCounter = 0;
 
 		//Create he memory blocks for mem and memCoor
 		memX = new double[memSize];
@@ -57,19 +59,21 @@ namespace integrators
 		//Create vital variables
 		y = gamma*dt;
 
-		//Create G+B Variables
-		coEff0 = exp(-y);
-		coEff1 = (1.0-coEff0)/y;
-		coEff2 = ((0.5*y*(1.0+coEff0))-(1.0-coEff0))/(y*y);
-		coEff3 = (y-(1.0-coEff0))/(y*y);
+		setupHigh(cfg);
+		if (gamma < 0.05)
+		{
+			setupLow(cfg);
+		}
+		if (gamma == 0)
+		{
+			setupZero(cfg);
+		}
 
-		//Create G+B EQ 2.12 for gaussian width.
-		double sig0 = temp/(mass*gamma*gamma);
-		sig1 = std::sqrt( sig0 * getWidth(y) );
-		sig2 = std::sqrt( -sig0 * getWidth(-y) );
+		double gamma2 = gamma*gamma;
 
-		double gn = exp(y) - exp(-y) - (2.0*y);
-		corr = (temp/(gamma*gamma)) * (gn/(sig1*sig2));
+		sig1   =  sqrt(+temp*sig1/gamma2);
+		sig2   =  sqrt(-temp*sig2/gamma2);
+		corr = (temp/(gamma2)) * (gn/(sig1*sig2));
 		dev = sqrt(1.0 - (corr*corr));
 
 		//Set the random number generator seed.
@@ -79,10 +83,6 @@ namespace integrators
 		//Creates the random device.
 		gen = new std::mt19937(rSeed);
 		Dist = new std::normal_distribution<double>(0.0,1.0);
-
-		goy2 = gn / (y*y);
-		goy3 = gn / (y*y*y);
-		hn  = y/(exp(y)-exp(-y));
 
 		std::cout.precision(7);
 
@@ -133,6 +133,70 @@ namespace integrators
 		delete Dist;
 	}
 
+	void brownianIntegrator::setupHigh(configReader::config* cfg)
+	{
+		double ty = 2.0*y;
+
+		coEff0 = exp(-y);
+		double aa1 = 1.0-coEff0;
+		double aa2 = 0.5*y*(1.0+coEff0)-aa1;
+		double aa3 = y-aa1;
+		coEff1 = aa1/y;
+		coEff2 = aa2/(y*y);
+		coEff3 = aa3/(y*y);
+
+
+		sig1 =  2.0*y-3.0+4.0*exp(-y)-exp(-ty);
+		sig2 = -2.0*y-3.0+4.0*exp( y)-exp(ty);
+
+		gn  = exp(y)-ty-exp(-y);
+
+		goy2 = gn/(y*y);
+		goy3 = gn/(y*y*y);
+
+		hn  = y/(exp(y)-exp(-y));
+	}
+
+	void brownianIntegrator::setupLow(configReader::config* cfg)
+	{
+		double y1 = y;
+		double y2 = y1*y1;
+		double y3 = y2*y1;
+		double y4 = y3*y1;
+		double y5 = y4*y1;
+		double y6 = y5*y1;
+		double y7 = y6*y1;
+		double y8 = y7*y1;
+		double y9 = y8*y1;
+
+		coEff1 = 1.0-0.5*y1+(1.0/6.0)*y2-(1.0/24.0)*y3
+           +(1.0/120.0)*y4;
+		coEff2 = (1.0/12.0)*y1-(1.0/24.0)*y2+(1.0/80.0)
+           *y3-(1.0/360.0)*y4;
+		coEff3 = 0.5-(1.0/6.0)*y1+(1.0/24.0)*y2-(1.0/120.0)*y3;
+
+		sig1 = +(2.0/3.0)*y3-0.5*y4+(7.0/30.0)*y5-(1.0/12.0)
+            *y6+(31.0/1260.0)*y7
+            -(1.0/160.0)*y8+(127.0/90720.0)*y9;
+		sig2 = -(2.0/3.0)*y3-0.5*y4-(7.0/30.)*y5-(1.0/12.0)
+            *y6-(31.0/1260.0)*y7
+            -(1.0/160.0)*y8-(127.0/90720.0)*y9;
+
+		goy2 = (1.0/3.0)*y1+(1.0/60.0)*y3;
+		goy3 = 1.0/3.0+(1.0/60.0)*y2;
+
+		hn = 0.5-(1.00/12.0)*y2+(7.0/720.0)*y4;
+		gn = (1.0/3.0)*y3+(1.0/60.0)*y5;
+	}
+
+	void brownianIntegrator::setupZero(configReader::config* cfg)
+	{
+		coEff0 = 1.0;
+		coEff1 = 1.0;
+		coEff2 = 0.0;
+		coEff3 = 0.5;
+	}
+
 	double brownianIntegrator::getWidth(double y)
 	{
 		return (2*y) - 3.0 + (4.0*exp(-y)) - exp(-2.0*y);
@@ -181,6 +245,7 @@ namespace integrators
 	int brownianIntegrator::normalStep(double time, double dt, int nParticles, int boxSize, simulation::particle** items, physics::forces* f)
 	{
 
+		double dt2 = dt * dt;
 		for (int i=0; i < nParticles; i++)
 		{
 
@@ -209,27 +274,168 @@ namespace integrators
 
 			double xNew = ((1.0+coEff0) * items[i]->getX());
 			xNew -= (coEff0 * x0);
-			xNew += (m * dt * dt * coEff1 * items[i]->getFX());
-			xNew += (m * dt * dt * coEff2 * (items[i]->getFX() - items[i]->getFX0()));
+			xNew += (m * dt2 * coEff1 * items[i]->getFX());
+			xNew += (m * dt2 * coEff2 * (items[i]->getFX() - items[i]->getFX0()));
 			xNew += (sig1 * memX[i]) + (coEff0 * memCorrX[i]);
 
 			double yNew = ((1.0+coEff0) * items[i]->getY()) ;
 			yNew -= (coEff0 * y0);
-			yNew += (m * dt * dt * coEff1 * items[i]->getFY());
-			yNew += (m * dt * dt * coEff2 * (items[i]->getFY() - items[i]->getFY0()));
+			yNew += (m * dt2 * coEff1 * items[i]->getFY());
+			yNew += (m * dt2 * coEff2 * (items[i]->getFY() - items[i]->getFY0()));
 			yNew += (sig1 * memY[i]) + (coEff0 * memCorrY[i]);
 
 			double zNew = ((1.0+coEff0) * items[i]->getZ());
 			zNew -= (coEff0 * z0);
-			zNew += (m * dt * dt * coEff1 * items[i]->getFZ());
-			zNew += (m * dt * dt * coEff2 * (items[i]->getFZ() - items[i]->getFZ0()));
+			zNew += (m * dt2 * coEff1 * items[i]->getFZ());
+			zNew += (m * dt2 * coEff2 * (items[i]->getFZ() - items[i]->getFZ0()));
 			zNew += (sig1 * memZ[i]) + (coEff0 * memCorrZ[i]);
+
+			if (velCounter == velFreq)
+			{
+				velocityStep(items, i, xNew, yNew, zNew, dt, boxSize);
+			}
 
 			items[i]->setPos(xNew, yNew, zNew, boxSize);
 
 		}
 
+		//Manage velocity output counter.
+		if (velCounter == velFreq)
+		{
+			velCounter = 0;
+		}
+		else
+		{
+			velCounter++;
+		}
+
 		return 0;
 
 	}
+
+	void brownianIntegrator::velocityStep(simulation::particle** items, int i, double xNew0, double yNew0, double zNew0, double dt, double boxSize)
+	{
+
+		double m = 1.0/items[i]->getMass();
+
+		double dx0 = items[i]->getX() - items[i]->getX0();
+		double dy0 = items[i]->getY() - items[i]->getY0();
+		double dz0 = items[i]->getZ() - items[i]->getZ0();
+
+		double xNew = utilities::util::safeMod(xNew0,boxSize);
+		double yNew = utilities::util::safeMod(yNew0,boxSize);
+		double zNew = utilities::util::safeMod(zNew0,boxSize);
+
+		double x0 = utilities::util::safeMod0(items[i]->getX(), xNew, boxSize);
+		double y0 = utilities::util::safeMod0(items[i]->getY(), yNew, boxSize);
+		double z0 = utilities::util::safeMod0(items[i]->getZ(), zNew, boxSize);
+
+		double dx = xNew - x0;
+		double dy = yNew - y0;
+		double dz = zNew - z0;
+
+		if(fabs(dx)>boxSize/2)
+		{
+			if(dx<0)
+			{
+				dx=dx+boxSize;
+			}
+			else
+			{
+				dx=dx-boxSize;
+			}
+		}
+		if(fabs(dy)>boxSize/2)
+		{
+			if(dy<0)
+			{
+				dy=dy+boxSize;
+			}
+			else
+			{
+				dy=dy-boxSize;
+			}
+		}
+		if(fabs(dz)>boxSize/2)
+		{
+			if(dz<0)
+			{
+				dz=dz+boxSize;
+			}
+			else
+			{
+				dz=dz-boxSize;
+			}
+		}
+
+		double dt2 = dt * dt;
+		double dt3 = dt * dt2;
+
+		double vxNew = dx + dx0;
+		vxNew += (m * dt2 * goy2 * items[i]->getFX());
+		vxNew -= (m * dt3 * goy3 * (items[i]->getFX() - items[i]->getFX0()));
+		vxNew += (memCorrX[i] - sig1*memX[i]);
+		vxNew *= (hn / dt);
+
+		double vyNew = dy + dy0;
+		vyNew += (m * dt2 * goy2 * items[i]->getFY());
+		vyNew -= (m * dt3 * goy3 * (items[i]->getFY() - items[i]->getFY0()));
+		vyNew += (memCorrY[i] - sig1*memY[i]);
+		vyNew *= (hn / dt);
+
+		double vzNew = dz + dz0;
+		vzNew += (m * dt2 * goy2 * items[i]->getFZ());
+		vzNew -= (m * dt3 * goy3 * (items[i]->getFZ() - items[i]->getFZ0()));
+		vzNew += (memCorrZ[i] - sig1*memZ[i]);
+		vzNew *= (hn / dt);
+
+		if (vxNew > 10)
+		{
+			std::cout << "HeyoX!: " << vxNew << "\n";
+			double vn = dx + dx0;
+			std::cout << "---" << vn << "\n";
+			vn += (m * goy2 * items[i]->getFX());
+			std::cout << "---" << vn << "\n";
+			vn -= (m * goy3 * (items[i]->getFX() - items[i]->getFX0()));
+			std::cout << "---" << vn << "\n";
+			vn += (memCorrX[i] - sig1*memX[i]);
+			std::cout << "---" << vn << "\n";
+			vn *= (hn / dt);
+			std::cout << "---" << vn << "\n";
+		}
+		if (vyNew > 10)
+		{
+			std::cout << "HeyoY!: " << vyNew << "\n";
+			double vn = dy + dy0;
+			std::cout << "---" << vn << "\n";
+			vn += (m * goy2 * items[i]->getFY());
+			std::cout << "---" << vn << "\n";
+			vn -= (m * goy3 * (items[i]->getFY() - items[i]->getFY0()));
+			std::cout << "---" << vn << "\n";
+			vn += (memCorrY[i] - sig1*memY[i]);
+			std::cout << "---" << vn << "\n";
+			vn *= (hn / dt);
+			std::cout << "---" << vn << "\n";
+		}
+		if (vzNew > 10)
+		{
+			std::cout << "HeyoZ!: " << vzNew << "\n";
+			double vn = dz + dz0;
+			std::cout << "---" << vn << "\n";
+			vn += (m * goy2 * items[i]->getFZ());
+			std::cout << "---" << vn << "\n";
+			vn -= (m * goy3 * (items[i]->getFZ() - items[i]->getFZ0()));
+			std::cout << "---" << vn << "\n";
+			vn += (memCorrZ[i] - sig1*memZ[i]);
+			std::cout << "---" << vn << "\n";
+			vn *= (hn / dt);
+			std::cout << "---" << vn << "\n";
+		}
+
+		items[i]->setVX(vxNew);
+		items[i]->setVY(vyNew);
+		items[i]->setVZ(vzNew);
+
+	}
+
 }

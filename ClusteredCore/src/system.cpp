@@ -113,7 +113,7 @@ namespace simulation
 		scale = cfg->getParam<int>("scale",4);
 
 		//Create a box based on desired concentration.
-		double vP = nParticles*(4.0/3.0)*atan(1)*4*r*r*r;
+		double vP = nParticles*(4.0/3.0)*atan(1.0)*4.0*r*r*r;
 		boxSize = (int) cbrt(vP / conc);
 
 		//Calculates the number of cells needed.
@@ -186,7 +186,7 @@ namespace simulation
 			//Output a snapshot every second.
 			if ( (counter % outputFreq) == 0 )
 			{
-				utilities::util::clearLines(13);
+				utilities::util::clearLines(14);
 				writeSystemState(tmr);
 			}
 

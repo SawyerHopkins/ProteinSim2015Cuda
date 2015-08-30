@@ -33,6 +33,8 @@ namespace simulation
 			double temp;
 			double currentTime;
 			double dTime;
+
+			//Settings flags
 			int outputFreq;
 			int outXYZ;
 
@@ -171,7 +173,6 @@ namespace simulation
 			 * @brief Write the initial system parameters.
 			 */
 			void writeSystemInit();
-
 			/**
 			 * @brief Writes the varies that define the system state. Average potential. Average coordination number. Temperature. Cluster size.
 			 */
@@ -197,6 +198,11 @@ namespace simulation
 			 * @return Return the number of clusters
 			 */
 			int numClusters(int xyz);
+			/**
+			 * @brief Returns the temperature of the system.
+			 * @return 
+			 */
+			double getTemperature();
 
 			/********************************************//**
 			 *---------------VERSION CONTROL-----------------
@@ -237,7 +243,15 @@ namespace simulation
 			 * @return 
 			 */
 			int getUtilitiesVersion() { return utilities::util::version; }
+			/**
+			 * @brief Gets the flagged version of the integrator for debugging..
+			 * @return  
+			 */
 			int getIntegratorVersion() { return integrators::I_integrator::version; }
+			/**
+			 * @brief Gets the flagged version of system.h for debugging.
+			 * @return 
+			 */
 			int getSystemVersion() { return version; }
 
 	};

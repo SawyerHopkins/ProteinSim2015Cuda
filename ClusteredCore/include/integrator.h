@@ -102,6 +102,11 @@ namespace integrators
 			double goy2;
 			double goy3;
 			double hn;
+			double gn;
+
+			//Update Flags;
+			int velFreq;
+			int velCounter;
 
 			//Random gaussian generator for the random kicks.
 			std::mt19937* gen;
@@ -127,6 +132,10 @@ namespace integrators
 			 * @return Nothing.
 			 */
 			~brownianIntegrator();
+
+			void setupHigh(configReader::config* cfg);
+			void setupLow(configReader::config* cfg);
+			void setupZero(configReader::config* cfg);
 
 			/**
 			 * @brief Integrates to the next system state.
@@ -164,6 +173,8 @@ namespace integrators
 			 * @return Return 0 for no error.
 			 */
 			int normalStep(double time, double dt, int nParticles, int boxSize, simulation::particle** items, physics::forces* f);
+
+			void velocityStep(simulation::particle** items, int i, double xNew0, double yNew0, double zNew0, double dt, double boxSize);
 
 	};
 

@@ -137,5 +137,27 @@ namespace simulation
 		//return clusterPool.size();
 	}
 
+	double system::getTemperature()
+	{
+		double vtot = 0;
+
+		for (int i = 0; i < nParticles; i++)
+		{
+			//Add the totat velocity squares.
+			double vx = particles[i]->getVX();
+			double vy = particles[i]->getVY();
+			double vz = particles[i]->getVZ();
+			vtot += (vx*vx);
+			vtot += (vy*vy);
+			vtot += (vz*vz);
+		}
+
+		//Important physics
+		vtot = vtot / 3.0;
+		vtot = vtot / nParticles;
+		//Average
+		return vtot;
+	}
+
 }
 
