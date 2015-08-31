@@ -163,14 +163,17 @@ void LennardJones::iterCells(int boxSize, double time, particle* index, cell* it
 				//---------POTENTIAL CALCULATION-------
 				//-------------------------------------
 
-				double ljPot = (LJ - 1.0);
-				ljPot *= (4.0*LJ);
+				if (r < 1.1)
+				{
+					double ljPot = (LJ - 1.0);
+					ljPot *= (4.0*LJ);
 
-				double yukPot = yukExp;
-				yukPot *= (debyeLength*yukStr*rInv);
+					double yukPot = yukExp;
+					yukPot *= (debyeLength*yukStr*rInv);
 
-				pot += (kT*yukPot);
-				pot += (kT*ljPot);
+					pot += (kT*yukPot);
+					pot += (kT*ljPot);
+				}
 
 				//-------------------------------------
 				//------NORMALIZATION AND SETTING------
@@ -195,7 +198,14 @@ void LennardJones::iterCells(int boxSize, double time, particle* index, cell* it
 				}
 
 				//Add to the net force on the particle.
-				index->updateForce(fx,fy,fz,pot,it->second);
+				if (r < 1.1)
+				{
+					index->updateForce(fx,fy,fz,pot,it->second);
+				}
+				else
+				{
+					index->updateForce(fx,fy,fz,pot,it->second,false);
+				}
 			}
 		}
 	}

@@ -293,7 +293,7 @@ namespace simulation
 			 * @param pot The potential of the force interaction.
 			 * @param p The particle providing the force.
 			 */
-			void updateForce(double xVal, double yVal, double zVal, double pot, particle* p);
+			void updateForce(double xVal, double yVal, double zVal, double pot, particle* p, bool countPair = true);
 
 			/**
 			 * @brief Clears the current force and updates previous force. Resets potential, neighbors, and coordination number.

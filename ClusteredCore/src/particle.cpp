@@ -150,15 +150,17 @@ namespace simulation
 		setZ(zVal,boxSize);
 	}
 
-	void particle::updateForce(double xVal, double yVal, double zVal, double pot, particle* p)
+	void particle::updateForce(double xVal, double yVal, double zVal, double pot, particle* p, bool countPair)
 	{
-		//Add to coordination number.
-		coorNumber++;
-
 		//Add to potential.
 		potential+=pot;
 
-		interactions.push_back(p);
+		//Add to coordination number.
+		if (countPair == true)
+		{
+			coorNumber++;
+			interactions.push_back(p);
+		}
 
 		//Increment the existing value of force.
 		fx += xVal;
