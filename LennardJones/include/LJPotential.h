@@ -16,9 +16,11 @@ private:
 		//Variables vital to the force.
 		double kT;
 		double yukStr;
-		double ljNum;
+		int ljNum;
 		double cutOff;
+		double cutOffSquared;
 		double debyeLength; //k
+		double debyeInv;
 		double mass; // m
 		double gamma; // g^2
 		double radius; // r

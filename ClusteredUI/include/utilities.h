@@ -117,6 +117,13 @@ namespace utilities
 			 * @param numLines The number of lines to clear.
 			 */
 			static void clearLines(int numLines);
+			/**
+			 * @brief A faster pow function with binary decomposition.
+			 * @param base The base value
+			 * @param exp The exponent.
+			 * @return 
+			 */
+			static double powBinaryDecomp(double base, int exp);
 
 	};
 

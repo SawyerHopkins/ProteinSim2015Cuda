@@ -1,6 +1,7 @@
 #ifndef INTEGRATOR_H
 #define INTEGRATOR_H
 #include "force.h"
+#include <omp.h>
 
 namespace integrators
 {
@@ -73,6 +74,7 @@ namespace integrators
 			//Variables vital to the force.
 			double gamma;
 			double dt;
+			double dtInv;
 			double y;
 
 			//Variables for integrator.
@@ -110,6 +112,7 @@ namespace integrators
 
 			//Random gaussian generator for the random kicks.
 			std::mt19937* gen;
+			std::map<int,std::mt19937*> tgens;
 			std::normal_distribution<double>* Dist;
 
 			/**

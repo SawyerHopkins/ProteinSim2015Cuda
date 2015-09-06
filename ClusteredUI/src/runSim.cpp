@@ -37,12 +37,6 @@ void runScript()
 	configReader::config * cfg =new configReader::config("settings.cfg");
 	cfg->showOutput();
 
-	/*-------------INTEGRATOR-------------*/
-
-	//Create the integrator.
-	util::writeTerminal("Creating integrator.\n", Colour::Green);
-	integrators::brownianIntegrator * difeq = new integrators::brownianIntegrator(cfg);
-
 	/*---------------FORCES---------------*/
 
 	//Creates a force manager.
@@ -91,6 +85,12 @@ void runScript()
 	//Does not work on GCC 4.8 and below.
 	int num_dev = cfg->getParam<double>("omp_device",0);
 	force->setDevice(num_dev);
+
+	/*-------------INTEGRATOR-------------*/
+
+	//Create the integrator.
+	util::writeTerminal("Creating integrator.\n", Colour::Green);
+	integrators::brownianIntegrator * difeq = new integrators::brownianIntegrator(cfg);
 
 	/*---------------SYSTEM---------------*/
 

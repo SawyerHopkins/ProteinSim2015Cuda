@@ -109,46 +109,29 @@ namespace utilities
 	double util::pbcDist(double X,double Y, double Z,double X1, double Y1,double Z1,double L)
 	{
 
-		double r,dx,dy,dz;
+		double dx = fabs(X-X1);
+		double dy = fabs(Y-Y1);
+		double dz = fabs(Z-Z1);
 
 		//Check X direction.
-		if(fabs(X-X1) <= L/2 )
+		if(dx > L/2 )
 		{
-			dx=fabs(X-X1);
-		}
-		else
-		{
-			dx=fabs(X-X1);
-			dx=fabs(dx-L);
+			dx-=L;
 		}
 
 		//Check Y direction.
-		if(fabs(Y-Y1) <= L/2 )
+		if(dy > L/2 )
 		{
-			dy=fabs(Y-Y1);
-		}
-		else
-		{
-			dy=fabs(Y-Y1);
-			dy=fabs(dy-L);
+			dy-=L;
 		}
 
 		//Check Z direction.
-		if(fabs(Z-Z1) <= L/2 )
+		if(dz > L/2 )
 		{
-			dz=fabs(Z-Z1);
+			dz-=L;
 		}
-		else
-		{
-			dz=fabs(Z-Z1);
-			dz=fabs(dz-L);
-		}
-
 		//Pythag for the distance.
-		r=(dx*dx)+(dy*dy)+(dz*dz);
-
-
-		return r;
+		return (dx*dx)+(dy*dy)+(dz*dz);
 
 	}
 
@@ -208,6 +191,21 @@ namespace utilities
 		//Normalize by distance.
 		dx=dx/r; dy=dy/r; dz=dz/r;
 		acc[0]=dx; acc[1]=dy; acc[2]=dz;
+	}
+
+	double util::powBinaryDecomp(double base, int exp)
+	{
+		double answer = 1;
+		while(exp)
+		{
+			if (exp & 1)
+			{
+				answer *= base;
+			}
+			exp >>= 1;
+			base *= base;
+		}
+		return answer;
 	}
 
 	void util::setTerminalColour(Colour c)

@@ -97,16 +97,13 @@ namespace simulation
 		sysForces = sysFcs;
 
 		//Set the concentration.
-		double conc = 0.0;
-		conc = cfg->getParam<double>("conc",0.01);
+		double conc = cfg->getParam<double>("conc",0.01);
 
 		//Set the radius.
-		double r = 0.0;
-		r = cfg->getParam<double>("radius",0.5);
+		double r = cfg->getParam<double>("radius",0.5);
 
 		//Set the mass.
-		double m = 0.0;
-		m = cfg->getParam<double>("mass",1.0);
+		double m = cfg->getParam<double>("mass",1.0);
 
 		//Set the scale.
 		int scale = 0;
@@ -191,7 +188,10 @@ namespace simulation
 			//Output a snapshot every second.
 			if ( (counter % outputFreq) == 0 )
 			{
-				utilities::util::clearLines(15);
+				if (currentTime > 0)
+				{
+					utilities::util::clearLines(13);
+				}
 				writeSystemState(tmr);
 			}
 

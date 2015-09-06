@@ -51,13 +51,15 @@ LennardJones::LennardJones(configReader::config* cfg)
 	yukStr = cfg->getParam<double>("yukawaStrength",8.0);
 
 	//Get the well depth
-	ljNum = cfg->getParam<double>("ljNum",18.0);
+	ljNum = cfg->getParam<int>("ljNum",18.0);
 
 	//Get the cutoff range
 	cutOff = cfg->getParam<double>("cutOff",2.5);
+	cutOffSquared = cutOff*cutOff;
 
 	//Get the debye length for the system.
 	debyeLength = cfg->getParam<double>("debyeLength",0.5);
+	debyeInv = 1.0 / debyeLength;
 
 	output = true;
 
@@ -77,10 +79,8 @@ void LennardJones::iterCells(int boxSize, double time, particle* index, cell* it
 																it->second->getX(), it->second->getY(), it->second->getZ(),
 																boxSize);
 
-			double rCutSquared = cutOff*cutOff;
-
 			//If the particles are in the potential well.
-			if (rSquared <= rCutSquared)
+			if (rSquared < cutOffSquared)
 			{
 				double r = sqrt(rSquared);
 
@@ -95,69 +95,27 @@ void LennardJones::iterCells(int boxSize, double time, particle* index, cell* it
 				//-----------FORCE CALCULATION---------
 				//-------------------------------------
 
-				double r0 = r;
-				if (output == true)
-				{
-					std::ofstream myFile;
-					myFile.open("/home/sawyer/ForcePlot.txt");
-					
-					for (r = 1.0; r < 1.2; r+=0.001)
-					{
-						double fNet = 0;
-						//Predefinitions.
-						double RadiusOverR = (size / r);
-						double rOverDebye = (r / debyeLength);
-						double rInv = (1.0  / r);
-						double DebyeShift = (debyeLength + r);
-						double yukExp = std::exp(-rOverDebye);
-
-						//Attractive LJ.
-						double attract = 0;
-
-						double LJ = std::pow(RadiusOverR,ljNum);
-						attract += ((2.0*LJ) - 1.0);
-						attract *= (4.0*ljNum*rInv*LJ);
-
-						//Repulsive Yukawa.
-						double repel = 0;
-						repel += yukExp;
-						repel *= (rInv*rInv*DebyeShift*yukStr);
-
-						fNet = kT*(attract+repel);
-
-						//Positive is attractive; Negative repulsive.
-						fNet = -fNet;
-						myFile << r << " " << attract << " " << repel << " " << fNet << "\n";
-					}
-					output = false;
-				}
-				r = r0;
-
-				double fNet = 0;
-
 				//Predefinitions.
 				double RadiusOverR = (size / r);
-				double rOverDebye = (r / debyeLength);
+				double rOverDebye = (r * debyeInv);
 				double rInv = (1.0  / r);
 				double DebyeShift = (debyeLength + r);
 				double yukExp = std::exp(-rOverDebye);
+				//double LJ = std::pow(RadiusOverR,ljNum);
+				double LJ = utilities::util::powBinaryDecomp(RadiusOverR,ljNum);
 
 				//Attractive LJ.
-				double attract = 0;
-
-				double LJ = std::pow(RadiusOverR,ljNum);
-				attract += ((2.0*LJ) - 1.0);
+				double attract = ((2.0*LJ) - 1.0);
 				attract *= (4.0*ljNum*rInv*LJ);
 
 				//Repulsive Yukawa.
-				double repel = 0;
-				repel += yukExp;
+				double repel = yukExp;
 				repel *= (rInv*rInv*DebyeShift*yukStr);
 
-				fNet = kT*(attract+repel);
+				double fNet = -kT*(attract+repel);
 
 				//Positive is attractive; Negative repulsive.
-				fNet = -fNet;
+				//fNet = -fNet;
 
 				//-------------------------------------
 				//---------POTENTIAL CALCULATION-------

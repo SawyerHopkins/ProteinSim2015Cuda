@@ -55,6 +55,7 @@ namespace integrators
 
 		//Sets the integration time step.
 		dt = cfg->getParam<double>("timeStep",0.001);
+		dtInv = 1.0 / dt;
 
 		//Create vital variables
 		y = gamma*dt;
@@ -83,6 +84,13 @@ namespace integrators
 		//Creates the random device.
 		gen = new std::mt19937(rSeed);
 		Dist = new std::normal_distribution<double>(0.0,1.0);
+
+		//Create thread safe random devices.
+		for (int i = 0; i < omp_get_max_threads(); i++)
+		{
+			double tSeed = (*Dist)(*gen);
+			tgens[i] = new std::mt19937(tSeed);
+		}
 
 		std::cout.precision(7);
 
@@ -252,25 +260,23 @@ namespace integrators
 	{
 
 		double dt2 = dt * dt;
+		#pragma omp parallel for
 		for (int i=0; i < nParticles; i++)
 		{
-
 			//SEE GUNSTEREN AND BERENDSEN 1981 EQ 2.26
-
 			//New random walk.
-			
-			memCorrX[i] = (*Dist)(*gen);
-			memCorrY[i] = (*Dist)(*gen);
-			memCorrZ[i] = (*Dist)(*gen);
+			memCorrX[i] = (*Dist)(*tgens[omp_get_thread_num()]);
+			memCorrY[i] = (*Dist)(*tgens[omp_get_thread_num()]);
+			memCorrZ[i] = (*Dist)(*tgens[omp_get_thread_num()]);
 
 			//Correlation to last random walk.
 			memCorrX[i] = sig2 * ((corr * memX[i])+(dev * memCorrX[i]));
 			memCorrY[i] = sig2 * ((corr * memY[i])+(dev * memCorrY[i]));
 			memCorrZ[i] = sig2 * ((corr * memZ[i])+(dev * memCorrZ[i]));
 
-			memX[i] = (*Dist)(*gen);
-			memY[i] = (*Dist)(*gen);
-			memZ[i] = (*Dist)(*gen);
+			memX[i] = (*Dist)(*tgens[omp_get_thread_num()]);
+			memY[i] = (*Dist)(*tgens[omp_get_thread_num()]);
+			memZ[i] = (*Dist)(*tgens[omp_get_thread_num()]);
 
 			double m = 1.0/items[i]->getMass();
 
@@ -370,19 +376,19 @@ namespace integrators
 		vxNew += (m * dt2 * goy2 * items[i]->getFX());
 		vxNew -= (m * dt3 * goy3 * (items[i]->getFX() - items[i]->getFX0()));
 		vxNew += (memCorrX[i] - sig1*memX[i]);
-		vxNew *= (hn / dt);
+		vxNew *= (hn * dtInv);
 
 		double vyNew = dy + dy0;
 		vyNew += (m * dt2 * goy2 * items[i]->getFY());
 		vyNew -= (m * dt3 * goy3 * (items[i]->getFY() - items[i]->getFY0()));
 		vyNew += (memCorrY[i] - sig1*memY[i]);
-		vyNew *= (hn / dt);
+		vyNew *= (hn * dtInv);
 
 		double vzNew = dz + dz0;
 		vzNew += (m * dt2 * goy2 * items[i]->getFZ());
 		vzNew -= (m * dt3 * goy3 * (items[i]->getFZ() - items[i]->getFZ0()));
 		vzNew += (memCorrZ[i] - sig1*memZ[i]);
-		vzNew *= (hn / dt);
+		vzNew *= (hn * dtInv);
 
 		//Set the velocities.
 		items[i]->setVX(vxNew);

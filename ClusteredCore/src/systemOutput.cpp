@@ -151,7 +151,7 @@ namespace simulation
 		std::cout <<"\n<R>: " << avgCoor << " - Rt: " << totCoor << "\n";
 		std::cout <<"<EAP>: " << eap << "\n";
 		std::cout <<"<N>/Nc: " << nClust << "\n";
-		std::cout <<"Temperature: " << getTemperature() << "\n\n";
+		std::cout <<"Temperature: " << getTemperature() << "\n";
 
 		//Output the number of clusters with time.
 		std::ofstream myFileClust(trialName + "/clustGraph.txt", std::ios_base::app | std::ios_base::out);

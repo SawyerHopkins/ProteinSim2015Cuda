@@ -9,7 +9,7 @@ SRCEXT := cpp
 SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
 CFLAGS := -g -O3 -fopenmp -std=c++11 -Wall -fPIC
-LIB := -fopenmp -shared -fPIC -L./linked -lcore
+LIB := -fopenmp -shared -fPIC -L./linked -lcore -lprofiler -ltcmalloc
 INC := -I include
 
 $(TARGET): $(OBJECTS)

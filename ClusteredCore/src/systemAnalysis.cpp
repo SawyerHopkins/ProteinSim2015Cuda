@@ -100,10 +100,6 @@ namespace simulation
 		{
 			//Create the file name.
 			std::string outName = std::to_string(int(std::round(currentTime)));
-			utilities::util::setTerminalColour(utilities::Colour::Cyan);
-			std::cout << "\n" << "Writing: " << outName << ".xyz";
-			utilities::util::setTerminalColour(utilities::Colour::Normal);
-
 			std::string dirName = trialName + "/snapshots/time-" + outName; 
 			mkdir(dirName.c_str(),0777);
 
