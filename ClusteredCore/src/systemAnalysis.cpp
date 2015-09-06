@@ -1,6 +1,6 @@
 /*The MIT License (MIT)
 
-Copyright (c) <2015> <Sawyer Hopkins>
+Copyright (c) [2015] [Sawyer Hopkins]
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -9,16 +9,16 @@ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.*/
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.*/
 
 #include <stack>
 #include "system.h"
@@ -104,7 +104,7 @@ namespace simulation
 			std::cout << "\n" << "Writing: " << outName << ".xyz";
 			utilities::util::setTerminalColour(utilities::Colour::Normal);
 
-			std::string dirName = trialName + "/snapshots/clusters-" + outName; 
+			std::string dirName = trialName + "/snapshots/time-" + outName; 
 			mkdir(dirName.c_str(),0777);
 
 			int clustName = 0;
@@ -112,7 +112,7 @@ namespace simulation
 			{
 				//Open the file steam.
 				std::ofstream myFile;
-				std::string fileName = trialName + "/snapshots/clusters-" + outName + "//clust" + std::to_string(clustName) + ".xyz";
+				std::string fileName = trialName + "/snapshots/time-" + outName + "/clust" + std::to_string(clustName) + ".xyz";
 				myFile.open(fileName);
 
 				//Number line.

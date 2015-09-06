@@ -37,6 +37,7 @@ namespace simulation
 			//Settings flags
 			int outputFreq;
 			int outXYZ;
+			double cycleHour;
 
 			//Random number seed.
 			int seed;
@@ -77,13 +78,11 @@ namespace simulation
 			 * @param distribution The distribution for the particles.
 			 */
 			void initCheck(std::mt19937* gen, std::uniform_real_distribution<double>* distribution);
-
 			/**
 			 * @brief Get input for working directory. Create if needed.
 			 * @return The working directory 
 			 */
 			std::string runSetup();
-
 			/**
 			 * @brief Check that the provided path is a valid directory.
 			 * @param path Directory path
@@ -177,6 +176,11 @@ namespace simulation
 			 * @brief Writes the varies that define the system state. Average potential. Average coordination number. Temperature. Cluster size.
 			 */
 			void writeSystemState(debugging::timer* tmr);
+			/**
+			 * @brief Outputs the system as XYZ for visualization purposes.
+			 * @param name File name
+			 */
+			void writeSystemXYZ(std::string name);
 
 			/********************************************//**
 			*-----------------SYSTEM RECOVERY----------------

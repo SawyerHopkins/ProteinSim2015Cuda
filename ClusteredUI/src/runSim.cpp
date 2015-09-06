@@ -1,6 +1,6 @@
 /*The MIT License (MIT)
 
-Copyright (c) <2015> <Sawyer Hopkins>
+Copyright (c) [2015] [Sawyer Hopkins]
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -9,16 +9,16 @@ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.*/
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.*/
 
 #include "system.h"
 #include <dlfcn.h>
@@ -51,8 +51,10 @@ void runScript()
 	std::string forceName = cfg->getParam<std::string>("force","");
 	std::string fileName = "./" + forceName + ".so";
 
+	//Opens the force library.
 	void* forceLib = dlopen(fileName.c_str(), RTLD_LAZY);
 
+	//Throw error if the library does not exist.
 	if (!forceLib)
 	{
 		util::writeTerminal("\n\nError loading in force library.\n\n", Colour::Red);
@@ -61,20 +63,22 @@ void runScript()
 
 	dlerror();
 
+	//Make a factory to create the force instance.
 	physics::create_Force* factory = (physics::create_Force*) dlsym(forceLib,"getForce");
 	const char* err = dlerror();
 
+	//If the force is not properly implemented.
 	if (err)
 	{
 		util::writeTerminal("\n\nCould not find symbol: getForce\n\n", Colour::Red);
 		return;
 	}
 
+	//Create a new force instance from the factory.
 	physics::IForce* loadForce = factory(cfg);
 
+	//Add the force to the force manager.
 	physics::forces * force = new physics::forces();
-	//force->addForce(new physics::AOPotential(cfg)); //Adds the aggregation force.
-	//force->addForce(new physics::Yukawa(cfg));
 	force->addForce(loadForce);
 
 	util::writeTerminal("Creating force manager.\n", Colour::Green);
@@ -84,7 +88,7 @@ void runScript()
 	int num_dyn = cfg->getParam<double>("omp_dynamic",0);
 	force->setDynamic(num_dyn);
 
-
+	//Does not work on GCC 4.8 and below.
 	int num_dev = cfg->getParam<double>("omp_device",0);
 	force->setDevice(num_dev);
 

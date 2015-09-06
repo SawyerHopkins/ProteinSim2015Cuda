@@ -1,6 +1,6 @@
 /*The MIT License (MIT)
 
-Copyright (c) <2015> <Sawyer Hopkins>
+Copyright (c) [2015] [Sawyer Hopkins]
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -9,16 +9,16 @@ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 copies of the Software, and to permit persons to whom the Software is
 furnished to do so, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.*/
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.*/
 
 #include "integrator.h"
 
@@ -135,6 +135,8 @@ namespace integrators
 
 	void brownianIntegrator::setupHigh(configReader::config* cfg)
 	{
+		//Coefficents for High Gamma.
+		//SEE GUNSTEREN AND BERENDSEN 1981
 		double ty = 2.0*y;
 
 		coEff0 = exp(-y);
@@ -159,6 +161,8 @@ namespace integrators
 
 	void brownianIntegrator::setupLow(configReader::config* cfg)
 	{
+		//Coefficents for Low Gamma (from series expansion).
+		//SEE GUNSTEREN AND BERENDSEN 1981
 		double y1 = y;
 		double y2 = y1*y1;
 		double y3 = y2*y1;
@@ -191,6 +195,8 @@ namespace integrators
 
 	void brownianIntegrator::setupZero(configReader::config* cfg)
 	{
+		//Special case coefficents.
+		//SEE GUNSTEREN AND BERENDSEN 1981
 		coEff0 = 1.0;
 		coEff1 = 1.0;
 		coEff2 = 0.0;
@@ -272,6 +278,7 @@ namespace integrators
 			double y0 = items[i]->getY0();
 			double z0 = items[i]->getZ0();
 
+			//Run the integration routine.
 			double xNew = ((1.0+coEff0) * items[i]->getX());
 			xNew -= (coEff0 * x0);
 			xNew += (m * dt2 * coEff1 * items[i]->getFX());
@@ -290,7 +297,22 @@ namespace integrators
 			zNew += (m * dt2 * coEff2 * (items[i]->getFZ() - items[i]->getFZ0()));
 			zNew += (sig1 * memZ[i]) + (coEff0 * memCorrZ[i]);
 
-			if (velCounter == velFreq)
+			//Velocity is not needed for brownianIntegration.
+			//Run velocity integration at the same frequency as
+			//the temperature/energy analysis routine.
+			//-------------------------------------------------
+			//For best perfomance use
+			//velFreq = outputFreq.
+			//-------------------------------------------------
+			//If using a velocity dependant force use
+			//velFreq = 0.
+			//-------------------------------------------------
+			//For all other cases do whatever.
+			if (velFreq == 0)
+			{
+				velocityStep(items, i, xNew, yNew, zNew, dt, boxSize);
+			}
+			else if (velCounter == velFreq)
 			{
 				velocityStep(items, i, xNew, yNew, zNew, dt, boxSize);
 			}
@@ -318,59 +340,32 @@ namespace integrators
 
 		double m = 1.0/items[i]->getMass();
 
+		//Current position and previous position are already PBC safe.
+		//Their difference is also already PBC safe.
 		double dx0 = items[i]->getX() - items[i]->getX0();
 		double dy0 = items[i]->getY() - items[i]->getY0();
 		double dz0 = items[i]->getZ() - items[i]->getZ0();
 
+		//Make the new position PBC safe.
 		double xNew = utilities::util::safeMod(xNew0,boxSize);
 		double yNew = utilities::util::safeMod(yNew0,boxSize);
 		double zNew = utilities::util::safeMod(zNew0,boxSize);
 
+		//Make the difference between the new position and the current position PBC safe.
 		double x0 = utilities::util::safeMod0(items[i]->getX(), xNew, boxSize);
 		double y0 = utilities::util::safeMod0(items[i]->getY(), yNew, boxSize);
 		double z0 = utilities::util::safeMod0(items[i]->getZ(), zNew, boxSize);
 
+		//Take the difference.
 		double dx = xNew - x0;
 		double dy = yNew - y0;
 		double dz = zNew - z0;
 
-		if(fabs(dx)>boxSize/2)
-		{
-			if(dx<0)
-			{
-				dx=dx+boxSize;
-			}
-			else
-			{
-				dx=dx-boxSize;
-			}
-		}
-		if(fabs(dy)>boxSize/2)
-		{
-			if(dy<0)
-			{
-				dy=dy+boxSize;
-			}
-			else
-			{
-				dy=dy-boxSize;
-			}
-		}
-		if(fabs(dz)>boxSize/2)
-		{
-			if(dz<0)
-			{
-				dz=dz+boxSize;
-			}
-			else
-			{
-				dz=dz-boxSize;
-			}
-		}
-
+		//Precompute.
 		double dt2 = dt * dt;
 		double dt3 = dt * dt2;
 
+		//Run the integration routine.
 		double vxNew = dx + dx0;
 		vxNew += (m * dt2 * goy2 * items[i]->getFX());
 		vxNew -= (m * dt3 * goy3 * (items[i]->getFX() - items[i]->getFX0()));
@@ -389,49 +384,7 @@ namespace integrators
 		vzNew += (memCorrZ[i] - sig1*memZ[i]);
 		vzNew *= (hn / dt);
 
-		if (vxNew > 10)
-		{
-			std::cout << "HeyoX!: " << vxNew << "\n";
-			double vn = dx + dx0;
-			std::cout << "---" << vn << "\n";
-			vn += (m * goy2 * items[i]->getFX());
-			std::cout << "---" << vn << "\n";
-			vn -= (m * goy3 * (items[i]->getFX() - items[i]->getFX0()));
-			std::cout << "---" << vn << "\n";
-			vn += (memCorrX[i] - sig1*memX[i]);
-			std::cout << "---" << vn << "\n";
-			vn *= (hn / dt);
-			std::cout << "---" << vn << "\n";
-		}
-		if (vyNew > 10)
-		{
-			std::cout << "HeyoY!: " << vyNew << "\n";
-			double vn = dy + dy0;
-			std::cout << "---" << vn << "\n";
-			vn += (m * goy2 * items[i]->getFY());
-			std::cout << "---" << vn << "\n";
-			vn -= (m * goy3 * (items[i]->getFY() - items[i]->getFY0()));
-			std::cout << "---" << vn << "\n";
-			vn += (memCorrY[i] - sig1*memY[i]);
-			std::cout << "---" << vn << "\n";
-			vn *= (hn / dt);
-			std::cout << "---" << vn << "\n";
-		}
-		if (vzNew > 10)
-		{
-			std::cout << "HeyoZ!: " << vzNew << "\n";
-			double vn = dz + dz0;
-			std::cout << "---" << vn << "\n";
-			vn += (m * goy2 * items[i]->getFZ());
-			std::cout << "---" << vn << "\n";
-			vn -= (m * goy3 * (items[i]->getFZ() - items[i]->getFZ0()));
-			std::cout << "---" << vn << "\n";
-			vn += (memCorrZ[i] - sig1*memZ[i]);
-			std::cout << "---" << vn << "\n";
-			vn *= (hn / dt);
-			std::cout << "---" << vn << "\n";
-		}
-
+		//Set the velocities.
 		items[i]->setVX(vxNew);
 		items[i]->setVY(vyNew);
 		items[i]->setVZ(vzNew);

@@ -17,6 +17,7 @@
 namespace utilities
 {
 
+	//Console colour codes.
 	#define __BLACK "\033[0;30m"
 	#define __RED "\033[0;31m"
 	#define __GREEN "\033[0;32m"
@@ -27,6 +28,7 @@ namespace utilities
 	#define __GREY "\033[0;37m"
 	#define __NORMAL "\033[0m"
 
+	//Enum for chosing console text colour.
 	enum Colour { Black, Red, Green, Brown, Blue, Magenta, Cyan, Grey, Normal };
 
 	/**
@@ -99,10 +101,21 @@ namespace utilities
 			 */
 			static void unitVectorAdv(double X,double Y, double Z,double X1, double Y1,double Z1,double (&acc)[3],double r,int L);
 
+			/**
+			 * @brief Set the text terminal text colour.
+			 * @param c The desired colour
+			 */
 			static void setTerminalColour(utilities::Colour c);
-
+			/**
+			 * @brief Writes a string to the terminal in the desired colour. Resets to default colour after writing.
+			 * @param text The string to write.
+			 * @param c The colour to write the string in.
+			 */
 			static void writeTerminal(std::string text, utilities::Colour c);
-
+			/**
+			 * @brief Clears lines text from the terminal including the current one.
+			 * @param numLines The number of lines to clear.
+			 */
 			static void clearLines(int numLines);
 
 	};

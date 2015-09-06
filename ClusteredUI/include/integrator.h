@@ -133,8 +133,20 @@ namespace integrators
 			 */
 			~brownianIntegrator();
 
+			/**
+			 * @brief Normal coefficents for high gamma.
+			 * @param cfg Config file reader.
+			 */
 			void setupHigh(configReader::config* cfg);
+			/**
+			 * @brief Series expanded coefficents for low gamma.
+			 * @param cfg Config file reader.
+			 */
 			void setupLow(configReader::config* cfg);
+			/**
+			 * @brief Special case coefficents.
+			 * @param cfg Config file reader.
+			 */
 			void setupZero(configReader::config* cfg);
 
 			/**
@@ -156,7 +168,7 @@ namespace integrators
 			 * @param dt The amount of time to advance.
 			 * @param nParticles The number of particles in the system.
 			 * @param boxSize The size of the system.
-			 * @param items The particles in the the system.
+			 * @param items The particles in the system.
 			 * @param f The force acting on the system.
 			 * @return Return 0 for no error.
 			 */
@@ -168,12 +180,20 @@ namespace integrators
 			 * @param dt The amount of time to advance.
 			 * @param nParticles The number of particles in the system.
 			 * @param boxSize The size of the system.
-			 * @param items The particles in the the system.
+			 * @param items The particles in the system.
 			 * @param f The force acting on the system.
 			 * @return Return 0 for no error.
 			 */
 			int normalStep(double time, double dt, int nParticles, int boxSize, simulation::particle** items, physics::forces* f);
 
+			/**
+			 * @brief Integrates the velocity when desired.
+			 * @param items The particles in the system.
+			 * @param i The working index.
+			 * @param xNew0,yNew0,zNew0 The newly integrated position.
+			 * @param dt The amount of time to advance.
+			 * @param boxSize The size of the system.
+			 */
 			void velocityStep(simulation::particle** items, int i, double xNew0, double yNew0, double zNew0, double dt, double boxSize);
 
 	};
