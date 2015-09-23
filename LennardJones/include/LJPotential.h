@@ -25,6 +25,7 @@ private:
 		double gamma; // g^2
 		double radius; // r
 		bool output;
+		bool quenched;
 
 	public:
 
@@ -61,6 +62,8 @@ private:
 		 * @param itemCell The cell to check for interactions in.
 		 */
 		void iterCells(int boxSize, double time, simulation::particle* index, simulation::cell* itemCell);
+		
+		void quench();
 
 };
 

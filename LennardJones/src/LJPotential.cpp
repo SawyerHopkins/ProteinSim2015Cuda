@@ -169,8 +169,19 @@ void LennardJones::iterCells(int boxSize, double time, particle* index, cell* it
 	}
 }
 
+void LennardJones::quench()
+{
+	kT=3.0;
+	cutOff = 1.5;
+	cutOffSquared = cutOff*cutOff;
+	debyeLength = 1.0/6.0;
+	debyeInv = 1.0 / debyeLength;
+	quenched=true;
+}
+
 void LennardJones::getAcceleration(int index, int nPart, int boxSize, double time, simulation::cell* itemCell, simulation::particle** items)
 {
+
 	for(auto it = itemCell->getFirstNeighbor(); it != itemCell->getLastNeighbor(); ++it)
 	{
 		iterCells(boxSize,time,items[index],*it);

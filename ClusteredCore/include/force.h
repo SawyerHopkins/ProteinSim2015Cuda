@@ -48,6 +48,11 @@ namespace physics
 			virtual bool isTimeDependent()=0;
 
 			/**
+			 * @brief Allows for systematic control of force variables.
+			 */
+			virtual void quench()=0;
+
+			/**
 			 * @brief Get the name of the force for logging purposes.
 			 * @return 
 			 */
@@ -124,7 +129,7 @@ namespace physics
 			 * @brief Set the default OMP target device.
 			 * @param num Device number.
 			 */
-			void setDevice(int num) { omp_set_default_device(num); }
+			void setDevice(int num) {}; //omp_set_default_device(num); }
 
 			//Iterators
 

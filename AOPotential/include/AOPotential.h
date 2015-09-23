@@ -66,6 +66,8 @@ private:
 		 */
 		void iterCells(int boxSize, double time, simulation::particle* index, simulation::cell* itemCell);
 
+		void quench(){};
+
 };
 
 //Class factories.

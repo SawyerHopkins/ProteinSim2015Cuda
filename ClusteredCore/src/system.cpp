@@ -175,9 +175,20 @@ namespace simulation
 		debugging::timer* tmr = new debugging::timer();
 		tmr->start();
 
+		bool quenched = false;
+
 		//Run system until end time.
 		while (currentTime < endTime)
 		{
+			if ((currentTime > (0.5)*endTime) && (quenched == false))
+			{
+				for (std::vector<physics::IForce*>::iterator it = sysForces->getBegin(); it != sysForces->getEnd(); ++it)
+				{
+					(*it)->quench();
+				}
+				quenched = true;
+			}
+
 			//Get the forces acting on the system.
 			sysForces->getAcceleration(nParticles,boxSize,currentTime,cells,particles);
 			//Get the next system.
