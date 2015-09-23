@@ -260,23 +260,22 @@ namespace integrators
 	{
 
 		double dt2 = dt * dt;
-		#pragma omp parallel for
 		for (int i=0; i < nParticles; i++)
 		{
 			//SEE GUNSTEREN AND BERENDSEN 1981 EQ 2.26
 			//New random walk.
-			memCorrX[i] = (*Dist)(*tgens[omp_get_thread_num()]);
-			memCorrY[i] = (*Dist)(*tgens[omp_get_thread_num()]);
-			memCorrZ[i] = (*Dist)(*tgens[omp_get_thread_num()]);
+			memCorrX[i] = (*Dist)(*gen);
+			memCorrY[i] = (*Dist)(*gen);
+			memCorrZ[i] = (*Dist)(*gen);
 
 			//Correlation to last random walk.
 			memCorrX[i] = sig2 * ((corr * memX[i])+(dev * memCorrX[i]));
 			memCorrY[i] = sig2 * ((corr * memY[i])+(dev * memCorrY[i]));
 			memCorrZ[i] = sig2 * ((corr * memZ[i])+(dev * memCorrZ[i]));
 
-			memX[i] = (*Dist)(*tgens[omp_get_thread_num()]);
-			memY[i] = (*Dist)(*tgens[omp_get_thread_num()]);
-			memZ[i] = (*Dist)(*tgens[omp_get_thread_num()]);
+			memX[i] = (*Dist)(*gen);
+			memY[i] = (*Dist)(*gen);
+			memZ[i] = (*Dist)(*gen);
 
 			double m = 1.0/items[i]->getMass();
 
