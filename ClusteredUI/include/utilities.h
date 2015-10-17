@@ -125,6 +125,20 @@ namespace utilities
 			 */
 			static double powBinaryDecomp(double base, int exp);
 
+			/**
+			 * @brief A fast method for generating a normal distribution.
+			 * @param mu The mean.
+			 * @param sigma The standard deviation.
+			 * @return A gaussian random number with mean of mu and a standard deviation of sigma.
+			 */
+			static double g250(int seed, double mu=0.0, double sigma=1.0);
+
+			/**
+			 * @brief A fast method for generating a random number.
+			 * @param iseed The seed to generate the random number from.
+			 * @return
+			 */
+			static double psdrand(int iseed);
 	};
 
 }

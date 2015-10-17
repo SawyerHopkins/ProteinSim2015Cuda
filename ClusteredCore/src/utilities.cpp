@@ -269,5 +269,98 @@ namespace utilities
 		}
 	}
 
+	//"Polar" version without trigonometric calls, 1 at a time 
+	double util::g250(int seed, double mu, double sigma) {
+        static bool deviateAvailable=false; //flag
+        static float storedDeviate; //deviate from previous calculation
+        double polar, rsquared, var1, var2;
+        
+        //If no deviate has been stored, the polar Box-Muller transformation is 
+        //performed, producing two independent normally-distributed random
+        //deviates. One is stored for the next round, and one is returned.
+        if (!deviateAvailable) {
+            //choose pairs of uniformly distributed deviates, discarding those 
+            //that don't fall within the unit circle
+            do {
+                var1=2.0*( double(psdrand(seed))/*double(RAND_MAX)*/ ) - 1.0;
+                var2=2.0*( double(psdrand(seed))/*double(RAND_MAX)*/ ) - 1.0;
+                rsquared=var1*var1+var2*var2;
+            } while ( rsquared>=1.0 || rsquared == 0.0);
+            
+            //calculate polar tranformation for each deviate
+            polar=sqrt(-2.0*log(rsquared)/rsquared);
+            
+            //store first deviate and set flag
+            storedDeviate=var1*polar;
+            deviateAvailable=true;
+            
+            //return second deviate
+            return var2*polar*sigma + mu;
+        }
+        
+        //If a deviate is available from a previous call to this function, it is
+        //returned, and the flag is set to false.
+        else {
+            deviateAvailable=false;
+            return storedDeviate*sigma + mu;
+        }
+	}
+
+	//random number generator
+	double util::psdrand(int iseed)
+	{
+		int i, j, k, inx;
+		double ran_num;
+		static const int ndim = 55, m10 = 1000000000, is = 21, ir = 30;
+		static const double base = 1.0E9;
+		static int jrand, istack[58];
+		static bool init = false;
+
+		if((!init) || (iseed < 0))
+		{
+			iseed = abs(iseed);
+	 		istack[ndim] = iseed;
+			j = iseed;
+			k = 1;
+
+			for(i = 1; i <= (ndim - 1); ++i)
+			{
+				inx = i*is - int((double)(i*is)/(double)(ndim))*ndim;
+				istack[inx] = k;
+				k = j - k;
+				if(k < 0) {k += m10;}
+				j = istack[inx];
+			}
+
+			for(j = 1; j <= 3; ++j)
+			{
+				for(i = 1; i <= ndim; ++i)
+				{
+					inx = i + ir - int((double)(i+ir)/(double)(ndim))*ndim;
+					istack[i] -= istack[inx+1];
+					if(istack[i] < 0) {istack[i] += m10;}
+				}
+			}
+			jrand = 0;
+			init = true;
+		}
+
+		jrand += 1;
+
+		if(jrand > ndim)
+		{
+			for(i = 1; i <= ndim; ++i)
+			{
+				inx = i + ir - ((int)((double)(i+ir)/(double)(ndim)))*ndim;
+			    istack[i] -= istack[inx+1];
+				if(istack[i] < 0) {istack[i] += m10;}
+			}
+			jrand = 1;
+		}
+
+		ran_num = ((double)istack[jrand]) / base;
+
+		return ran_num;
+	}
 }
 

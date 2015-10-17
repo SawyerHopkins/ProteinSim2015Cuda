@@ -77,20 +77,7 @@ namespace integrators
 		corr = (temp/(gamma2)) * (gn/(sig1*sig2));
 		dev = sqrt(1.0 - (corr*corr));
 
-		//Set the random number generator seed.
-		int rSeed = 0;
-		rSeed = cfg->getParam<int>("seed",90210);
-
-		//Creates the random device.
-		gen = new std::mt19937(rSeed);
-		Dist = new std::normal_distribution<double>(0.0,1.0);
-
-		//Create thread safe random devices.
-		for (int i = 0; i < omp_get_max_threads(); i++)
-		{
-			double tSeed = (*Dist)(*gen);
-			tgens[i] = new std::mt19937(tSeed);
-		}
+		seed = cfg->getParam<int>("seed",90210);
 
 		std::cout.precision(7);
 
@@ -136,9 +123,6 @@ namespace integrators
 		delete &sig2;
 		delete &corr;
 		delete &dev;
-
-		delete gen;
-		delete Dist;
 	}
 
 	void brownianIntegrator::setupHigh(configReader::config* cfg)
@@ -242,9 +226,9 @@ namespace integrators
 			memCorrY[i] = 0.0;
 			memCorrZ[i] = 0.0;
 
-			memX[i] = (*Dist)(*gen);
-			memY[i] = (*Dist)(*gen);
-			memZ[i] = (*Dist)(*gen);
+			memX[i] = utilities::util::g250(seed);
+			memY[i] = utilities::util::g250(seed);
+			memZ[i] = utilities::util::g250(seed);
 
 			double m = 1.0/items[i]->getMass();
 			double xNew = items[i]->getX() + (items[i]->getVX() * coEff1 * dt) + (items[i]->getFX() * coEff3 * dt * dt * m) + (sig1 * memX[i]);
@@ -264,18 +248,18 @@ namespace integrators
 		{
 			//SEE GUNSTEREN AND BERENDSEN 1981 EQ 2.26
 			//New random walk.
-			memCorrX[i] = (*Dist)(*gen);
-			memCorrY[i] = (*Dist)(*gen);
-			memCorrZ[i] = (*Dist)(*gen);
+			memCorrX[i] = utilities::util::g250(seed);
+			memCorrY[i] = utilities::util::g250(seed);
+			memCorrZ[i] = utilities::util::g250(seed);
 
 			//Correlation to last random walk.
 			memCorrX[i] = sig2 * ((corr * memX[i])+(dev * memCorrX[i]));
 			memCorrY[i] = sig2 * ((corr * memY[i])+(dev * memCorrY[i]));
 			memCorrZ[i] = sig2 * ((corr * memZ[i])+(dev * memCorrZ[i]));
 
-			memX[i] = (*Dist)(*gen);
-			memY[i] = (*Dist)(*gen);
-			memZ[i] = (*Dist)(*gen);
+			memX[i] = utilities::util::g250(seed);
+			memY[i] = utilities::util::g250(seed);
+			memZ[i] = utilities::util::g250(seed);
 
 			double m = 1.0/items[i]->getMass();
 

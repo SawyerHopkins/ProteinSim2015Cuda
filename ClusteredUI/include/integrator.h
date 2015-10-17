@@ -110,10 +110,8 @@ namespace integrators
 			int velFreq;
 			int velCounter;
 
-			//Random gaussian generator for the random kicks.
-			std::mt19937* gen;
-			std::map<int,std::mt19937*> tgens;
-			std::normal_distribution<double>* Dist;
+			//Random number seed;
+			int seed;
 
 			/**
 			 * @brief Gets the width of the random gaussians according to G+B 2.12
