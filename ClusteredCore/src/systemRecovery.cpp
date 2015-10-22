@@ -28,9 +28,61 @@ namespace simulation
 	*-----------------SYSTEM RECOVERY----------------
 	 ***********************************************/
 
-	void system::loadFromFile(std::string settings, std::string sysState)
+	system* system::loadFromFile(configReader::config cfg, std::string sysState, integrators::I_integrator* sysInt, physics::forces* sysFcs)
 	{
-		
+		int bsize = cfg->getParam<int>("boxSize",0);
+
+		std::vector<particle*> loadedparts;
+
+		ifstream state;
+		state.open(sysState, ios_base::in);
+
+		for(std::string line; std::getline(state, line))
+		{
+			std::istringstream data(line);
+
+			float x, y, z;
+			float x0, y0, z0;
+			float fx, fy, fz;
+			float fx0, fy0, fz0;
+
+			data >> x >> y >> z;
+			data >> x0 >> y0 >> z0;
+			data >> fx >> fy >> fz;
+			data >> fx0 >> fy0 >> fz0;
+
+			particle* temp = new particle(loadedparts.size());
+			temp->setPos(x0,y0,z0,bsize);
+			temp->updateForce(fx0,fy0,fz0,0,null,false);
+			temp->nextIter();
+			temp->setPos(x,y,z,bsize);
+			temp->updateForce(fx,fy,fz,0,null,false);
+
+			loadedparts.push_back(temp);
+		}
+
+		system* oldSys = new system();
+		oldSys->trialName = sysState + "-rewind";
+		oldSys->nParticles = loadedparts.size();
+		oldSys->concentration = cfg->getParam<int>("Concentration",0);
+		oldSys->boxSize = bsize;
+		oldSys->cellSize = cfg->getParam<int>("cellSize",0);
+		oldSys->cellScale = cfg->getParam<int>("cellScale",0);
+		oldSys->temp = cfg->getParam<int>("temp",0);
+		oldSys->currentTime = 0;
+		oldSys->dTime = cfg->getParam<int>("dTime",0);
+		oldSys->outputFreq = cfg->getParam<int>("outputFreq",0);
+		oldSys->outXYZ = cfg->getParam<int>("outXYZ",0);
+		oldSys->cycleHour = cfg->getParam<int>("cycleHour",0);
+		oldSys->seed = cfg->getParam<int>("seed",0);
+
+		oldSys->integrator = sysInt;
+		oldSys->sysForces = sysForces;
+
+		oldSys->particles = loadedparts.data();
+
+		oldSys->initCells(oldSys->cellScale);
+		writeSystemInit();
 	}
 
 }

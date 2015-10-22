@@ -29,7 +29,7 @@ namespace simulation
 	*------------------SYSTEM INIT-------------------
 	************************************************/
 
-	void system::initCells(int numCells, int scale)
+	void system::initCells(int scale)
 	{
 
 		//Create the cells.

@@ -58,10 +58,10 @@ namespace simulation
 		//Write each point in the system as a line of csv formatted as: X,Y,Z
 		for (int i = 0; i < nParticles; i++)
 		{
-			myFile << particles[i]->getX() << "," << particles[i]->getY() << "," << particles[i]->getZ() << ",";
-			myFile << particles[i]->getX0() << "," << particles[i]->getY0() << "," << particles[i]->getZ0() << ",";
-			myFile << particles[i]->getFX() << "," << particles[i]->getFY() << "," << particles[i]->getFZ() << ",";
-			myFile << particles[i]->getFX0() << "," << particles[i]->getFY0() << "," << particles[i]->getFZ0();
+			myFile << particles[i]->getX() << " " << particles[i]->getY() << " " << particles[i]->getZ() << " ";
+			myFile << particles[i]->getX0() << " " << particles[i]->getY0() << " " << particles[i]->getZ0() << " ";
+			myFile << particles[i]->getFX() << " " << particles[i]->getFY() << " " << particles[i]->getFZ() << " ";
+			myFile << particles[i]->getFX0() << " " << particles[i]->getFY0() << " " << particles[i]->getFZ0();
 			if (i < (nParticles-1))
 			{
 				myFile << "\n";
@@ -94,14 +94,18 @@ namespace simulation
 		myFile.open(trialName + "/sysConfig.txt");
 
 		//Writes the system configuration.
-		myFile << "trialName: " << trialName << "\n";
-		myFile << "nParticles: " << nParticles << "\n";
-		myFile << "Concentration: " << concentration << "\n";
-		myFile << "boxSize: " << boxSize << "\n";
-		myFile << "cellSize: " << cellSize << "\n";
-		myFile << "cellScale: " << cellScale << "\n";
-		myFile << "temp: " << temp << "\n";
-		myFile << "dTime: " << dTime;
+		myFile << "trialName = " << trialName << "\n";
+		myFile << "nParticles = " << nParticles << "\n";
+		myFile << "Concentration = " << concentration << "\n";
+		myFile << "boxSize = " << boxSize << "\n";
+		myFile << "cellSize = " << cellSize << "\n";
+		myFile << "cellScale = " << cellScale << "\n";
+		myFile << "temp = " << temp << "\n";
+		myFile << "dTime = " << dTime << "\n";
+		myFile << "outputFreq = " << outputFreq << "\n";
+		myFile << "outXYZ = " << outXYZ << "\n";
+		myFile << "cycleHour = " << cycleHour << "\n";
+		myFile << "seed = " << seed;
 
 		//Close the stream.
 		myFile.close();

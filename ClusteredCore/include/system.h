@@ -59,7 +59,7 @@ namespace simulation
 			 * @param numCells The number of cells to be created.
 			 * @param scale The number of cells in each dimension. (numCells^1/3)
 			 */
-			void initCells(int numCells, int scale);
+			void initCells(int scale);
 			/**
 			 * @brief Creates an initial uniform distribution of particles.
 			 * @param r The radius of the particles
@@ -109,6 +109,10 @@ namespace simulation
 			*---------------SYSTEM CONSTRUCTION--------------
 			 ***********************************************/
 
+			/**
+			 * @brief Default constructor used for loading system from recovery file.
+			 */
+			system() {};
 			/**
 			 * @brief Constructs the particle system.
 			 * @return Nothing.
@@ -191,7 +195,7 @@ namespace simulation
 			 * @param settings The location of the settings file.
 			 * @param sysState The location of the system file.
 			 */
-			void loadFromFile(std::string settings, std::string sysState);
+			static system* loadFromFile(configReader::config cfg, std::string sysState, integrators::I_integrator* sysInt, physics::forces* sysFcs);
 
 			/********************************************//**
 			*-----------------SYSTEM ANALYSIS----------------

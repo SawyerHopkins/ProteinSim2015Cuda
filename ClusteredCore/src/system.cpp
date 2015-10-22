@@ -68,7 +68,6 @@ namespace simulation
 					runSetup();
 				}
 			}
-
 		}
 
 		//Set time information
@@ -128,7 +127,7 @@ namespace simulation
 		initParticles(r,m);
 
 		//Create cells.
-		initCells(numCells, cellScale);
+		initCells(cellScale);
 		std::cout << "Created: " << numCells << " cells from scale: " <<  cellScale << "\n";
 
 		writeSystemInit();

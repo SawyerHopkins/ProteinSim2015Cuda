@@ -1,0 +1,622 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"psto",
+				"psavgtotsq"
+			],
+			[
+				"Max",
+				"maxTests"
+			],
+			[
+				"mtav",
+				"mtavgtot"
+			],
+			[
+				"mta",
+				"mtavg"
+			],
+			[
+				"cuav",
+				"cuavg"
+			],
+			[
+				"g",
+				"g250"
+			],
+			[
+				"conf",
+				"configReader"
+			],
+			[
+				"config",
+				"configReader"
+			],
+			[
+				"cell",
+				"cellIndex"
+			],
+			[
+				"dey",
+				"debyeLength"
+			],
+			[
+				"ce",
+				"cellIndex"
+			],
+			[
+				"blo",
+				"blockIdx"
+			],
+			[
+				"item",
+				"itemCell"
+			],
+			[
+				"getC",
+				"getCX"
+			],
+			[
+				"x",
+				"getX"
+			],
+			[
+				"cu",
+				"cutOffSquared"
+			],
+			[
+				"mem",
+				"memCorrZ"
+			],
+			[
+				"res",
+				"resetCells"
+			],
+			[
+				"Cell",
+				"cellSize"
+			],
+			[
+				"part",
+				"particlesPerCell"
+			],
+			[
+				"box",
+				"boxSize"
+			],
+			[
+				"__",
+				"__host__"
+			],
+			[
+				"d_par",
+				"d_particlesPerCell"
+			],
+			[
+				"par",
+				"particlesPerCell"
+			],
+			[
+				"grid",
+				"gridCounter"
+			],
+			[
+				"foc",
+				"forceFactory"
+			],
+			[
+				"cudaGe",
+				"cudaGetErrorString"
+			],
+			[
+				"launc",
+				"launchParams"
+			],
+			[
+				"next",
+				"nextSystem"
+			],
+			[
+				"cudaM",
+				"cudaMalloc"
+			],
+			[
+				"to",
+				"to_string"
+			],
+			[
+				"num",
+				"numCells"
+			],
+			[
+				"get",
+				"getNeighbor"
+			],
+			[
+				"cells",
+				"cells"
+			],
+			[
+				"d_t",
+				"d_currentTime"
+			],
+			[
+				"force",
+				"forceFactory"
+			],
+			[
+				"Len",
+				"LennardJones"
+			],
+			[
+				"sysF",
+				"sysForces"
+			],
+			[
+				"build",
+				"buildFactory"
+			],
+			[
+				"do",
+				"doThings"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "ClusteredCore/src/systemRecovery.cpp",
+			"settings":
+			{
+				"buffer_size": 1370,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "ClusteredCore/include/system.h",
+			"settings":
+			{
+				"buffer_size": 7650,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "ClusteredCore/src/systemOutput.cpp",
+			"settings":
+			{
+				"buffer_size": 6000,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+		[
+			[
+				[
+					"Packages/C++/C++ Single File.sublime-build",
+					""
+				],
+				[
+					"Packages/C++/C++ Single File.sublime-build",
+					"Run"
+				],
+				[
+					"Packages/User/buildClustered.sublime-build",
+					""
+				]
+			],
+			[
+				"Packages/User/buildClustered.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/C++/C++ Single File.sublime-build",
+					""
+				],
+				[
+					"Packages/C++/C++ Single File.sublime-build",
+					"Run"
+				],
+				[
+					"Packages/User/defaultBuild.sublime-build",
+					""
+				]
+			],
+			[
+				"Packages/User/defaultBuild.sublime-build",
+				""
+			]
+		],
+		[
+			[
+				[
+					"Packages/Makefile/Make.sublime-build",
+					""
+				],
+				[
+					"Packages/Makefile/Make.sublime-build",
+					"Clean"
+				],
+				[
+					"Packages/User/buildClustered.sublime-build",
+					""
+				]
+			],
+			[
+				"Packages/User/buildClustered.sublime-build",
+				""
+			]
+		]
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"last_filter": "pack",
+		"selected_items":
+		[
+			[
+				"pack",
+				"Package Control: Install Package"
+			],
+			[
+				"glu",
+				"Glue - Launch"
+			],
+			[
+				"package control in",
+				"Package Control: Install Package"
+			],
+			[
+				"menu",
+				"View: Toggle Menu"
+			],
+			[
+				"Pack Control: Insta",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 467.0
+	},
+	"console":
+	{
+		"height": 126.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = '2915d1851351e5ee549c20394736b442' + '8bc59f460fa1548d1514676163dafc88'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by)"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/sawyer/Programming/PhDResearch/Clustered",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/include",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/src"
+	],
+	"file_history":
+	[
+		"/home/sawyer/Programming/PhDResearch/Clustered/LennardJones/src/LJPotential.cpp",
+		"/home/sawyer/Programming/PhDResearch/Clustered/LennardJones/include/LJPotential.h",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/include/globals.cuh",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/src/system.cu",
+		"/home/sawyer/Programming/PhDResearch/Clustered/LennardJones/src/LJPotential.cu",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/src/brownianIntegrator.cu",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/src/utilities.cu",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredUI/src/runSim.cu",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/src/brownianIntegrator.cpp",
+		"/home/sawyer/testproj/trial/Makefile",
+		"/home/sawyer/testproj/trial/clock.cu",
+		"/home/sawyer/testproj/trial/main.cu",
+		"/home/sawyer/Desktop/Research/main.c",
+		"/home/sawyer/testproj/trial/main.cpp",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/include/error.h",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/src/error.cu",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/src/particle.cu",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/include/system.h",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/include/particle.h",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/include/integrator.h",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/include/force.h",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/include/config.h",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/include/cell.h",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/include/utilities.h",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/src/systemAnalysis.cpp",
+		"/home/sawyer/Programming/PhDResearch/Clustered/AOPotential/src/AOPotential.cpp",
+		"/home/sawyer/Programming/PhDResearch/Clustered/AOPotential/AOPotential.sh",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/include/timer.h",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/src/cell.cpp",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/src/config.cpp",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/src/force.cpp",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/src/system.cpp",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/src/particle.cpp",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/src/systemInit.cpp",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/src/systemHandling.cpp",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/src/utilities.cpp",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/src/timer.cpp",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/src/systemRecovery.cpp",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/src/systemOutput.cpp",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/src/error.cpp",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredUI/src/main.cpp",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredUI/src/runSim.cpp",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredUI/src/analysis.cpp",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/src/cell.cu",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredUI/src/main.cu",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredUI/src/analysis.cu",
+		"/home/sawyer/Programming/PhDResearch/Clustered/buildAll.sh",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredUI/ClusteredUI.sh",
+		"/home/sawyer/Programming/PhDResearch/Clustered/LennardJones/makefile",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredUI/makefile",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/ClusteredCore.sh",
+		"/home/sawyer/Programming/PhDResearch/Clustered/ClusteredCore/makefile",
+		"/home/sawyer/.config/sublime-text-3/Packages/User/Default (Linux).sublime-keymap",
+		"/home/sawyer/.config/sublime-text-3/Packages/User/buildClustered.sublime-build",
+		"/home/sawyer/.config/sublime-text-3/Packages/User/RunAppy.py",
+		"/home/sawyer/Programming/PhDResearch/Clustered/Clustered.sublime-project",
+		"/home/sawyer/Programming/PhDResearch/Clustered/LennardJones/LennardJones.sh",
+		"/home/sawyer/.config/sublime-text-3/Packages/User/defaultBuild.sublime-build",
+		"/home/sawyer/Programming/PhDResearch/Clustered/LennardJones/include/force.h",
+		"/home/sawyer/Programming/PhDResearch/Clustered/.tern-project",
+		"/home/sawyer/.config/sublime-text-3/Packages/User/Preferences.sublime-settings",
+		"/home/sawyer/.config/sublime-text-3/Packages/User/Distraction Free.sublime-settings"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"updateCel",
+			"rand",
+			"rnd",
+			"random",
+			"seed",
+			"seed =",
+			"int(",
+			"nextIter",
+			"gamma",
+			"printf",
+			"getCZ",
+			"name",
+			"integrat",
+			"size",
+			"particlesPerCell",
+			"util",
+			"uti;",
+			"util",
+			"cout",
+			"sysFrc",
+			"}\n"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 2,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "ClusteredCore/src/systemRecovery.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1370,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1364,
+								1364
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "ClusteredCore/include/system.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7650,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5837,
+								5837
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": -0.0,
+						"translation.y": 2145.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "ClusteredCore/src/systemOutput.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6000,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1941,
+								1941
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": -0.0,
+						"translation.y": 273.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 23.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 135.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "Packages/User/buildClustered.sublime-build",
+	"project": "clustered.sublime-project",
+	"replace":
+	{
+		"height": 42.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"runs",
+				"ClusteredUI/src/runSim.cu"
+			],
+			[
+				"run",
+				"ClusteredUI/src/runSim.cu"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 72.0,
+		"last_filter": "getAcc",
+		"selected_items":
+		[
+			[
+				"getAcc",
+				"getAcceleration"
+			]
+		],
+		"width": 611.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 362.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
