@@ -8,3 +8,5 @@ bin/*
 **/*.project
 .tern-port
 .tern-project
+clustered.sublime-project
+clustered.sublime-workspace

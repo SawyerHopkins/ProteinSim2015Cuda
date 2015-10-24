@@ -195,7 +195,7 @@ namespace simulation
 			 * @param settings The location of the settings file.
 			 * @param sysState The location of the system file.
 			 */
-			static system* loadFromFile(configReader::config cfg, std::string sysState, integrators::I_integrator* sysInt, physics::forces* sysFcs);
+			static system* loadFromFile(configReader::config* cfg, std::string sysState, integrators::I_integrator* sysInt, physics::forces* sysFcs);
 
 			/********************************************//**
 			*-----------------SYSTEM ANALYSIS----------------

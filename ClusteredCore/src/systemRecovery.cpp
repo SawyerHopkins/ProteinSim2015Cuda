@@ -28,18 +28,20 @@ namespace simulation
 	*-----------------SYSTEM RECOVERY----------------
 	 ***********************************************/
 
-	system* system::loadFromFile(configReader::config cfg, std::string sysState, integrators::I_integrator* sysInt, physics::forces* sysFcs)
+	system* system::loadFromFile(configReader::config* cfg, std::string sysState, integrators::I_integrator* sysInt, physics::forces* sysFcs)
 	{
+		using namespace std;
+
 		int bsize = cfg->getParam<int>("boxSize",0);
 
-		std::vector<particle*> loadedparts;
+		vector<particle*> loadedparts;
 
 		ifstream state;
 		state.open(sysState, ios_base::in);
 
-		for(std::string line; std::getline(state, line))
+		for(std::string line; std::getline(state, line);)
 		{
-			std::istringstream data(line);
+			istringstream data(line);
 
 			float x, y, z;
 			float x0, y0, z0;
@@ -53,10 +55,10 @@ namespace simulation
 
 			particle* temp = new particle(loadedparts.size());
 			temp->setPos(x0,y0,z0,bsize);
-			temp->updateForce(fx0,fy0,fz0,0,null,false);
+			temp->updateForce(fx0,fy0,fz0,0,NULL,false);
 			temp->nextIter();
 			temp->setPos(x,y,z,bsize);
-			temp->updateForce(fx,fy,fz,0,null,false);
+			temp->updateForce(fx,fy,fz,0,NULL,false);
 
 			loadedparts.push_back(temp);
 		}
@@ -77,12 +79,13 @@ namespace simulation
 		oldSys->seed = cfg->getParam<int>("seed",0);
 
 		oldSys->integrator = sysInt;
-		oldSys->sysForces = sysForces;
+		oldSys->sysForces = sysFcs;
 
 		oldSys->particles = loadedparts.data();
 
 		oldSys->initCells(oldSys->cellScale);
-		writeSystemInit();
+		oldSys->writeSystemInit();
+		return oldSys;
 	}
 
 }
