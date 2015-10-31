@@ -24,48 +24,76 @@ SOFTWARE.*/
 
 namespace debugging
 {
-
+	__device__ __host__
 	void error::throwInitializationError()
 	{
+		#if __CUDA_ARCH__ > 0
+		printf("Could not create initial system.\nTry decreasing particle density");
+		#else
 		std::cout << "Could create initial system.\n";
 		std::cout << "Try decreasing particle density\n.";
 		exit(7701);
+		#endif
 	}
 
+	__device__ __host__
 	void error::throwCellBoundsError(int cx, int cy, int cz)
 	{
+		#if __CUDA_ARCH__ > 0
+		printf("Unable to find: cells[%d,%d,%d]\n",cx,cy,cz);
+		#else
 		std::cout << "Unable to find: cells[" << cx << "][" << cy << "][" << cz << "]";
 		exit(7702);
+		#endif
 	}
 
-	void error::throwParticleBoundsError(int x, int y, int z)
+	__device__ __host__
+	void error::throwParticleBoundsError(float x, float y, float z)
 	{
+		#if __CUDA_ARCH__ > 0
+		printf("Particle out of bounds: %f, %f, %f\n", x, y, z);
+		#else
 		std::cout << "\nParticle out of bounds.\n";
 		std::cout << x << "," << y << "," << z << "\n";
 		exit(7703);
+		#endif
 	}
 
-	void error::throwParticleOverlapError(int nameI, int nameJ, double r)
+	__device__ __host__
+	void error::throwParticleOverlapError(int nameI, int nameJ, float r)
 	{
+		#if __CUDA_ARCH__ > 0
+		printf("Significant particle overlap. Consider time-step reduction: %f, %d, %d\n", r, nameI, nameJ);
+		#else
 		std::cout << "\nSignificant particle overlap. Consider time-step reduction.\n";
 		std::cout << "\nR: " << r;
 		std::cout << "\n" << "I-Name:" << nameI;
 		std::cout << "\n" << "J-Name:" << nameJ;
 		exit(7704);
+		#endif
 	}
 
+	__device__ __host__
 	void error::throwInfiniteForce()
 	{
+		#if __CUDA_ARCH__ > 0
+		printf("Bad news bears. Numerically unstable system.\n");
+		#else
 		std::cout << "\nBad news bears; Numerically unstable system.";
 		std::cout << "\nAttempt reduction of concentration or decreased time step.";
 		exit(7705);
+		#endif
 	}
 
+	__device__ __host__
 	void error::throwInputError()
 	{
+		#if __CUDA_ARCH__ > 0
+		printf("Invalid input file.\n");
+		#else
 		std::cout << "\n" << "Invalid input file." << "\n";
 		exit(7706);
+		#endif
 	}
-
 }
 

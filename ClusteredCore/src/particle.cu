@@ -19,17 +19,50 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
-
 #include "particle.h"
 
 namespace simulation
 {
-
 	/********************************************//**
 	*--------------SYSTEM CONSTRUCTION---------------
 	************************************************/
 
+	__device__ __host__
 	particle::particle(int pid)
+	{
+		init(pid);
+	}
+
+	__device__ __host__
+	particle::~particle()
+	{
+		delete &x;
+		delete &y;
+		delete &z;
+		delete &x0;
+		delete &y0;
+		delete &z0;
+		delete &fx;
+		delete &fy;
+		delete &fz;
+		delete &fx0;
+		delete &fy0;
+		delete &fz0;
+		delete &vx;
+		delete &vy;
+		delete &vz;
+		delete &m;
+		delete &r;
+		delete &cx;
+		delete &cy;
+		delete &cz;
+		delete &name;
+		delete &coorNumber;
+		delete &potential;
+	}
+
+	__device__ __host__
+	void particle::init(int pid)
 	{
 		//Set the initial parameters.
 		name = pid;
@@ -66,46 +99,16 @@ namespace simulation
 
 		coorNumber = 0;
 		potential = 0;
-
-		//Make sure interactions is clear.
-		//std::vector<particle*>().swap(interactions);
-
-	}
-
-	particle::~particle()
-	{
-		delete &x;
-		delete &y;
-		delete &z;
-		delete &x0;
-		delete &y0;
-		delete &z0;
-		delete &fx;
-		delete &fy;
-		delete &fz;
-		delete &fx0;
-		delete &fy0;
-		delete &fz0;
-		delete &vx;
-		delete &vy;
-		delete &vz;
-		delete &m;
-		delete &r;
-		delete &cx;
-		delete &cy;
-		delete &cz;
-		delete &name;
-		delete &coorNumber;
-		delete &potential;
 	}
 
 	/********************************************//**
 	*---------------SYSTEM MANAGEMENT----------------
 	************************************************/
 
-	void particle::setX(double val, double boxSize)
+	__device__ __host__
+	void particle::setX(float val, int boxSize)
 	{
-		double xTemp = x;
+		float xTemp = x;
 		//Update current position.
 		x = utilities::util::safeMod(val, boxSize);
 		//Set lat position.
@@ -116,9 +119,10 @@ namespace simulation
 		}
 	}
 
-	void particle::setY(double val, double boxSize)
+	__device__ __host__
+	void particle::setY(float val, int boxSize)
 	{
-		double yTemp = y;
+		float yTemp = y;
 		//Update current position.
 		y = utilities::util::safeMod(val, boxSize);
 		//Set lat position.
@@ -129,9 +133,10 @@ namespace simulation
 		}
 	}
 
-	void particle::setZ(double val, double boxSize)
+	__device__ __host__
+	void particle::setZ(float val, int boxSize)
 	{
-		double zTemp = z;
+		float zTemp = z;
 		//Update current position.
 		z = utilities::util::safeMod(val, boxSize);
 		//Set lat position.
@@ -142,7 +147,8 @@ namespace simulation
 		}
 	}
 
-	void particle::setPos(double xVal, double yVal, double zVal, double boxSize)
+	__device__ __host__
+	void particle::setPos(float xVal, float yVal, float zVal, int boxSize)
 	{
 		//Update all the positions.
 		setX(xVal,boxSize);
@@ -150,16 +156,17 @@ namespace simulation
 		setZ(zVal,boxSize);
 	}
 
-	void particle::updateForce(double xVal, double yVal, double zVal, double pot, particle* p, bool countPair)
+	__device__ __host__
+	void particle::updateForce(float xVal, float yVal, float zVal, float pot, particle* p, bool countPair)
 	{
 		//Add to potential.
 		potential+=pot;
+
 
 		//Add to coordination number.
 		if (countPair == true)
 		{
 			coorNumber++;
-			interactions.push_back(p);
 		}
 
 		//Increment the existing value of force.
@@ -168,14 +175,9 @@ namespace simulation
 		fz += zVal;
 	}
 
+	__device__ __host__
 	void particle::nextIter()
 	{
-
-		//Reset interacting particles.
-		interactions.clear();
-		interactions.shrink_to_fit();
-		//Minimize memory allocations by making a guess at how many slots we need.
-		interactions.reserve(coorNumber);
 
 		//Reset coordination number;
 		coorNumber = 0;
@@ -192,5 +194,41 @@ namespace simulation
 		fz = 0.0;
 	}
 
+	__device__
+	void particle::copyDummy(particle* dummy)
+	{
+		name = dummy->getName();
+
+		x = dummy->getX();
+		y = dummy->getY();
+		z = dummy->getZ();
+
+		x0 = dummy->getX0();
+		y0 = dummy->getY0();
+		z0 = dummy->getZ0();
+
+		fx = dummy->getFX();
+		fy = dummy->getFY();
+		fz = dummy->getFZ();
+		
+		fx0 = dummy->getFX0();
+		fy0 = dummy->getFY0();
+		fz0 = dummy->getFZ0();
+
+		vx = dummy->getVX();
+		vy = dummy->getVY();
+		vz = dummy->getVZ();
+
+		r = dummy->getRadius();
+		m = dummy->getMass();
+
+		cx = dummy->getCX();
+		cy = dummy->getCY();
+		cz = dummy->getCZ();
+
+		coorNumber = 0;
+		potential = 0;
+
+	}
 }
 

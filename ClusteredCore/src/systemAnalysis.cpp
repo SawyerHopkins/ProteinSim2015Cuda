@@ -25,9 +25,9 @@ SOFTWARE.*/
 
 namespace simulation
 {
-
 	int system::numClusters(int xyz)
 	{
+		/*
 		//A map of all the particles in the system by name.
 		std::map<int,particle*> selectionPool;
 
@@ -131,18 +131,20 @@ namespace simulation
 		return avgSize;
 
 		//return clusterPool.size();
+		*/
+		return 0;
 	}
 
-	double system::getTemperature()
+	float system::getTemperature()
 	{
-		double vtot = 0;
+		float vtot = 0;
 
 		for (int i = 0; i < nParticles; i++)
 		{
 			//Add the totat velocity squares.
-			double vx = particles[i]->getVX();
-			double vy = particles[i]->getVY();
-			double vz = particles[i]->getVZ();
+			float vx = particles[i].getVX();
+			float vy = particles[i].getVY();
+			float vz = particles[i].getVZ();
 			vtot += (vx*vx);
 			vtot += (vy*vy);
 			vtot += (vz*vz);
@@ -154,6 +156,5 @@ namespace simulation
 		//Average
 		return vtot;
 	}
-
 }
 

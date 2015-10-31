@@ -1,11 +1,10 @@
 #ifndef INTEGRATOR_H
 #define INTEGRATOR_H
 #include "force.h"
-#include <omp.h>
+#include <curand_kernel.h>
 
 namespace integrators
 {
-
 	/********************************************//**
 	*--------------INTEGRATOR INTERFACE--------------
 	************************************************/
@@ -19,11 +18,6 @@ namespace integrators
 	 */
 	class I_integrator
 	{
-
-		protected:
-
-			std::string name;
-
 		public:
 
 			//Header Version.
@@ -40,14 +34,21 @@ namespace integrators
 			 * @param f The force acting on the system.
 			 * @return Return 0 for no error.
 			 */
-			virtual int nextSystem(double time, double dt, int nParticles, int boxSize, simulation::cell**** cells, simulation::particle** items, physics::forces* f)=0;
+			__device__
+			virtual void nextSystem(float *time, float *dt, int *nParticles, int *boxSize, simulation::particle* items)=0;
 
 			/**
-			 * @brief Get the name of the integrator for logging purposes.
-			 * @return 
+			 * @brief Loads the initial values into the object.
+			 * @param vars The array of values to load.
 			 */
-			std::string getName() { return name; }
-
+			__device__
+			virtual void cudaTest()=0;
+			/**
+			 * @brief Performs an intial test on the integrator.
+			 * @param vars
+			 */
+			__device__
+			virtual void cudaLoad(float* vars)=0;
 	};
 
 	/********************************************//**
@@ -61,67 +62,70 @@ namespace integrators
 	 * @file integrator.h
 	 * @brief Integrator for brownian dynamics.
 	 */
-	class brownianIntegrator : public I_integrator
+	class brownianIntegrator
 	{
-
 		private:
 
 			//System variables
-			double mass;
-			double temp;
+			float mass;
+			float temp;
 			int memSize;
 
 			//Variables vital to the force.
-			double gamma;
-			double dt;
-			double dtInv;
-			double y;
+			float gamma;
+			float dt;
+			float dtInv;
+			float y;
 
 			//Variables for integrator.
 			//See GUNSTEREN AND BERENDSEN 1981 EQ 2.6
-			double coEff0;
-			double coEff1;
-			double coEff2;
-			double coEff3;
+			float coEff0;
+			float coEff1;
+			float coEff2;
+			float coEff3;
 
 			//The previous kick.
-			double * memX;
-			double * memY;
-			double * memZ;
+			float* memX;
+			float* memY;
+			float* memZ;
 
 			//The correlation to the previous kick.
-			double * memCorrX;
-			double * memCorrY;
-			double * memCorrZ;
+			float* memCorrX;
+			float* memCorrY;
+			float* memCorrZ;
+
+			//Random number generator.
+			curandStateXORWOW_t* devStates;
+			int rSeed;
 
 			//Gaussian width.
-			double sig1;
-			double sig2;
-			double corr;
-			double dev;
+			float sig1;
+			float sig2;
+			float corr;
+			float dev;
 
 			//Tempature vars;
-			double goy2;
-			double goy3;
-			double hn;
-			double gn;
+			float goy2;
+			float goy3;
+			float hn;
+			float gn;
 
 			//Update Flags;
 			int velFreq;
 			int velCounter;
-
-			//Random number seed;
-			int seed;
 
 			/**
 			 * @brief Gets the width of the random gaussians according to G+B 2.12
 			 * @param gdt gamma * dT
 			 * @return 
 			 */
-			double getWidth(double gdt);
+			__host__ __device__
+			float getWidth(float gdt);
 
 		public:
 
+			__device__
+			brownianIntegrator() {};
 			/**
 			 * @brief Constructs the brownian motion integrator.
 			 * @param cfg The address of the configuration file reader.
@@ -138,17 +142,20 @@ namespace integrators
 			 * @brief Normal coefficents for high gamma.
 			 * @param cfg Config file reader.
 			 */
-			void setupHigh(configReader::config* cfg);
+			__host__ __device__
+			void setupHigh();
 			/**
 			 * @brief Series expanded coefficents for low gamma.
 			 * @param cfg Config file reader.
 			 */
-			void setupLow(configReader::config* cfg);
+			__host__ __device__
+			void setupLow();
 			/**
 			 * @brief Special case coefficents.
 			 * @param cfg Config file reader.
 			 */
-			void setupZero(configReader::config* cfg);
+			__host__ __device__
+			void setupZero();
 
 			/**
 			 * @brief Integrates to the next system state.
@@ -161,7 +168,8 @@ namespace integrators
 			 * @param f The force acting on the system.
 			 * @return Return 0 for no error.
 			 */
-			int nextSystem(double time, double dt, int nParticles, int boxSize, simulation::cell**** cells, simulation::particle** items, physics::forces* f);
+			__device__
+			void nextSystem(float* time, float* dt, int* nParticles, int* boxSize, simulation::particle* items);
 
 			/**
 			 * @brief Integrates to the next system state.
@@ -173,7 +181,8 @@ namespace integrators
 			 * @param f The force acting on the system.
 			 * @return Return 0 for no error.
 			 */
-			int firstStep(double time, double dt, int nParticles, int boxSize, simulation::particle** items, physics::forces* f);
+			__device__
+			void firstStep(float time, float dt, int nParticles, int boxSize, simulation::particle* items);
 
 			/**
 			 * @brief Integrates to the next system state.
@@ -185,7 +194,8 @@ namespace integrators
 			 * @param f The force acting on the system.
 			 * @return Return 0 for no error.
 			 */
-			int normalStep(double time, double dt, int nParticles, int boxSize, simulation::particle** items, physics::forces* f);
+			__device__
+			void normalStep(float time, float dt, int nParticles, int boxSize, simulation::particle* items);
 
 			/**
 			 * @brief Integrates the velocity when desired.
@@ -195,10 +205,21 @@ namespace integrators
 			 * @param dt The amount of time to advance.
 			 * @param boxSize The size of the system.
 			 */
-			void velocityStep(simulation::particle** items, int i, double xNew0, double yNew0, double zNew0, double dt, double boxSize);
+			__device__
+			void velocityStep(simulation::particle* items, int i, float xNew0, float yNew0, float zNew0, float dt, int boxSize);
 
+			/**
+			 * @brief Performs an intial test on the integrator.
+			 */
+			__device__
+			void cudaTest();
+			/**
+			 * @brief Loads the initial values into the object.
+			 * @param vars The array of values to load.
+			 */
+			__device__
+			void cudaLoad(float* vars);
 	};
-
 }
 
 #endif // VERLET_H

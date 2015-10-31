@@ -24,7 +24,6 @@ SOFTWARE.*/
 
 namespace simulation
 {
-
 	/********************************************//**
 	*-----------------SYSTEM OUTPUT------------------
 	************************************************/
@@ -45,7 +44,7 @@ namespace simulation
 			//Write the particle positions in XYZ format, spoofing all particles as Hydrogen.
 			for (int i =0; i < nParticles; i++)
 			{
-				myFile << "H " << particles[i]->getX() << " " << particles[i]->getY() << " " << particles[i]->getZ() << "\n";
+				myFile << "H " << particles[i].getX() << " " << particles[i].getY() << " " << particles[i].getZ() << "\n";
 			}
 		}
 	}
@@ -58,10 +57,10 @@ namespace simulation
 		//Write each point in the system as a line of csv formatted as: X,Y,Z
 		for (int i = 0; i < nParticles; i++)
 		{
-			myFile << particles[i]->getX() << " " << particles[i]->getY() << " " << particles[i]->getZ() << " ";
-			myFile << particles[i]->getX0() << " " << particles[i]->getY0() << " " << particles[i]->getZ0() << " ";
-			myFile << particles[i]->getFX() << " " << particles[i]->getFY() << " " << particles[i]->getFZ() << " ";
-			myFile << particles[i]->getFX0() << " " << particles[i]->getFY0() << " " << particles[i]->getFZ0();
+			myFile << particles[i].getX() << "," << particles[i].getY() << "," << particles[i].getZ() << ",";
+			myFile << particles[i].getX0() << "," << particles[i].getY0() << "," << particles[i].getZ0() << ",";
+			myFile << particles[i].getFX() << "," << particles[i].getFY() << "," << particles[i].getFZ() << ",";
+			myFile << particles[i].getFX0() << "," << particles[i].getFY0() << "," << particles[i].getFZ0();
 			if (i < (nParticles-1))
 			{
 				myFile << "\n";
@@ -73,17 +72,17 @@ namespace simulation
 
 	void system::writeInitTemp()
 	{
-		double v2 = 0.0;
+		float v2 = 0.0;
 		//Get V^2 for each particle.
 		for (int i = 0; i < nParticles; i++)
 		{
-			v2 += particles[i]->getVX()*particles[i]->getVX();
-			v2 += particles[i]->getVY()*particles[i]->getVY();
-			v2 += particles[i]->getVZ()*particles[i]->getVZ();
+			v2 += particles[i].getVX()*particles[i].getVX();
+			v2 += particles[i].getVY()*particles[i].getVY();
+			v2 += particles[i].getVZ()*particles[i].getVZ();
 		}
 		//Average v2.
-		double vAvg = v2 / float(nParticles);
-		double temp = (vAvg / 3.0);
+		float vAvg = v2 / float(nParticles);
+		float temp = (vAvg / 3.0);
 		//
 		std::cout << "---Temp: " << temp << " m/k" << "\n";
 	}
@@ -94,18 +93,14 @@ namespace simulation
 		myFile.open(trialName + "/sysConfig.txt");
 
 		//Writes the system configuration.
-		myFile << "trialName = " << trialName << "\n";
-		myFile << "nParticles = " << nParticles << "\n";
-		myFile << "Concentration = " << concentration << "\n";
-		myFile << "boxSize = " << boxSize << "\n";
-		myFile << "cellSize = " << cellSize << "\n";
-		myFile << "cellScale = " << cellScale << "\n";
-		myFile << "temp = " << temp << "\n";
-		myFile << "dTime = " << dTime << "\n";
-		myFile << "outputFreq = " << outputFreq << "\n";
-		myFile << "outXYZ = " << outXYZ << "\n";
-		myFile << "cycleHour = " << cycleHour << "\n";
-		myFile << "seed = " << seed;
+		myFile << "trialName: " << trialName << "\n";
+		myFile << "nParticles: " << nParticles << "\n";
+		myFile << "Concentration: " << concentration << "\n";
+		myFile << "boxSize: " << boxSize << "\n";
+		myFile << "cellSize: " << cellSize << "\n";
+		myFile << "cellScale: " << cellScale << "\n";
+		myFile << "temp: " << temp << "\n";
+		myFile << "dTime: " << dTime;
 
 		//Close the stream.
 		myFile.close();
@@ -130,11 +125,11 @@ namespace simulation
 
 		//Calculate the perfomance.
 		tmr->stop();
-		double timePerCycle = tmr->getElapsedSeconds() / double(outputFreq);
+		float timePerCycle = tmr->getElapsedSeconds() / float(outputFreq);
 		std::setprecision(4);
 		std::cout << "\n" << "Average Cycle Time: " << timePerCycle << " seconds.\n";
-		double totalTime = (cycleHour*timePerCycle);
-		double finishedTime = ((currentTime/dTime) / 3600) * timePerCycle;
+		float totalTime = (cycleHour*timePerCycle);
+		float finishedTime = ((currentTime/dTime) / 3600) * timePerCycle;
 		std::cout << "Time for completion: " << (totalTime-finishedTime) << " hours.\n";
 		tmr->start();
 
@@ -143,24 +138,24 @@ namespace simulation
 		int totEAP = 0;
 		for (int i=0; i<nParticles; i++)
 		{
-			totCoor+=particles[i]->getCoorNumber();
-			totEAP+=particles[i]->getPotential();
+			totCoor+=particles[i].getCoorNumber();
+			totEAP+=particles[i].getPotential();
 		}
 
-		double eap = (totEAP / double(nParticles));
-		double nClust = numClusters(outXYZ);
-		double avgCoor = double(totCoor) / double(nParticles);
+		float eap = (totEAP / float(nParticles));
+		//float nClust = numClusters(outXYZ);
+		float avgCoor = float(totCoor) / float(nParticles);
 
 		//Output the current system statistics.
 		std::cout <<"\n<R>: " << avgCoor << " - Rt: " << totCoor << "\n";
 		std::cout <<"<EAP>: " << eap << "\n";
-		std::cout <<"<N>/Nc: " << nClust << "\n";
+		//std::cout <<"<N>/Nc: " << nClust << "\n";
 		std::cout <<"Temperature: " << getTemperature() << "\n";
 
 		//Output the number of clusters with time.
-		std::ofstream myFileClust(trialName + "/clustGraph.txt", std::ios_base::app | std::ios_base::out);
-		myFileClust << currentTime << " " << nClust << "\n";
-		myFileClust.close();
+		//std::ofstream myFileClust(trialName + "/clustGraph.txt", std::ios_base::app | std::ios_base::out);
+		//myFileClust << currentTime << " " << nClust << "\n";
+		//myFileClust.close();
 
 		//Output the average potential with time.
 		std::ofstream myFilePot(trialName + "/potGraph.txt", std::ios_base::app | std::ios_base::out);
@@ -172,5 +167,4 @@ namespace simulation
 		myFileCoor << currentTime << " " << avgCoor << "\n";
 		myFileCoor.clear();
 	}
-
 }

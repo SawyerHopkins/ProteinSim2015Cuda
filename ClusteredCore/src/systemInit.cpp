@@ -24,113 +24,12 @@ SOFTWARE.*/
 
 namespace simulation
 {
-
 	/********************************************//**
 	*------------------SYSTEM INIT-------------------
 	************************************************/
 
-	void system::initCells(int scale)
+	void system::initParticles(float r, float m)
 	{
-
-		//Create the cells.
-		cells = new cell***[scale];
-		for(int i=0; i < scale; i++)
-		{
-			cells[i] = new cell**[scale];
-			for(int j=0; j < scale; j++)
-			{
-				cells[i][j] = new cell*[scale];
-				for(int k=0; k < scale; k++)
-				{
-					cells[i][j][k] = new cell;
-				}
-			}
-		}
-
-		//Set the cell neighbors.
-		for(int x=0; x < scale; x++)
-		{
-			for(int y=0; y < scale; y++)
-			{
-				for(int z=0; z < scale; z++)
-				{
-					int left = x-1;
-					int right = x+1;
-					int top = y-1;
-					int bot = y+1;
-					int front = z-1;
-					int back = z+1;
-
-					if (x == 0)
-					{
-						left = (scale-1);
-					}
-					else if (x == (scale-1))
-					{
-						right = 0;
-					}
-
-					if (y == 0)
-					{
-						top = (scale-1);
-					}
-					else if (y == (scale-1))
-					{
-						bot = 0;
-					}
-
-					if (z == 0)
-					{
-						front = (scale-1);
-					}
-					else if (z == (scale-1))
-					{
-						back = 0;
-					}
-
-					//Set the 6 principle cells next the current cell.
-					//Access diagonals through combinations of these six.
-					cells[x][y][z]->left = cells[left][y][z];
-					cells[x][y][z]->right = cells[right][y][z];
-					cells[x][y][z]->top = cells[x][top][z];
-					cells[x][y][z]->bot = cells[x][bot][z];
-					cells[x][y][z]->front = cells[x][y][front];
-					cells[x][y][z]->back = cells[x][y][back];
-				}
-			}
-		}
-
-		//Check the cell neighborhood mapping.
-		for(int x=0; x < scale; x++)
-		{
-			for(int y=0; y < scale; y++)
-			{
-				for(int z=0; z < scale; z++)
-				{
-					cells[x][y][z]->createNeighborhood();
-				}
-			}
-		}
-
-		//Assign the particle to their starting cell.
-		for(int i=0; i < nParticles; i++)
-		{
-			int cx = particles[i]->getX() / cellSize;
-			int cy = particles[i]->getY() / cellSize;
-			int cz = particles[i]->getZ() / cellSize;
-
-			//Tell the particle what cell its in, then add to cell.
-			particles[i]->setCell(cx,cy,cz);
-			cells[cx][cy][cz]->addMember(particles[i]);
-
-		}
-
-	}
-
-	void system::initParticles(double r, double m)
-	{
-		particles = new particle*[nParticles];
-
 		//If there is no inital seed create one.
 		if (seed==0)
 		{
@@ -139,20 +38,19 @@ namespace simulation
 		}
 		//Setup random uniform distribution generator.
 		std::mt19937 gen(seed);
-		std::uniform_real_distribution<double> distribution(0.0,1.0);
+		std::uniform_real_distribution<float> distribution(0.0,1.0);
 		
 		//Iterates through all points.
 		for(int i = 0; i < nParticles; i++)
 		{
-			particles[i] = new particle(i);
+			particles[i].init(i);
 
-			particles[i]->setX( distribution(gen) * boxSize , boxSize);
-			particles[i]->setY( distribution(gen) * boxSize , boxSize);
-			particles[i]->setZ( distribution(gen) * boxSize , boxSize);
+			particles[i].setX( distribution(gen) * boxSize , boxSize);
+			particles[i].setY( distribution(gen) * boxSize , boxSize);
+			particles[i].setZ( distribution(gen) * boxSize , boxSize);
 
-			particles[i]->setRadius(r);
-			particles[i]->setMass(m);
-
+			particles[i].setRadius(r);
+			particles[i].setMass(m);
 		}
 
 		std::cout << "---Added " << nParticles << " particles. Checking for overlap.\n\n";
@@ -166,10 +64,9 @@ namespace simulation
 		maxwellVelocityInit(&gen, &distribution);
 
 		std::cout << "---Maxwell distribution created. Creating cell assignment.\n\n";
-
 	}
 
-	void system::initCheck(std::mt19937* gen, std::uniform_real_distribution<double>* distribution)
+	void system::initCheck(std::mt19937* gen, std::uniform_real_distribution<float>* distribution)
 	{
 		//Keeps track of how many resolutions we have attempted.
 		int counter = 0;
@@ -192,12 +89,12 @@ namespace simulation
 					{
 						//Gets the distance between the two particles.
 
-						double radius = utilities::util::pbcDist(particles[i]->getX(), particles[i]->getY(), particles[i]->getZ(),
-																			particles[j]->getX(), particles[j]->getY(), particles[j]->getZ(),
+						float radius = utilities::util::pbcDist(particles[i].getX(), particles[i].getY(), particles[i].getZ(),
+																			particles[j].getX(), particles[j].getY(), particles[j].getZ(),
 																			boxSize);
 
 						//Gets the sum of the particle radius.
-						double r = particles[i]->getRadius() + particles[j]->getRadius();
+						float r = particles[i].getRadius() + particles[j].getRadius();
 
 						//If the particles are slightly closer than twice their radius resolve conflict.
 						if (radius < 1.1*r)
@@ -215,9 +112,9 @@ namespace simulation
 							resolution = false;
 
 							//Set new uniform random position.
-							particles[i]->setX( (*distribution)(*gen) * boxSize , boxSize );
-							particles[i]->setY( (*distribution)(*gen) * boxSize , boxSize );
-							particles[i]->setZ( (*distribution)(*gen) * boxSize , boxSize );
+							particles[i].setX( (*distribution)(*gen) * boxSize , boxSize );
+							particles[i].setY( (*distribution)(*gen) * boxSize , boxSize );
+							particles[i].setZ( (*distribution)(*gen) * boxSize , boxSize );
 						}
 					}
 				}
@@ -226,11 +123,11 @@ namespace simulation
 
 	}
 
-	void system::maxwellVelocityInit(std::mt19937* gen, std::uniform_real_distribution<double>* distribution)
+	void system::maxwellVelocityInit(std::mt19937* gen, std::uniform_real_distribution<float>* distribution)
 	{
-		double r1,r2;
-		double vsum,vsum2;
-		double sigold,vsig,ratio;
+		float r1,r2;
+		float vsum,vsum2;
+		float sigold,vsig,ratio;
 		int i;
 
 		//Set the initial velocities.
@@ -239,21 +136,21 @@ namespace simulation
 			r1=(*distribution)(*gen);
 			r2=(*distribution)(*gen);
 
-			particles[i]->setVX(sqrt(-2.0 * log(r1) ) * cos(8.0*atan(1)*r2));
+			particles[i].setVX(sqrt(-2.0 * log(r1) ) * cos(8.0*atan(1)*r2));
 		}
 
 		for(i=0; i<nParticles; i++)
 		{
 			r1=(*distribution)(*gen);
 			r2=(*distribution)(*gen);
-			particles[i]->setVY(sqrt(-2.0 * log(r1) ) * cos(8.0*atan(1)*r2));
+			particles[i].setVY(sqrt(-2.0 * log(r1) ) * cos(8.0*atan(1)*r2));
 		}
 
 		for(i=0; i<nParticles; i++)
 		{
 			r1=(*distribution)(*gen);
 			r2=(*distribution)(*gen);
-			particles[i]->setVZ(sqrt(-2.0 * log(r1) ) * cos(8.0*atan(1)*r2));
+			particles[i].setVZ(sqrt(-2.0 * log(r1) ) * cos(8.0*atan(1)*r2));
 		}
 		
 		//Normalize the initial velocities according to the system temperature.
@@ -262,7 +159,7 @@ namespace simulation
 		
 		for(i=0; i<nParticles; i++)
 		{
-			double vx = particles[i]->getVX();
+			float vx = particles[i].getVX();
 			vsum=vsum+vx;
 			vsum2=vsum2+(vx*vx);
 		}
@@ -275,7 +172,7 @@ namespace simulation
 
 		for(i=0; i<nParticles; i++)
 		{
-			particles[i]->setVX(ratio*(particles[i]->getVX()-vsum));
+			particles[i].setVX(ratio*(particles[i].getVX()-vsum));
 		}
 
 		//maxwell for vy//
@@ -284,7 +181,7 @@ namespace simulation
 		
 		for(i=0; i<nParticles; i++)
 		{
-			double vy = particles[i]->getVY();
+			float vy = particles[i].getVY();
 			vsum=vsum+vy;
 			vsum2=vsum2+(vy*vy);
 		}
@@ -297,7 +194,7 @@ namespace simulation
 
 		for(i=0; i<nParticles; i++)
 		{
-			particles[i]->setVY(ratio*(particles[i]->getVY()-vsum));
+			particles[i].setVY(ratio*(particles[i].getVY()-vsum));
 		}
 
 		//maxwell for vz//
@@ -306,7 +203,7 @@ namespace simulation
 		
 		for(i=0; i<nParticles; i++)
 		{
-			double vz = particles[i]->getVZ();
+			float vz = particles[i].getVZ();
 			vsum=vsum+vz;
 			vsum2=vsum2+(vz*vz);
 		}
@@ -319,7 +216,7 @@ namespace simulation
 
 		for(i=0; i<nParticles; i++)
 		{
-			particles[i]->setVZ(ratio*(particles[i]->getVZ()-vsum));
+			particles[i].setVZ(ratio*(particles[i].getVZ()-vsum));
 		}
 
 		//Write the system temp to verify.
@@ -428,5 +325,4 @@ namespace simulation
 		}
 		return validDir;
 	}
-
 }

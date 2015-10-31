@@ -1,34 +1,68 @@
-CC := g++ # This is the main compiler
-ARC := ar
-
+################################################################################
+################################GENERAL PATH INFO###############################
+################################################################################
 SRCDIR := src
-BUILDDIR := build
-TARGET := bin/libcore.a
- 
-SRCEXT := cpp
-SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
-OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
-CFLAGS := -g -O3 -fopenmp -std=c++11 -Wall -fPIC
-LIB := -fopenmp
 INC := -I include
+################################################################################
+##############################CUDA PATH AND OPTIONS#############################
+################################################################################
+CUDA_PATH ?= "/usr/local/cuda-7.5"
+GPUINC := -I /usr/local/cuda-7.5/include/
+HOST_COMPILER ?= g++
+NVCC := $(CUDA_PATH)/bin/nvcc -ccbin $(HOST_COMPILER)
+GFLAGS := -m64 -arch=sm_50 --std=c++11 --compiler-options '-fPIC'
+################################################################################
+################################DEVICE CODE PATHS###############################
+################################################################################
+GPUEXT := cu
+GPUBUILDDIR := gpu
+GPUSOURCES := $(shell find $(SRCDIR) -type f -name *.$(GPUEXT))
+GPUOBJECTS := $(patsubst $(SRCDIR)/%,$(GPUBUILDDIR)/%,$(GPUSOURCES:.$(GPUEXT)=.o))
+GPULINKED := gpu/kernal.o
+GPUTARGET := bin/libkernal.a
+################################################################################
+#################################HOST CODE PATHS################################
+################################################################################
+CPUEXT := cpp
+CPUBUILDDIR := cpu
+CPUSOURCES := $(shell find $(SRCDIR) -type f -name *.$(CPUEXT))
+CPUOBJECTS := $(patsubst $(SRCDIR)/%,$(CPUBUILDDIR)/%,$(CPUSOURCES:.$(CPUEXT)=.o))
+CPUTARGET := bin/libcore.a
+################################################################################
+######################################RULES#####################################
+################################################################################
 
-$(TARGET): $(OBJECTS)
-	@echo
-	@tput setaf 3
-	@echo " Creating static library..."
-	@tput setaf 7
-	@echo
-	@echo " $(ARC) -rcs $(TARGET) $^"; $(ARC) -rcs $(TARGET) $^
-	@echo
+# default
 
-$(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
-	@mkdir -p $(BUILDDIR)
-	@echo " $(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
+all: gpu cpu
 
-clean:
-	@tput setaf 3
-	@echo " Cleaning..."; 
-	@tput setaf 7
-	@echo " $(RM) -r $(BUILDDIR) $(TARGET)"; $(RM) -r $(BUILDDIR) $(TARGET)
+# gpu rules:
 
-.PHONY: clean
+gpu: $(GPUOBJECTS)
+	$(EXEC) $(NVCC) $(GFLAGS) -lib $(GPUOBJECTS) -o $(GPUTARGET)
+
+
+$(GPUBUILDDIR)/%.o: $(SRCDIR)/%.$(GPUEXT)
+	$(EXEC) $(NVCC) $(GFLAGS) $(INC) -o $@ -dc $<
+
+# cpu rules:
+
+cpu: $(CPUOBJECTS)
+	ar -rcs $(CPUTARGET) $^
+	ranlib $(CPUTARGET)
+
+$(CPUBUILDDIR)/%.o: $(SRCDIR)/%.$(CPUEXT)
+	$(EXEC) $(NVCC) $(GFLAGS) $(INC) -c -o $@ $<
+
+#clean rules:
+
+clean: 
+	$(RM) -rf bin
+
+cleancpu: 
+	$(RM) -rf $(CPUBUILDIR)
+
+cleangpu: 
+	$(RM) -rf $(GPUBUILDDIR)
+
+spotless: clean cleancpu cleangpu

@@ -1,10 +1,10 @@
 #ifndef CELL_H
 #define CELL_H
 #include "particle.h"
+#include <thrust/pair.h>
 
 namespace simulation
 {
-
 	/**
 	 * @class cell
 	 * @author Sawyer Hopkins
@@ -14,20 +14,23 @@ namespace simulation
 	 */
 	class cell
 	{
-
 		private:
 
-			//The particles in the cell.
-			std::map<int,particle*> members;
-			std::vector<cell*> neighbors;
+			cell* neighbors[27];
 
 		public:
 
 			//Header Version.
 			static const int version = 1;
+			int maxMem;
+			int gridCounter;
+			int index;
+			particle** members;
 
 			//Constructor and Destructor
-			cell();
+			__host__ __device__
+			cell(int cellParts);
+			__host__ __device__
 			~cell();
 
 			//Cell neighbors
@@ -37,51 +40,33 @@ namespace simulation
 			cell* right;
 			cell* front;
 			cell* back;
-
-			//Member management.
+			
 			/**
-			 * @brief Adds a particle to the cell manager.
-			 * @param p The address of the particle to add.
-			 */
-			void addMember(particle* p);
-			/**
-			 * @brief Removes a particle from the cell manager.
-			 * @param p The address of the particle to remove.
-			 */
-			void removeMember(particle* p);
-			/**
-			 * @brief Expose the pointer to the first particle in the cell.
+			 * @brief Find the index of the particle in the members array.
+			 * @param p
 			 * @return 
 			 */
-			const std::map<int,particle*>::iterator getBegin() { return members.begin(); }
+			__host__ __device__
+			int findIndex(particle* p);
 			/**
-			 * @brief Expose the end of the bucket.
+			 * @brief Gets the member at specific index.
+			 * @param key
 			 * @return 
 			 */
-			const std::map<int,particle*>::iterator getEnd() { return members.end(); }
-			/**
-			 * @brief Return a specific member by name.
-			 * @param key The name of the particle to get.
-			 * @return 
-			 */
-			const std::map<int,particle*>::mapped_type getMember(int key) { return members[key]; }
+			__host__ __device__
+			const particle* getMember(int key) { return members[key]; }
 			/**
 			 * @brief Gets the iterator to the first neighboring cell.
 			 * @return 
 			 */
-			const std::vector<cell*>::iterator getFirstNeighbor() { return neighbors.begin(); }
-			/**
-			 * @brief Gets the end of the cell neighbor iterator. The parent cell is the last cell in the vector.
-			 * @return 
-			 */
-			const std::vector<cell*>::iterator getLastNeighbor() { return neighbors.end(); }
+			__host__ __device__
+			cell* getNeighbor(int i) { return neighbors[i]; }
 			/**
 			 * @brief Creates a vector containing points to all adjacent cells.
 			 */
+			__host__ __device__
 			void createNeighborhood();
-
 	};
-
 }
 
 #endif // CELL_H

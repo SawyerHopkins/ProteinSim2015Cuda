@@ -20,7 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.*/
 
-#include "system.h"
+#include "ui.h"
 #include <dlfcn.h>
 
 using namespace std;
@@ -37,17 +37,20 @@ void runScript()
 	configReader::config * cfg =new configReader::config("settings.cfg");
 	cfg->showOutput();
 
+	/*-------------INTEGRATOR-------------*/
+
+	//Create the integrator.
+	util::writeTerminal("Creating integrator.\n", Colour::Green);
+	integrators::brownianIntegrator * difeq = new integrators::brownianIntegrator(cfg);
+
 	/*---------------FORCES---------------*/
 
-	//Creates a force manager.
-	util::writeTerminal("Adding required forces.\n", Colour::Green);
-
+	//Create the force.
+	util::writeTerminal("Creating forces.\n", Colour::Green);
 	std::string forceName = cfg->getParam<std::string>("force","");
 	std::string fileName = "./" + forceName + ".so";
-
-	//Opens the force library.
 	void* forceLib = dlopen(fileName.c_str(), RTLD_LAZY);
-
+	
 	//Throw error if the library does not exist.
 	if (!forceLib)
 	{
@@ -58,7 +61,7 @@ void runScript()
 	dlerror();
 
 	//Make a factory to create the force instance.
-	physics::create_Force* factory = (physics::create_Force*) dlsym(forceLib,"getForce");
+	physics::create_CudaForce* buildFactory = (physics::create_CudaForce*) dlsym(forceLib,"getCudaForce");
 	const char* err = dlerror();
 
 	//If the force is not properly implemented.
@@ -68,35 +71,67 @@ void runScript()
 		return;
 	}
 
+	//Setup variables to copy.
+	//This should be automated for a general number of inputs in future builds.
+	float* frcLocal = new float[7];
+	float* frcDevice;
+	int frcSize = 7 * sizeof(float);
+	cudaMalloc((void **)&frcDevice, frcSize);
+	frcLocal[0] = cfg->getParam<float>("kT", 10.0);
+	frcLocal[1] = cfg->getParam<float>("radius",0.5);
+	frcLocal[2] = cfg->getParam<float>("mass",1.0);
+	frcLocal[3] = cfg->getParam<float>("yukawaStrength",8.0);
+	frcLocal[4] = cfg->getParam<int>("ljNum",18.0);
+	frcLocal[5] = cfg->getParam<float>("cutOff",2.5);
+	frcLocal[6] = cfg->getParam<float>("debyeLength",0.5);
+	cudaMemcpy(frcDevice,frcLocal,frcSize,cudaMemcpyHostToDevice);
+
+	std::cout << "\n";
+
 	//Create a new force instance from the factory.
-	physics::IForce* loadForce = factory(cfg);
+	physics::IForce** loadForce;
+	cudaMalloc(&loadForce, sizeof(physics::IForce**));
+	buildFactory(loadForce, frcDevice);
 
-	//Add the force to the force manager.
-	physics::forces * force = new physics::forces();
-	force->addForce(loadForce);
+	//Run a test routine to ensure everything is loaded corrently.
+	physics::cuda_Test* testFactory = (physics::cuda_Test*) dlsym(forceLib,"runCudaTest");
 
-	util::writeTerminal("Creating force manager.\n", Colour::Green);
-	int num_threads = cfg->getParam<double>("threads",1);
-	force->setNumThreads(num_threads);
+	err = dlerror();
 
-	int num_dyn = cfg->getParam<double>("omp_dynamic",0);
-	force->setDynamic(num_dyn);
+	//If the force is not properly implemented.
+	if (err)
+	{
+		util::writeTerminal("\n\nCould not find symbol: getForce\n\n", Colour::Red);
+		return;
+	}
 
-	//Does not work on GCC 4.8 and below.
-	int num_dev = cfg->getParam<double>("omp_device",0);
-	force->setDevice(num_dev);
+	testFactory(loadForce);
 
-	/*-------------INTEGRATOR-------------*/
+	physics::cuda_Acceleration* accFactory = (physics::cuda_Acceleration*) dlsym(forceLib,"runAcceleration");
 
-	//Create the integrator.
-	util::writeTerminal("Creating integrator.\n", Colour::Green);
-	integrators::brownianIntegrator * difeq = new integrators::brownianIntegrator(cfg);
+	err = dlerror();
+
+	//If the force is not properly implemented.
+	if (err)
+	{
+		util::writeTerminal("\n\nCould not find symbol: getForce\n\n", Colour::Red);
+		return;
+	}
 
 	/*---------------SYSTEM---------------*/
 
 	util::writeTerminal("\nCreating particle system.\n", Colour::Green);
+
+	//Set the number of particles.
+	int nParticles = cfg->getParam<int>("nParticles",0);
+
+	if (nParticles == 0)
+	{
+		util::writeTerminal("\n\nSystem must start with more than zero particles.", Colour::Red);
+		return;
+	}
 	//Creates the particle system.
-	simulation::system * sys = new simulation::system(cfg, difeq, force);
+	simulation::system * sys = new simulation::system(cfg, difeq, loadForce, accFactory, nParticles);
 
 	/*---------------RUNNING--------------*/
 
@@ -124,11 +159,11 @@ void runScript()
 
 	util::writeTerminal("Starting integration.\n", Colour::Green);
 
-	int endTime = cfg->getParam<double>("endTime",1000);
+	int endTime = cfg->getParam<float>("endTime",1000);
 
 	sys->run(endTime);
 
 	//Write the final system.
 	util::writeTerminal("\nIntegration complete.\n\n Writing final system to file.", Colour::Green);
-	sys->writeSystem("/finSys");
+	//sys->writeSystem("/finSys");
 }

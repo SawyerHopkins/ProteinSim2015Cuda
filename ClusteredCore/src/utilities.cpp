@@ -26,61 +26,7 @@ using namespace std;
 
 namespace utilities
 {
-
-	double util::safeMod(double val, double base)
-	{
-		//0 mod n is always zero
-		if (val == 0)
-		{
-			return 0.0;
-		}
-		//if the particle is on the edge of the system.
-		else if (val == base)
-		{
-			return 0.0;
-		}
-		//if the particle is outside the upper bounds.
-		else if (val>base)
-		{
-			return (val-base);
-		}
-		//if the particle is outside the lower bounds.
-		else if (val<0)
-		{
-			return (val+base);
-		}
-		//No problems return value.
-		else
-		{
-			return val;
-		}
-	}
-
-	double util::safeMod0(double val0, double val, double base)
-	{
-		//The difference between the two values.
-		double dx = val - val0;
-		//If the values are further apart than half the system, use PBC.
-		if (fabs(dx) > base/2 )
-		{
-			//Check which direction to implement PBC.
-			if (dx < 0)
-			{
-				return val0-base;
-			}
-			else
-			{
-				return val0+base;
-			}
-		}
-		else
-		{
-			return val0;
-		}
-		return 0.0;
-	}
-
-	void util::loadBar(double x0, int n, long counter, int w)
+	void util::loadBar(float x0, int n, long counter, int w)
 	{
 		/**************************************************************************************//**
 		*----------------------------------------SOURCE FROM---------------------------------------
@@ -95,7 +41,7 @@ namespace utilities
 		//Choose when to update console.
 		if ( (x != n) && (counter % 100 != 0) ) return;
 
-		double ratio  =  x/(double)n;
+		float ratio  =  x/(float)n;
 		int   c      =  ratio * w;
 
 		cout.precision(4);
@@ -104,108 +50,6 @@ namespace utilities
 		for (int x=0; x<c; x++) cout << "=";
 		for (int x=c; x<w; x++) cout << " ";
 		cout << "] - " << x0 << "\r" << flush;
-	}
-
-	double util::pbcDist(double X,double Y, double Z,double X1, double Y1,double Z1,double L)
-	{
-
-		double dx = fabs(X-X1);
-		double dy = fabs(Y-Y1);
-		double dz = fabs(Z-Z1);
-
-		//Check X direction.
-		if(dx > L/2 )
-		{
-			dx-=L;
-		}
-
-		//Check Y direction.
-		if(dy > L/2 )
-		{
-			dy-=L;
-		}
-
-		//Check Z direction.
-		if(dz > L/2 )
-		{
-			dz-=L;
-		}
-		//Pythag for the distance.
-		return (dx*dx)+(dy*dy)+(dz*dz);
-
-	}
-
-	void util::unitVectorSimple(double dX, double dY, double dZ, double r, double (&acc)[3])
-	{
-		//Normalize by distance.
-		acc[0]=dX/r;
-		acc[1]=dY/r;
-		acc[2]=dZ/r;
-	}
-
-	void util::unitVectorAdv(double X,double Y, double Z,double X1, double Y1,double Z1,double (&acc)[3],double r,int L)
-	{
-		double dx,dy,dz;
-
-		dx=X1-X; dy=Y1-Y; dz=Z1-Z;
-
-		//Check X PBC.
-		if(fabs(dx) > L/2)
-		{
-			if(dx<0)
-			{
-				dx=dx+L;
-			}
-			else
-			{
-				dx=dx-L;
-			}
-		}
-
-		//Check Y PBC.
-		if(fabs(dy) > L/2)
-		{
-			if(dy<0)
-			{
-				dy=dy+L;
-			}
-			else
-			{
-				dy=dy-L;
-			}
-		}
-
-		//Check Z PBC.
-		if(fabs(dz) > L/2)
-		{
-			if(dz<0)
-			{
-				dz=dz+L;
-			}
-			else
-			{
-				dz=dz-L;
-			}
-		}
-
-		//Normalize by distance.
-		dx=dx/r; dy=dy/r; dz=dz/r;
-		acc[0]=dx; acc[1]=dy; acc[2]=dz;
-	}
-
-	double util::powBinaryDecomp(double base, int exp)
-	{
-		double answer = 1;
-		while(exp)
-		{
-			if (exp & 1)
-			{
-				answer *= base;
-			}
-			exp >>= 1;
-			base *= base;
-		}
-		return answer;
 	}
 
 	void util::setTerminalColour(Colour c)
@@ -267,100 +111,6 @@ namespace utilities
 				}
 			}
 		}
-	}
-
-	//"Polar" version without trigonometric calls, 1 at a time 
-	double util::g250(int seed, double mu, double sigma) {
-        static bool deviateAvailable=false; //flag
-        static float storedDeviate; //deviate from previous calculation
-        double polar, rsquared, var1, var2;
-        
-        //If no deviate has been stored, the polar Box-Muller transformation is 
-        //performed, producing two independent normally-distributed random
-        //deviates. One is stored for the next round, and one is returned.
-        if (!deviateAvailable) {
-            //choose pairs of uniformly distributed deviates, discarding those 
-            //that don't fall within the unit circle
-            do {
-                var1=2.0*( double(psdrand(seed))/*double(RAND_MAX)*/ ) - 1.0;
-                var2=2.0*( double(psdrand(seed))/*double(RAND_MAX)*/ ) - 1.0;
-                rsquared=var1*var1+var2*var2;
-            } while ( rsquared>=1.0 || rsquared == 0.0);
-            
-            //calculate polar tranformation for each deviate
-            polar=sqrt(-2.0*log(rsquared)/rsquared);
-            
-            //store first deviate and set flag
-            storedDeviate=var1*polar;
-            deviateAvailable=true;
-            
-            //return second deviate
-            return var2*polar*sigma + mu;
-        }
-        
-        //If a deviate is available from a previous call to this function, it is
-        //returned, and the flag is set to false.
-        else {
-            deviateAvailable=false;
-            return storedDeviate*sigma + mu;
-        }
-	}
-
-	//random number generator
-	double util::psdrand(int iseed)
-	{
-		int i, j, k, inx;
-		double ran_num;
-		static const int ndim = 55, m10 = 1000000000, is = 21, ir = 30;
-		static const double base = 1.0E9;
-		static int jrand, istack[58];
-		static bool init = false;
-
-		if((!init) || (iseed < 0))
-		{
-			iseed = abs(iseed);
-	 		istack[ndim] = iseed;
-			j = iseed;
-			k = 1;
-
-			for(i = 1; i <= (ndim - 1); ++i)
-			{
-				inx = i*is - int((double)(i*is)/(double)(ndim))*ndim;
-				istack[inx] = k;
-				k = j - k;
-				if(k < 0) {k += m10;}
-				j = istack[inx];
-			}
-
-			for(j = 1; j <= 3; ++j)
-			{
-				for(i = 1; i <= ndim; ++i)
-				{
-					inx = i + ir - int((double)(i+ir)/(double)(ndim))*ndim;
-					istack[i] -= istack[inx+1];
-					if(istack[i] < 0) {istack[i] += m10;}
-				}
-			}
-			jrand = 0;
-			init = true;
-		}
-
-		jrand += 1;
-
-		if(jrand > ndim)
-		{
-			for(i = 1; i <= ndim; ++i)
-			{
-				inx = i + ir - ((int)((double)(i+ir)/(double)(ndim)))*ndim;
-			    istack[i] -= istack[inx+1];
-				if(istack[i] < 0) {istack[i] += m10;}
-			}
-			jrand = 1;
-		}
-
-		ran_num = ((double)istack[jrand]) / base;
-
-		return ran_num;
 	}
 }
 

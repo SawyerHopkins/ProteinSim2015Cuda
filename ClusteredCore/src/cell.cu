@@ -24,9 +24,11 @@ SOFTWARE.*/
 
 namespace simulation
 {
-
-	cell::cell()
+	__host__ __device__
+	cell::cell(int cellParts) : members(new particle*[cellParts])
 	{
+		maxMem = cellParts;
+		gridCounter = 0;
 		//Set neighbors as self until initialized by the system.
 		top = this;
 		bot = this;
@@ -36,60 +38,62 @@ namespace simulation
 		right = this;
 	}
 
+	__host__ __device__
 	cell::~cell()
 	{
 		delete[] &members;
+		delete[] &neighbors;
 	}
 
-	void cell::addMember(particle* p)
+	__host__ __device__
+	int cell::findIndex(particle* p)
 	{
-		//Adds member with name as the key.
-		members[p->getName()] = p;
+		int i =0;
+		bool search = true;
+		while (search)
+		{
+			if (members[i]->getName() == p->getName()) return i;
+		}
+		return -1;
 	}
 
-	void cell::removeMember(particle* p)
-	{
-		//Removes the member by associated key.
-		members.erase(p->getName());
-	}
-
+	__host__ __device__
 	void cell::createNeighborhood()
 	{
 		//Add the cross section at the cell.
-		neighbors.push_back(left);
-		neighbors.push_back(right);
-		neighbors.push_back(top);
-		neighbors.push_back(bot);
-		neighbors.push_back(top->left);
-		neighbors.push_back(top->right);
-		neighbors.push_back(bot->left);
-		neighbors.push_back(bot->right);
+		neighbors[0] = left;
+		neighbors[1] = right;
+		neighbors[2] = top;
+		neighbors[3] = bot;
+		neighbors[4] = top->left;
+		neighbors[5] = top->right;
+		neighbors[6] = bot->left;
+		neighbors[7] = bot->right;
 
 		//Adds the cross section in front of the cell.
-		neighbors.push_back(front);
-		neighbors.push_back(front->left);
-		neighbors.push_back(front->right);
-		neighbors.push_back(front->top);
-		neighbors.push_back(front->bot);
-		neighbors.push_back(front->top->left);
-		neighbors.push_back(front->top->right);
-		neighbors.push_back(front->bot->left);
-		neighbors.push_back(front->bot->right);
+		neighbors[8] = front;
+		neighbors[9] = front->left;
+		neighbors[10] = front->right;
+		neighbors[11] = front->top;
+		neighbors[12] = front->bot;
+		neighbors[13] = front->top->left;
+		neighbors[14] = front->top->right;
+		neighbors[15] = front->bot->left;
+		neighbors[16] = front->bot->right;
 
 		//Adds the cross section behind of the cell.
-		neighbors.push_back(back);
-		neighbors.push_back(back->left);
-		neighbors.push_back(back->right);
-		neighbors.push_back(back->top);
-		neighbors.push_back(back->bot);
-		neighbors.push_back(back->top->left);
-		neighbors.push_back(back->top->right);
-		neighbors.push_back(back->bot->left);
-		neighbors.push_back(back->bot->right);
+		neighbors[17] = back;
+		neighbors[18] = back->left;
+		neighbors[19] = back->right;
+		neighbors[20] = back->top;
+		neighbors[21] = back->bot;
+		neighbors[22] = back->top->left;
+		neighbors[23] = back->top->right;
+		neighbors[24] = back->bot->left;
+		neighbors[25] = back->bot->right;
 
 		//Adds the parent cell to the end of the vector.
-		neighbors.push_back(this);
+		neighbors[26]=this;
 	}
-
 }
 

@@ -6,7 +6,6 @@
 
 namespace physics
 {
-
 	/********************************************//**
 	*-----------------FORCE INTERFACE----------------
 	 ***********************************************/
@@ -20,12 +19,9 @@ namespace physics
 	 */
 	class IForce
 	{
-
-		protected:
-
-			std::string name;
-
 		public:
+
+			int size;
 
 			//Header Version.
 			static const int version = 1;
@@ -39,29 +35,21 @@ namespace physics
 			 * @param itemCell The cell containing the index particle. 
 			 * @param items All particles in the system.
 			 */
-			virtual void getAcceleration(int index, int nPart, int boxSize, double time, simulation::cell* itemCell, simulation::particle** items)=0;
+			__device__
+			virtual void getAcceleration(int* nPart, int* boxSize, int* cellScale ,float* time, simulation::cell* cells, simulation::particle* items)=0;
 
 			/**
-			 * @brief Flag for a force dependent time.
-			 * @return True for time dependent. False otherwise. 
+			 * @brief Run any precalculation tests on the device to ensure it has properly loaded.
 			 */
-			virtual bool isTimeDependent()=0;
-
-			/**
-			 * @brief Allows for systematic control of force variables.
-			 */
-			virtual void quench()=0;
-
-			/**
-			 * @brief Get the name of the force for logging purposes.
-			 * @return 
-			 */
-			std::string getName() { return name; }
-
+			__device__
+			virtual void cudaTest()=0;
 	};
 
+	/** Create the host force */
 	typedef IForce* create_Force(configReader::config*);
-
+	typedef void create_CudaForce(physics::IForce**, float *);
+	typedef void cuda_Test(physics::IForce**);
+	typedef void cuda_Acceleration(physics::IForce**, int*, int*, int*, float*, simulation::cell*, simulation::particle*, int numThreads);
 	/********************************************//**
 	*----------------FORCE MANAGEMENT----------------
 	 ***********************************************/
@@ -71,14 +59,14 @@ namespace physics
 	 * @author Sawyer Hopkins
 	 * @date 06/27/15
 	 * @file force.h
-	 * @brief Management system for a collection of forces.
+	 * @brief Management system for a collection of forces. This force is currently orphaned in cuda branch.
 	 */
 	class forces
 	{
 		private:
 
 			//A vector of all forces in the system.
-			std::vector<IForce*> flist;
+			IForce* flist;
 			//Flagged if flist contains a time dependant force.
 			bool timeDependent;
 
@@ -87,65 +75,24 @@ namespace physics
 			/**
 			 * @brief Creates the force management system.
 			 */
-			forces();
+			forces(IForce* add);
 			/**
 			 * @brief Releases the management system.
 			 */
 			~forces();
-
-			/**
-			 * @brief Adds a force to the management system.
-			 * @param f The force to add. Must implement IForce interface.
-			 */
-			void addForce(IForce* f);
-
-			/**
-			 * @brief Find the net force on all particles in the system.  
-			 * @param nPart The number of particles in the system.
-			 * @param boxSize The size of the system.
-			 * @param time The current system time.
-			 * @param cells The system cell manager.
-			 * @param items The particles in the system.
-			 */
-			void getAcceleration(int nPart, int boxSize, double time, simulation::cell**** cells, simulation::particle** items);
-
 			/**
 			 * @brief Checks if the system contains a time dependent force.
 			 * @return True if time dependent. False otherwise.
 			 */
+			__host__ __device__
 			bool isTimeDependent() { return timeDependent; }
-
 			/**
-			 * @brief Set the number of threads for OMP to use
-			 * @param num Number of threads.
+			 * @brief Get the list of forces.
+			 * @return 
 			 */
-			void setNumThreads(int num) { if (num > 0) {omp_set_num_threads(num);} }
-			/**
-			 * @brief Set the dynamic/static mode of operation.
-			 * @param num 0 for static. num > 0 for dynamics.
-			 */
-			void setDynamic(int num) { omp_set_dynamic(num); }
-			/**
-			 * @brief Set the default OMP target device.
-			 * @param num Device number.
-			 */
-			void setDevice(int num) {}; //omp_set_default_device(num); }
-
-			//Iterators
-
-			/**
-			 * @brief Gets the beginning iterator of the force list.
-			 * @return flist.begin().
-			 */
-			std::vector<IForce*>::iterator getBegin() { return flist.begin(); }
-			/**
-			 * @brief Gets the end iterator of the force list.
-			 * @return flist.end();
-			 */
-			std::vector<IForce*>::iterator getEnd() { return flist.end(); }
-
+			__device__
+			IForce* getForce() { return flist; }
 	};
-
 }
 
 #endif // FORCE_H

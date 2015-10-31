@@ -1,15 +1,30 @@
-CC := g++ # This is the main compiler
-# CC := clang --analyze # and comment out the linker last line for sanity
+################################################################################
+################################GENERAL PATH INFO###############################
+################################################################################
 SRCDIR := src
 BUILDDIR := build
-TARGET := bin/Clustered
- 
-SRCEXT := cpp
+INC := -I include
+################################################################################
+##############################CUDA PATH AND OPTIONS#############################
+################################################################################
+CUDA_PATH ?= "/usr/local/cuda-7.5"
+GPUINC := -I /usr/local/cuda-7.5/include/
+HOST_COMPILER ?= g++
+NVCC := $(CUDA_PATH)/bin/nvcc -ccbin $(HOST_COMPILER)
+GFLAGS := -m64 -arch=sm_50 --std=c++11 --compiler-options '-fPIC'
+################################################################################
+#################################HOST CODE PATHS################################
+################################################################################
+SRCEXT := cu
 SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
-CFLAGS := -g -O3 -fopenmp -std=c++11
-LIB := -fopenmp -ldl -lc -L./linked -lcore
-INC := -I include
+LIB := -ldl -lc -L./linked -lcore -lkernal -lcudart -lcuda
+TARGET := bin/Clustered
+################################################################################
+######################################RULES#####################################
+################################################################################
+
+# default
 
 $(TARGET): $(OBJECTS)
 	@echo
@@ -17,17 +32,17 @@ $(TARGET): $(OBJECTS)
 	@echo " Linking..."
 	@tput setaf 7
 	@echo
-	@echo " $(CC) $^ -o $(TARGET) $(LIB)"; $(CC) $^ -o $(TARGET) $(LIB)
+	$(EXEC) $(NVCC) $(GFLAGS) $^ $(LIB) -o $(TARGET)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
-	@mkdir -p $(BUILDDIR)
-	@echo " $(CC) $(CFLAGS) $(INC) -c -o $@ $<"; $(CC) $(CFLAGS) $(INC) -c -o $@ $<
+	$(EXEC) $(NVCC) $(GFLAGS) $(INC) -o $@ -dc $<
 
-clean:
-	@tput setaf 3
-	@echo " Cleaning..."; 
-	@tput setaf 7
-	@echo " $(RM) -r $(BUILDDIR) $(TARGET) linked/libcore.a"; $(RM) -r $(BUILDDIR) $(TARGET) linked/libcore.a
+#clean rules:
 
+clean: 
+	$(RM) -rf bin linked/libcore.a linked/libkernal.a
 
-.PHONY: clean
+cleancpu: 
+	$(RM) -rf $(BUILDDIR)
+
+spotless: clean cleancpu
