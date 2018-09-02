@@ -5,8 +5,6 @@ A langevin dynamics engine for the GPU.
 
 PSim2015 is a particle dynamics engine being developed in the Kansas State University Physics Department. 
 
-Keep update with the project at [www.psim.xyz](http://www.psim.xyz)
-
 This project is an experimental fork of [ProteinSim2015](../../../ProteinSim2015). To see usage and implementation refer to the original ProteinSim2015. Note this project lags behind the upstream and may not have all features implemented.
 
 ## Custom Forces
